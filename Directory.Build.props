@@ -1,0 +1,19 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>Jean-Philippe Leconte</Authors>
+    <Copyright>Copyright © Jean-Philippe Leconte 2021</Copyright>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/ins0mniaque/Omnidoc</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ins0mniaque/Omnidoc</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>
