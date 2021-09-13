@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <NeutralLanguage>en</NeutralLanguage>
 
-    <Description>Omnidoc.Xps adds XPS support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
+    <Description>Omnidoc.Xps.Windows adds XPS support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
     <PackageTags>Omnidoc;Omnidoc.Xps;xps;oxps;document;extract;convert;preview;render</PackageTags>
   </PropertyGroup>
 
@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Omnidoc.Core\Omnidoc.Core.csproj" />
+    <ProjectReference Include="..\Omnidoc.Xps\Omnidoc.Xps.csproj" />
   </ItemGroup>
 
   <ItemGroup>
