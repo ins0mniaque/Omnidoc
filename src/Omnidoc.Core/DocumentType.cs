@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Omnidoc
 {
     public class DocumentType : IEquatable < DocumentType? >
     {
-        private static ConcurrentDictionary < string, DocumentType > types = new ConcurrentDictionary < string, DocumentType > ( );
+        private static Dictionary < string, DocumentType > cache = new Dictionary < string, DocumentType > ( );
 
-        public static void Register ( DocumentType type )
+        public static void Register ( params DocumentType [ ] types )
         {
-            if ( type is null )
-                throw new ArgumentNullException ( nameof ( type ) );
+            if ( types is null )
+                throw new ArgumentNullException ( nameof ( types ) );
 
-            types.TryAdd ( type.Extension, type );
+            lock ( cache )
+                foreach ( var type in types )
+                    cache.TryAdd ( type.Extension, type );
         }
 
         [ SuppressMessage ( "Globalization", "CA1308:Normalize strings to uppercase", Justification = "Extensions are lowercase" ) ]
@@ -22,15 +24,16 @@ namespace Omnidoc
             if ( extension is null )
                 throw new ArgumentNullException ( nameof ( extension ) );
 
-            return types.TryGetValue ( extension.ToLowerInvariant ( ), out var type ) ? type : null;
+            return cache.TryGetValue ( extension.TrimStart ( '.' ).ToLowerInvariant ( ), out var type ) ? type : null;
         }
 
         [ SuppressMessage ( "Globalization", "CA1308:Normalize strings to uppercase", Justification = "Extensions are lowercase" ) ]
         public DocumentType ( string name, string contentType, string extension )
         {
-            Name        = name                            ?? throw new ArgumentNullException ( nameof ( name        ) );
-            ContentType = contentType                     ?? throw new ArgumentNullException ( nameof ( contentType ) );
-            Extension   = extension?.ToLowerInvariant ( ) ?? throw new ArgumentNullException ( nameof ( extension   ) );
+            Name        = name        ?? throw new ArgumentNullException ( nameof ( name        ) );
+            ContentType = contentType ?? throw new ArgumentNullException ( nameof ( contentType ) );
+            Extension   = extension   ?? throw new ArgumentNullException ( nameof ( extension   ) );
+            Extension   = Extension.TrimStart ( '.' ).ToLowerInvariant ( );
         }
 
         public string Name        { get; }
