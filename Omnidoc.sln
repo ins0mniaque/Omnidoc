@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omnidoc.Pdf", "src\Omnidoc.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omnidoc.Xps.Windows", "src\Omnidoc.Xps.Windows\Omnidoc.Xps.Windows.csproj", "{744EFB69-8E96-450E-AAD9-06173E1A5ABB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omnidoc.HtmlRenderer.PdfSharp", "src\Omnidoc.HtmlRenderer.PdfSharp\Omnidoc.HtmlRenderer.PdfSharp.csproj", "{8D46BBC8-BCB7-4C35-AE40-64481A05B87F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{744EFB69-8E96-450E-AAD9-06173E1A5ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{744EFB69-8E96-450E-AAD9-06173E1A5ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{744EFB69-8E96-450E-AAD9-06173E1A5ABB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D46BBC8-BCB7-4C35-AE40-64481A05B87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D46BBC8-BCB7-4C35-AE40-64481A05B87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D46BBC8-BCB7-4C35-AE40-64481A05B87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D46BBC8-BCB7-4C35-AE40-64481A05B87F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DABC6B90-8F39-4D2D-8C2F-EF1B37D43B9F} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
@@ -74,5 +80,6 @@ Global
 		{C0464198-7F2E-4FDC-B96A-2E54254013DF} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
 		{1E72BBA4-2321-4E85-80ED-1FE7D4922149} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
 		{744EFB69-8E96-450E-AAD9-06173E1A5ABB} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
+		{8D46BBC8-BCB7-4C35-AE40-64481A05B87F} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
 	EndGlobalSection
 EndGlobal

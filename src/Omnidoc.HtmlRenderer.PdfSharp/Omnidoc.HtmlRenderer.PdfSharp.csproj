@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+    <Description>Omnidoc.HtmlRenderer.PdfSharp is a port of HtmlRenderer.PdfSharp for PdfSharpCore. It is used by Omnidoc.HtmlToPdf to add HTML to PDF support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
+    <PackageTags>Omnidoc;Omnidoc.HtmlRenderer.PdfSharp;html;pdf;htmlrenderer;pdfsharp;document;extract;convert;preview;render</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Visible="false" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    <PackageReference Include="PdfSharpCore" Version="1.2.20" />
+  </ItemGroup>
+
+</Project>
