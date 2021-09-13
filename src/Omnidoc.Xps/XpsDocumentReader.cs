@@ -15,9 +15,9 @@ namespace Omnidoc.Xps
     {
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps };
 
-        public async IAsyncEnumerable < DocumentContent > ReadAsync ( Stream stream, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
+        public async IAsyncEnumerable < DocumentContent > ReadAsync ( Stream document, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
         {
-            using ( var archive = new ZipArchive ( stream ) )
+            using ( var archive = new ZipArchive ( document ) )
             {
                 foreach ( var entry in archive.Entries )
                 {
