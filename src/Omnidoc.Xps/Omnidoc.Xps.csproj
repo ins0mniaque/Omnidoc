@@ -4,8 +4,8 @@
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <NeutralLanguage>en</NeutralLanguage>
 
-    <Description>Omnidoc is a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
-    <PackageTags>Omnidoc;document;extract;convert;preview;render</PackageTags>
+    <Description>Omnidoc.Xps adds Xps support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
+    <PackageTags>Omnidoc;Omnidoc.Xps;xps;oxps;document;extract;convert;preview;render</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
