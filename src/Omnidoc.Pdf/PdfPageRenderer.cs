@@ -10,9 +10,9 @@ namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public sealed class PdfDocumentPageRenderer : IDocumentPageRenderer
+    public sealed class PdfPageRenderer : IPageRenderer
     {
-        public PdfDocumentPageRenderer ( FpdfPageT page )
+        public PdfPageRenderer ( FpdfPageT page )
         {
             Page = page;
         }

@@ -10,9 +10,9 @@ namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public sealed class PdfDocumentPager < T > : IDocumentPager < T >
+    public sealed class PdfPager < T > : IPager < T >
     {
-        public PdfDocumentPager ( FpdfDocumentT document, Func < FpdfPageT, T > factory )
+        public PdfPager ( FpdfDocumentT document, Func < FpdfPageT, T > factory )
         {
             Document = document;
             Factory  = factory;
