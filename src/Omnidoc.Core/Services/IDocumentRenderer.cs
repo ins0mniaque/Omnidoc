@@ -6,6 +6,6 @@ namespace Omnidoc.Services
 {
     public interface IDocumentRenderer : IDocumentService
     {
-        Task < IDocumentRendering > PrepareAsync ( Stream document, CancellationToken cancellationToken = default );
+        Task < IDocumentPager < IDocumentPageRenderer > > PrepareAsync ( Stream document, CancellationToken cancellationToken = default );
     }
 }

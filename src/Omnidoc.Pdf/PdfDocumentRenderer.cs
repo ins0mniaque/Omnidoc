@@ -13,16 +13,17 @@ namespace Omnidoc.Pdf
     {
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Pdf };
 
-        public Task < IDocumentRendering > PrepareAsync ( Stream document, CancellationToken cancellationToken = default )
+        public Task < IDocumentPager < IDocumentPageRenderer > > PrepareAsync ( Stream document, CancellationToken cancellationToken = default )
         {
             return Task.Run ( ( ) => Prepare ( document ), cancellationToken );
         }
 
-        private static IDocumentRendering Prepare ( Stream document )
+        private static IDocumentPager < IDocumentPageRenderer > Prepare ( Stream document )
         {
             using var fileAccess = document.ToFileAccess ( );
 
-            return new PdfDocumentRendering ( FPDF_LoadCustomDocument ( fileAccess, null ) );
+            return new PdfDocumentPager < IDocumentPageRenderer > ( FPDF_LoadCustomDocument ( fileAccess, null ),
+                                                                    page => new PdfDocumentPageRenderer ( page ) );
         }
     }
 }
