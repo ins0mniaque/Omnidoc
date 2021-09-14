@@ -3,23 +3,25 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-using PDFiumSharp;
-using PDFiumSharp.Types;
-
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
+    using static PDFiumCore.fpdfview;
+
     public class PdfDocumentPreviewer : IDocumentPreviewer
     {
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Pdf };
 
         public async Task PreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {
-            using var pdf = new PdfDocument ( document, FPDF_FILEREAD.FromStream ( document ) );
+            using var fileAccess = document.ToFileAccess ( );
 
-            await pdf.Pages [ 0 ].RenderAsync    ( output, options, cancellationToken )
-                                 .ConfigureAwait ( false );
+            using var pdf  = FPDF_LoadCustomDocument ( fileAccess, null ).AsDisposable ( FPDF_CloseDocument );
+            using var page = FPDF_LoadPage           ( pdf, 0 )          .AsDisposable ( FPDF_ClosePage     );
+
+            await page.RenderAsync    ( output, options, cancellationToken )
+                      .ConfigureAwait ( false );
         }
     }
 }

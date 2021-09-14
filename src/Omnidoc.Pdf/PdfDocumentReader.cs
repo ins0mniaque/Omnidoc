@@ -6,14 +6,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using PDFiumSharp;
-using PDFiumSharp.Types;
+using PDFiumCore;
 
 using Omnidoc.Content;
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
+    using static PDFiumCore.fpdfview;
+    using static PDFiumCore.fpdf_text;
+
     public class PdfDocumentReader : IDocumentReader
     {
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Pdf };
@@ -32,12 +34,17 @@ namespace Omnidoc.Pdf
 
         private static void Read ( Stream document, BlockingCollection < DocumentContent > contents, CancellationToken cancellationToken )
         {
-            using var pdf = new PdfDocument ( document, FPDF_FILEREAD.FromStream ( document ) );
+            using var fileAccess = document.ToFileAccess ( );
 
-            foreach ( var page in pdf.Pages )
+            using var pdf = FPDF_LoadCustomDocument ( fileAccess, null ).AsDisposable ( FPDF_CloseDocument );
+
+            var pageCount = FPDF_GetPageCount ( pdf );
+
+            for ( var index = 0; index < pageCount; index++ )
             {
                 cancellationToken.ThrowIfCancellationRequested ( );
 
+                using var page = FPDF_LoadPage ( pdf, index ).AsDisposable ( FPDF_ClosePage );
                 foreach ( var content in ReadPage ( page, cancellationToken ) )
                     contents.Add ( content );
             }
@@ -45,42 +52,38 @@ namespace Omnidoc.Pdf
             contents.CompleteAdding ( );
         }
 
-        private static IEnumerable < DocumentContent > ReadPage ( PdfPage page, CancellationToken cancellationToken )
+        private static IEnumerable < DocumentContent > ReadPage ( FpdfPageT page, CancellationToken cancellationToken )
         {
-            var textPage = PDFium.FPDFText_LoadPage ( page.Handle );
+            using var textPage = FPDFTextLoadPage ( page ).AsDisposable ( FPDFTextClosePage );
 
-            try
+            var count = FPDFTextCountRects ( textPage, 0, 1000000 );
+
+            for ( var index = 0; index < count; index++ )
             {
-                var count = PDFium.FPDFText_CountRects ( textPage, 0, 1000000 );
+                cancellationToken.ThrowIfCancellationRequested ( );
 
-                for ( var index = 0; index < count; index++ )
+                var flags = 0;
+                var font  = PdfString.Alloc ( (buffer, length) => (int) FPDFTextGetFontInfo ( textPage, index, buffer, (uint) length, ref flags ), Encoding.UTF8 );
+
+                double left = 0, top = 0, right = 0, bottom = 0;
+                FPDFTextGetRect ( textPage, index, ref left, ref top, ref right, ref bottom );
+
+                uint r = 0, g = 0, b = 0, a = 255;
+                FPDFTextGetFillColor ( textPage, index, ref r, ref g, ref b, ref a );
+
+                var text = PdfString.Alloc ( (ref ushort buffer, int length) => FPDFTextGetBoundedText ( textPage, left, top, right, bottom, ref buffer, length ) );
+
+                yield return new DocumentText ( text )
                 {
-                    cancellationToken.ThrowIfCancellationRequested ( );
-
-                    var zero   = (byte) 0;
-                    var length = PDFium.FPDFText_GetFontInfo ( textPage, index, ref zero, 0, out var flags );
-                    var font   = new byte [ length ];
-
-                    PDFium.FPDFText_GetFontInfo  ( textPage, index, ref font [ 0 ], (uint) font.Length, out flags );
-                    PDFium.FPDFText_GetRect      ( textPage, index, out var left, out var top, out var right, out var bottom );
-                    PDFium.FPDFText_GetFillColor ( textPage, index, out var r,    out var g,   out var b,     out var a      );
-
-                    yield return new DocumentText ( PDFium.FPDFText_GetBoundedText ( textPage, left, top, right, bottom ) )
-                    {
-                        Left       = left,
-                        Top        = top,
-                        Right      = right,
-                        Bottom     = bottom,
-                        Color      = $"#{a:x2}{r:x2}{g:x2}{b:x2}",
-                        Font       = Encoding.Unicode.GetString    ( font ),
-                        FontSize   = PDFium.FPDFText_GetFontSize   ( textPage, index ),
-                        FontWeight = PDFium.FPDFText_GetFontWeight ( textPage, index )
-                    };
-                }
-            }
-            finally
-            {
-                PDFium.FPDFText_ClosePage ( textPage );
+                    Left       = left,
+                    Top        = top,
+                    Right      = right,
+                    Bottom     = bottom,
+                    Color      = $"#{a:x2}{r:x2}{g:x2}{b:x2}",
+                    Font       = font,
+                    FontSize   = FPDFTextGetFontSize   ( textPage, index ),
+                    FontWeight = FPDFTextGetFontWeight ( textPage, index )
+                };
             }
         }
     }

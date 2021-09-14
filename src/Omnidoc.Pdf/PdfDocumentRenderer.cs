@@ -3,13 +3,12 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-using PDFiumSharp;
-using PDFiumSharp.Types;
-
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
+    using static PDFiumCore.fpdfview;
+
     public class PdfDocumentRenderer : IDocumentRenderer
     {
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Pdf };
@@ -21,9 +20,9 @@ namespace Omnidoc.Pdf
 
         private static IDocumentRendering Prepare ( Stream document )
         {
-            var pdf = new PdfDocument ( document, FPDF_FILEREAD.FromStream ( document ) );
+            using var fileAccess = document.ToFileAccess ( );
 
-            return new PdfDocumentRendering ( pdf );
+            return new PdfDocumentRendering ( FPDF_LoadCustomDocument ( fileAccess, null ) );
         }
     }
 }

@@ -1,35 +1,43 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using PDFiumSharp;
+using PDFiumCore;
 
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
+    using static PDFiumCore.fpdfview;
+
     public sealed class PdfDocumentRendering : IDocumentRendering
     {
-        public PdfDocumentRendering ( PdfDocument document )
+        public PdfDocumentRendering ( FpdfDocumentT document )
         {
             Document = document;
         }
 
-        public PdfDocument Document { get; }
+        public FpdfDocumentT Document { get; }
 
         public Task < int > GetPageCountAsync ( CancellationToken cancellationToken )
         {
-            return Task.FromResult ( Document.Pages.Count );
+            return Task.FromResult ( FPDF_GetPageCount ( Document ) );
         }
 
         public Task < IDocumentPageRenderer > GetPageRendererAsync ( int page, CancellationToken cancellationToken )
         {
-            return Task.FromResult < IDocumentPageRenderer > ( new PdfDocumentPageRenderer ( Document.Pages [ page ] ) );
+            return Task.FromResult < IDocumentPageRenderer > ( new PdfDocumentPageRenderer ( FPDF_LoadPage ( Document, page ) ) );
         }
+
+        private bool closed;
 
         public void Dispose ( )
         {
-            if ( ! Document.IsDisposed )
-                Document.Close ( );
+            if ( ! closed )
+            {
+                FPDF_CloseDocument ( Document );
+
+                closed = true;
+            }
         }
     }
 }
