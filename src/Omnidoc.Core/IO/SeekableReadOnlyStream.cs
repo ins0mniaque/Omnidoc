@@ -11,6 +11,9 @@ namespace Omnidoc.IO
     /// </summary>
     public class SeekableReadOnlyStream : Stream
     {
+        private Stream baseStream;
+        private Stream bufferingStream;
+
         /// <summary>
         /// Initializes a SeekableReadOnlyStream instance with base stream and 
         /// buffering stream.
@@ -34,23 +37,23 @@ namespace Omnidoc.IO
 
         /// <summary>
         /// Initializes a SeekableReadOnlyStream instance with base stream and inherently uses
-        /// MemoryStream instance as buffering stream.
+        /// VirtualStream instance as buffering stream.
         /// </summary>
         /// <param name="baseStream">Base stream</param>
-        public SeekableReadOnlyStream ( Stream baseStream ) : this ( baseStream, new MemoryStream ( ) )
+        public SeekableReadOnlyStream ( Stream baseStream ) : this ( baseStream, new VirtualStream ( ) )
         {
-            // Empty
+
         }
 
         /// <summary>
         /// Initializes a SeekableReadOnlyStream instance with base stream and buffer size, and 
-        /// inherently uses MemoryStream instance as buffering stream.
+        /// inherently uses VirtualStream instance as buffering stream.
         /// </summary>
         /// <param name="baseStream">Base stream</param>
         /// <param name="bufferSize">Buffer size</param>
-        public SeekableReadOnlyStream ( Stream baseStream, int bufferSize ) : this ( baseStream, new MemoryStream ( bufferSize ) )
+        public SeekableReadOnlyStream ( Stream baseStream, int bufferSize ) : this ( baseStream, new VirtualStream ( bufferSize ) )
         {
-            // Empty
+
         }
 
         /// <summary>
@@ -121,8 +124,8 @@ namespace Omnidoc.IO
 
                     // Read buffer from the base stream and write it to the buffering stream
                     // in 4K chunks
-                    byte [] buffer = new byte[ 4096 ];
-                    long bytesToRead = value - bufferingStream.Position;
+                    var buffer = new byte [ 4096 ];
+                    var bytesToRead = value - bufferingStream.Position;
                     while ( bytesToRead > 0 )
                     {
                         // Read to buffer 4K or byteToRead, whichever is less
@@ -188,7 +191,7 @@ namespace Omnidoc.IO
                 bufferingStream.Seek ( 0, SeekOrigin.End );
 
                 // Read all remaining bytes from the base stream to the buffering stream
-                byte [] buffer = new byte[ 4096 ];
+                var buffer = new byte [ 4096 ];
                 for (; ; )
                 {
                     // Read buffer from base stream
@@ -333,9 +336,5 @@ namespace Omnidoc.IO
             // Flush the buffering stream
             bufferingStream.Flush ( );
         }
-
-
-        private Stream baseStream;
-        private Stream bufferingStream;
     }
 }
