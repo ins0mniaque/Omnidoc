@@ -12,14 +12,6 @@ namespace Omnidoc
     {
         IDocumentServiceProvider Services { get; }
 
-        Stream PrepareStream ( Stream stream )
-        {
-            if ( stream is null )
-                throw new ArgumentNullException ( nameof ( stream ) );
-
-            return stream.CanSeek ? stream : new SeekableReadOnlyStream ( stream );
-        }
-
         DocumentType? DetectType ( Stream stream )
         {
             return Services.GetServices ( )
@@ -36,7 +28,7 @@ namespace Omnidoc
             var contentType = reader.DetectType ( stream );
 
             if ( ! stream.CanSeek )
-                throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_StreamMustBeSeekable, $"{ nameof ( DocumentEngine ) }.{ nameof ( IDocumentEngine.PrepareStream ) }" ) );
+                throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_StreamMustBeSeekable, $"{ nameof ( Seekable ) }.{ nameof ( Seekable.AsSeekable ) }" ) );
 
             stream.Seek ( 0, SeekOrigin.Begin );
 
