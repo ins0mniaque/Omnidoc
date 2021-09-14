@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Omnidoc.IO;
 
 namespace Omnidoc.Services
 {
@@ -26,7 +29,7 @@ namespace Omnidoc.Services
             if ( output   is null ) throw new ArgumentNullException ( nameof ( output   ) );
             if ( options  is null ) throw new ArgumentNullException ( nameof ( options  ) );
 
-            var memory = (MemoryStream?) null;
+            var memory = (Stream?) null;
 
             try
             {
@@ -34,15 +37,15 @@ namespace Omnidoc.Services
                 {
                     var isLast           = index == Chain.Count - 1;
                     var converter        = Chain [ index ];
-                    var converterOptions = isLast ? options : new OutputOptions ( SelectContentType ( converter, Chain [ index + 1 ] ) );
-                    var converterOutput  = isLast ? output  : memory = new MemoryStream ( );
+                    var converterOptions = isLast ? options : new OutputOptions ( SelectOutputType ( converter, Chain [ index + 1 ] ) );
+                    var converterOutput  = isLast ? output  : memory = CreateBufferStream ( ) ?? throw new InvalidOperationException ( Strings.Error_FailedToCreateBufferStream );
 
                     await converter.ConvertAsync   ( document, converterOutput, converterOptions, cancellationToken )
                                    .ConfigureAwait ( false );
 
                     if ( index > 0 && ! isLast )
                     {
-                        memory = (MemoryStream) document;
+                        memory = document;
                         memory.Dispose ( );
                         memory = null;
                     }
@@ -54,17 +57,21 @@ namespace Omnidoc.Services
             finally
             {
                 memory?.Dispose ( );
-                memory = null;
             }
         }
 
-        public virtual DocumentType SelectContentType ( IDocumentConverter converter, IDocumentConverter nextConverter )
+        protected virtual Stream CreateBufferStream ( ) => new VirtualStream ( );
+
+        protected virtual DocumentType SelectOutputType ( IDocumentConverter converter, IDocumentConverter nextConverter )
         {
             if ( converter     is null ) throw new ArgumentNullException ( nameof ( converter     ) );
             if ( nextConverter is null ) throw new ArgumentNullException ( nameof ( nextConverter ) );
 
             return converter.OutputTypes.Intersect ( nextConverter.Types ).FirstOrDefault ( ) ??
-                   throw new NotSupportedException ( $"{ converter.GetType ( ).Name } cannot chain to { nextConverter.GetType ( ).Name }" );
+                   throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture,
+                                                                     Strings.Error_UnsupportedConverterChain,
+                                                                     converter    .GetType ( ).Name,
+                                                                     nextConverter.GetType ( ).Name ) );
         }
     }
 }

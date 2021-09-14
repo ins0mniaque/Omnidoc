@@ -53,6 +53,12 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_FailedToCreateBufferStream {
+            get {
+                return ResourceManager.GetString("Error_FailedToCreateBufferStream", resourceCulture);
+            }
+        }
+        
         internal static string Error_InvalidDataUri {
             get {
                 return ResourceManager.GetString("Error_InvalidDataUri", resourceCulture);
@@ -62,6 +68,12 @@ namespace Omnidoc {
         internal static string Error_StreamMustBeSeekable {
             get {
                 return ResourceManager.GetString("Error_StreamMustBeSeekable", resourceCulture);
+            }
+        }
+        
+        internal static string Error_UnsupportedConverterChain {
+            get {
+                return ResourceManager.GetString("Error_UnsupportedConverterChain", resourceCulture);
             }
         }
     }

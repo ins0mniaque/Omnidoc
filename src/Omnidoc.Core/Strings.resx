@@ -15,10 +15,16 @@
 	<data name="Error_BufferingStreamMustBeSeekable" xml:space="preserve">
 		<value>Buffering stream must be seekable</value>
 	</data>
+	<data name="Error_FailedToCreateBufferStream" xml:space="preserve">
+		<value>Failed to create buffer stream</value>
+	</data>
 	<data name="Error_InvalidDataUri" xml:space="preserve">
 		<value>Invalid data uri</value>
 	</data>
 	<data name="Error_StreamMustBeSeekable" xml:space="preserve">
 		<value>Stream must be seekable. Try calling {0} beforehand.</value>
+	</data>
+	<data name="Error_UnsupportedConverterChain" xml:space="preserve">
+		<value>{0} cannot chain to {1}</value>
 	</data>
 </root>
