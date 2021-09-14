@@ -16,15 +16,15 @@ namespace Omnidoc.Pdf
     using static PDFiumCore.fpdfview;
     using static PDFiumCore.fpdf_text;
 
-    public class PdfDocumentReader : IDocumentReader
+    public class PdfDocumentParser : IDocumentParser
     {
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Pdf };
 
-        public async IAsyncEnumerable < DocumentContent > ReadAsync ( Stream document, [ EnumeratorCancellation ] CancellationToken cancellationToken )
+        public async IAsyncEnumerable < DocumentContent > ParseAsync ( Stream document, [ EnumeratorCancellation ] CancellationToken cancellationToken )
         {
             using var contents = new BlockingCollection < DocumentContent > ( );
 
-            var reading = Task.Run ( ( ) => Read ( document, contents, cancellationToken ), cancellationToken );
+            var reading = Task.Run ( ( ) => Parse ( document, contents, cancellationToken ), cancellationToken );
 
             foreach ( var content in contents )
                 yield return content;
@@ -32,7 +32,7 @@ namespace Omnidoc.Pdf
             await reading.ConfigureAwait ( false );
         }
 
-        private static void Read ( Stream document, BlockingCollection < DocumentContent > contents, CancellationToken cancellationToken )
+        private static void Parse ( Stream document, BlockingCollection < DocumentContent > contents, CancellationToken cancellationToken )
         {
             using var fileAccess = document.ToFileAccess ( );
 
@@ -45,14 +45,14 @@ namespace Omnidoc.Pdf
                 cancellationToken.ThrowIfCancellationRequested ( );
 
                 using var page = FPDF_LoadPage ( pdf, index ).AsDisposable ( FPDF_ClosePage );
-                foreach ( var content in ReadPage ( page, cancellationToken ) )
+                foreach ( var content in ParsePage ( page, cancellationToken ) )
                     contents.Add ( content );
             }
 
             contents.CompleteAdding ( );
         }
 
-        private static IEnumerable < DocumentContent > ReadPage ( FpdfPageT page, CancellationToken cancellationToken )
+        private static IEnumerable < DocumentContent > ParsePage ( FpdfPageT page, CancellationToken cancellationToken )
         {
             using var textPage = FPDFTextLoadPage ( page ).AsDisposable ( FPDFTextClosePage );
 

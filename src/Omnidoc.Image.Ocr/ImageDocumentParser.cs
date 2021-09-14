@@ -13,12 +13,12 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {
-    public class ImageDocumentReader : IDocumentReader
+    public class ImageDocumentParser : IDocumentParser
     {
         public static Func < TesseractEngine > CreateDefaultEngine { get; set; } = ( ) => new TesseractEngine ( @"tessdata", "eng" );
 
-        public ImageDocumentReader ( ) : this ( CreateDefaultEngine ) { }
-        public ImageDocumentReader ( Func < TesseractEngine > createEngine )
+        public ImageDocumentParser ( ) : this ( CreateDefaultEngine ) { }
+        public ImageDocumentParser ( Func < TesseractEngine > createEngine )
         {
             CreateEngine = createEngine;
         }
@@ -27,12 +27,12 @@ namespace Omnidoc.Image
 
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Bmp, DocumentTypes.Gif, DocumentTypes.Jpeg, DocumentTypes.Png, DocumentTypes.Tga, DocumentTypes.Tiff };
 
-        public async IAsyncEnumerable < DocumentContent > ReadAsync ( Stream document, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
+        public async IAsyncEnumerable < DocumentContent > ParseAsync ( Stream document, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
         {
             using var engine   = CreateEngine ( );
             using var contents = new BlockingCollection < DocumentContent > ( );
 
-            var reading = Task.Run ( ( ) => ReadWords ( engine, document, contents, cancellationToken ), cancellationToken );
+            var reading = Task.Run ( ( ) => ParseWords ( engine, document, contents, cancellationToken ), cancellationToken );
 
             foreach ( var content in contents )
                 yield return content;
@@ -40,7 +40,7 @@ namespace Omnidoc.Image
             await reading.ConfigureAwait ( false );
         }
 
-        private static void ReadWords ( TesseractEngine engine, Stream document, BlockingCollection < DocumentContent > contents, CancellationToken cancellationToken )
+        private static void ParseWords ( TesseractEngine engine, Stream document, BlockingCollection < DocumentContent > contents, CancellationToken cancellationToken )
         {
             using var buffer = new MemoryStream ( );
 
@@ -67,7 +67,7 @@ namespace Omnidoc.Image
                         {
                             cancellationToken.ThrowIfCancellationRequested ( );
 
-                            contents.Add ( ExtractWord ( iterator ) );
+                            contents.Add ( ParseWord ( iterator ) );
                         }
                         while ( iterator.Next ( PageIteratorLevel.TextLine, PageIteratorLevel.Word ) );
                     }
@@ -78,7 +78,7 @@ namespace Omnidoc.Image
             while ( iterator.Next ( PageIteratorLevel.Block ) );
         }
 
-        private static DocumentText ExtractWord ( ResultIterator iterator )
+        private static DocumentText ParseWord ( ResultIterator iterator )
         {
             var startBlock     = iterator.IsAtBeginningOf ( PageIteratorLevel.Block    );
             var startParagraph = iterator.IsAtBeginningOf ( PageIteratorLevel.Para     );
