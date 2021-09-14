@@ -7,13 +7,13 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Xps
 {
-    public class XpsDocumentTypeReader : IDocumentTypeReader
+    public class XpsDocumentTypeDetector : IDocumentTypeDetector
     {
         public static IReadOnlyCollection < byte [ ] > MagicNumbers { get; } = new [ ] { MagicNumber.From ( (byte) 'P', (byte) 'K', 0x03, 0x04 ) };
 
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps };
 
-        public DocumentType? ReadDocumentType ( Stream stream )
+        public DocumentType? DetectType ( Stream stream )
         {
             if ( stream is null )
                 throw new ArgumentNullException ( nameof ( stream ) );

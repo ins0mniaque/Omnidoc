@@ -7,7 +7,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {
-    public class ImageDocumentTypeReader : IDocumentTypeReader
+    public class ImageDocumentTypeDetector : IDocumentTypeDetector
     {
         public static IReadOnlyCollection < byte [ ] > MagicNumbers { get; } = new [ ]
         {
@@ -24,7 +24,7 @@ namespace Omnidoc.Image
 
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Bmp, DocumentTypes.Gif, DocumentTypes.Jpeg, DocumentTypes.Png, DocumentTypes.Tiff };
 
-        public DocumentType? ReadDocumentType ( Stream stream )
+        public DocumentType? DetectType ( Stream stream )
         {
             if ( stream is null )
                 throw new ArgumentNullException ( nameof ( stream ) );

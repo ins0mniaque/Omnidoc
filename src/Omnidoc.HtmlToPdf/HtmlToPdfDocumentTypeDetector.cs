@@ -7,13 +7,13 @@ using Omnidoc.Services;
 
 namespace Omnidoc.HtmlToPdf
 {
-    public class HtmlToPdfDocumentTypeReader : IDocumentTypeReader
+    public class HtmlToPdfDocumentTypeDetector : IDocumentTypeDetector
     {
         public static IReadOnlyCollection < byte [ ] > MagicNumbers { get; } = new [ ] { MagicNumber.From ( "<" ), MagicNumber.From ( "%PDF" ) };
 
         public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Html, DocumentTypes.Pdf };
 
-        public DocumentType? ReadDocumentType ( Stream stream )
+        public DocumentType? DetectType ( Stream stream )
         {
             if ( stream is null )
                 throw new ArgumentNullException ( nameof ( stream ) );
