@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Omnidoc.Core\Omnidoc.Core.csproj" />
+    <ProjectReference Include="..\Omnidoc.Image.Core\Omnidoc.Image.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,8 +4,8 @@
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <NeutralLanguage>en</NeutralLanguage>
 
-    <Description>Omnidoc.Image.Ocr adds OCR (image to text) support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
-    <PackageTags>Omnidoc;Omnidoc.Image.Orc;ocr;image;document;extract;convert;preview;render</PackageTags>
+    <Description>Omnidoc.Image.Core adds image detection support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
+    <PackageTags>Omnidoc;Omnidoc.Image;image;document;extract;convert;preview;render</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,11 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Tesseract" Version="4.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Omnidoc.Image.Core\Omnidoc.Image.Core.csproj" />
+    <ProjectReference Include="..\Omnidoc.Core\Omnidoc.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
