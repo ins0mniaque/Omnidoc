@@ -10,11 +10,22 @@ namespace Omnidoc
 {
     public static class DataUri
     {
-        public const string Scheme = "data";
+        public  const string Scheme             = "data";
+        private const string DefaultContentType = "application/octet-stream";
 
         public static void Enable ( )
         {
             WebRequest.RegisterPrefix ( Scheme, new DataWebRequestFactory ( ) );
+        }
+
+        public static Uri Generate ( byte [ ] data )
+        {
+            return Generate ( data, null );
+        }
+
+        public static Uri Generate ( byte [ ] data, string? contentType )
+        {
+            return new Uri ( $"{ Scheme }:{ contentType ?? DefaultContentType };base64,{ Convert.ToBase64String ( data ) }" );
         }
 
         public static void Parse ( Uri uri, [ NotNull ] out byte [ ]? data )
@@ -66,7 +77,7 @@ namespace Omnidoc
             data        = decode ( content );
             contentType = parameters [ 0 ];
             if ( string.IsNullOrEmpty ( contentType ) )
-                contentType = "text/plain";
+                contentType = DefaultContentType;
 
             return true;
         }
