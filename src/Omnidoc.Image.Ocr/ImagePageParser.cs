@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using Tesseract;
 
-using Omnidoc.Content;
+using Omnidoc.Model;
 using Omnidoc.Services;
 
 namespace Omnidoc.Image
@@ -23,9 +23,9 @@ namespace Omnidoc.Image
         public TesseractEngine Engine { get; }
         public Stream          Page   { get; }
 
-        public async IAsyncEnumerable < DocumentContent > ParseAsync ( [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
+        public async IAsyncEnumerable < Content > ParseAsync ( [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
         {
-            using var contents = new BlockingCollection < DocumentContent > ( );
+            using var contents = new BlockingCollection < Content > ( );
 
             var reading = Task.Run ( ( ) => ParseWords ( Engine, Page, contents, cancellationToken ), cancellationToken );
 
@@ -35,7 +35,7 @@ namespace Omnidoc.Image
             await reading.ConfigureAwait ( false );
         }
 
-        private static void ParseWords ( TesseractEngine engine, Stream stream, BlockingCollection < DocumentContent > contents, CancellationToken cancellationToken )
+        private static void ParseWords ( TesseractEngine engine, Stream stream, BlockingCollection < Content > contents, CancellationToken cancellationToken )
         {
             using var buffer = new MemoryStream ( );
 
@@ -73,36 +73,34 @@ namespace Omnidoc.Image
             while ( iterator.Next ( PageIteratorLevel.Block ) );
         }
 
-        private static DocumentText ParseWord ( ResultIterator iterator )
+        private static Glyphs ParseWord ( ResultIterator iterator )
         {
-            var startBlock     = iterator.IsAtBeginningOf ( PageIteratorLevel.Block    );
-            var startParagraph = iterator.IsAtBeginningOf ( PageIteratorLevel.Para     );
-            var startLine      = iterator.IsAtBeginningOf ( PageIteratorLevel.TextLine );
-            var endBlock       = iterator.IsAtFinalOf     ( PageIteratorLevel.Block,    PageIteratorLevel.Word );
-            var endParagraph   = iterator.IsAtFinalOf     ( PageIteratorLevel.Para,     PageIteratorLevel.Word );
-            var endLine        = iterator.IsAtFinalOf     ( PageIteratorLevel.TextLine, PageIteratorLevel.Word );
-            var markers        = ( startBlock     ? DocumentMarkers.StartBlock     : DocumentMarkers.None ) |
-                                 ( startParagraph ? DocumentMarkers.StartParagraph : DocumentMarkers.None ) |
-                                 ( startLine      ? DocumentMarkers.StartLine      : DocumentMarkers.None ) |
-                                 ( endBlock       ? DocumentMarkers.EndBlock       : DocumentMarkers.None ) |
-                                 ( endParagraph   ? DocumentMarkers.EndParagraph   : DocumentMarkers.None ) |
-                                 ( endLine        ? DocumentMarkers.EndLine        : DocumentMarkers.None );
+            var blockStart     = iterator.IsAtBeginningOf ( PageIteratorLevel.Block );
+            var blockEnd       = iterator.IsAtFinalOf     ( PageIteratorLevel.Block,    PageIteratorLevel.Word );
+            var paragraphStart = iterator.IsAtBeginningOf ( PageIteratorLevel.Para );
+            var paragraphEnd   = iterator.IsAtFinalOf     ( PageIteratorLevel.Para,     PageIteratorLevel.Word );
+            var lineStart      = iterator.IsAtBeginningOf ( PageIteratorLevel.TextLine );
+            var lineEnd        = iterator.IsAtFinalOf     ( PageIteratorLevel.TextLine, PageIteratorLevel.Word );
+            var levels         = ( blockStart     ? Levels.BlockStart     : Levels.None ) |
+                                 ( blockEnd       ? Levels.BlockEnd       : Levels.None ) |
+                                 ( paragraphStart ? Levels.ParagraphStart : Levels.None ) |
+                                 ( paragraphEnd   ? Levels.ParagraphEnd   : Levels.None ) |
+                                 ( lineStart      ? Levels.LineStart      : Levels.None ) |
+                                 ( lineEnd        ? Levels.LineEnd        : Levels.None );
 
             var font    = iterator.GetWordFontAttributes ( );
-            var content = new DocumentText ( iterator.GetText ( PageIteratorLevel.Word ) )
+            var content = new Glyphs ( iterator.GetText ( PageIteratorLevel.Word ) )
             {
-                Font       = font.FontInfo.Name,
-                FontSize   = font.PointSize,
-                FontWeight = font.FontInfo.IsBold ? 700 : 400,
-                Markers    = markers
+                Levels = levels,
+                Font   = new Font { Name   = font.FontInfo.Name,
+                                    Size   = font.PointSize,
+                                    Weight = font.FontInfo.IsBold ? 700 : 400 }
             };
 
             if ( iterator.TryGetBoundingBox ( PageIteratorLevel.Word, out var bounds ) )
             {
-                content.Left   = bounds.X1;
-                content.Top    = bounds.Y1;
-                content.Right  = bounds.X2;
-                content.Bottom = bounds.Y2;
+                content.Position = new Point ( bounds.X1, bounds.Y1 );
+                content.Size     = new Size  ( bounds.X2 - bounds.X1, bounds.Y2 - bounds.Y1 );
             }
 
             return content;

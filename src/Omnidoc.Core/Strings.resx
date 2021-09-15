@@ -24,8 +24,17 @@
 	<data name="Error_FailedToRemoveContent" xml:space="preserve">
 		<value>Failed to remove {0} to page</value>
 	</data>
+	<data name="Error_InvalidAttachment" xml:space="preserve">
+		<value>Invalid attachment</value>
+	</data>
 	<data name="Error_InvalidDataUri" xml:space="preserve">
 		<value>Invalid data uri</value>
+	</data>
+	<data name="Error_InvalidFormat" xml:space="preserve">
+		<value>Invalid {0} format: {1}</value>
+	</data>
+	<data name="Error_MustBeNonNegative" xml:space="preserve">
+		<value>{0} must be non-negative</value>
 	</data>
 	<data name="Error_StreamMustBeSeekable" xml:space="preserve">
 		<value>Stream must be seekable. Try calling {0} beforehand.</value>

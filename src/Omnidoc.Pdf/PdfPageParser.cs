@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 using PDFiumCore;
 
-using Omnidoc.Content;
 using Omnidoc.Interop;
+using Omnidoc.Model;
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
@@ -25,9 +25,9 @@ namespace Omnidoc.Pdf
 
         public FpdfPageT Page { get; }
 
-        public async IAsyncEnumerable < DocumentContent > ParseAsync ( [ EnumeratorCancellation ] CancellationToken cancellationToken )
+        public async IAsyncEnumerable < Content > ParseAsync ( [ EnumeratorCancellation ] CancellationToken cancellationToken )
         {
-            using var contents = new BlockingCollection < DocumentContent > ( );
+            using var contents = new BlockingCollection < Content > ( );
 
             var reading = Task.Run ( ( ) => Parse ( Page, contents, cancellationToken ), cancellationToken );
 
@@ -37,7 +37,7 @@ namespace Omnidoc.Pdf
             await reading.ConfigureAwait ( false );
         }
 
-        private static void Parse ( FpdfPageT page, BlockingCollection < DocumentContent > contents, CancellationToken cancellationToken )
+        private static void Parse ( FpdfPageT page, BlockingCollection < Content > contents, CancellationToken cancellationToken )
         {
             using var textPage = FPDFTextLoadPage ( page ).AsDisposable ( FPDFTextClosePage );
 
@@ -57,16 +57,14 @@ namespace Omnidoc.Pdf
                 FPDFTextGetFillColor ( textPage, index, ref r, ref g, ref b, ref a );
 
                 var text    = PdfString.Alloc ( (ref ushort buffer, int length) => FPDFTextGetBoundedText ( textPage, left, top, right, bottom, ref buffer, length ) );
-                var content = new DocumentText ( text )
+                var content = new Glyphs ( text )
                 {
-                    Left       = left,
-                    Top        = top,
-                    Right      = right,
-                    Bottom     = bottom,
-                    Color      = $"#{a:x2}{r:x2}{g:x2}{b:x2}",
-                    Font       = font,
-                    FontSize   = FPDFTextGetFontSize   ( textPage, index ),
-                    FontWeight = FPDFTextGetFontWeight ( textPage, index )
+                    Position = new Point ( left, top ),
+                    Size     = new Size  ( right - left, bottom - top ),
+                    Fill     = $"#{a:x2}{r:x2}{g:x2}{b:x2}",
+                    Font     = new Font { Name   = font,
+                                          Size   = FPDFTextGetFontSize   ( textPage, index ),
+                                          Weight = FPDFTextGetFontWeight ( textPage, index ) }
                 };
 
                 contents.Add ( content );

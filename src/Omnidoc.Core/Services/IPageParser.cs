@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 
-using Omnidoc.Content;
+using Omnidoc.Model;
 
 namespace Omnidoc.Services
 {
     public interface IPageParser : IDisposable
     {
-        IAsyncEnumerable < DocumentContent > ParseAsync ( CancellationToken cancellationToken = default );
+        IAsyncEnumerable < Content > ParseAsync ( CancellationToken cancellationToken = default );
     }
 }

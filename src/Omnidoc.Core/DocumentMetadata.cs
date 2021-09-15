@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using Omnidoc.Dynamic;
+using Omnidoc.Collections;
 
 namespace Omnidoc
 {

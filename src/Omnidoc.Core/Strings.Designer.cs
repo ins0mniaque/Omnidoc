@@ -71,9 +71,27 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_InvalidAttachment {
+            get {
+                return ResourceManager.GetString("Error_InvalidAttachment", resourceCulture);
+            }
+        }
+        
         internal static string Error_InvalidDataUri {
             get {
                 return ResourceManager.GetString("Error_InvalidDataUri", resourceCulture);
+            }
+        }
+        
+        internal static string Error_InvalidFormat {
+            get {
+                return ResourceManager.GetString("Error_InvalidFormat", resourceCulture);
+            }
+        }
+        
+        internal static string Error_MustBeNonNegative {
+            get {
+                return ResourceManager.GetString("Error_MustBeNonNegative", resourceCulture);
             }
         }
         

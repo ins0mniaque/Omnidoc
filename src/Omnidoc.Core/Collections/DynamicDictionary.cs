@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 
-namespace Omnidoc.Dynamic
+namespace Omnidoc.Collections
 {
     public class DynamicDictionary : DynamicObject, IDictionary < string, object? >
     {

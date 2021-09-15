@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Omnidoc.Content;
+using Omnidoc.Model;
 using Omnidoc.Services;
 
 namespace Omnidoc
@@ -28,7 +28,7 @@ namespace Omnidoc
         IEnumerable < IDocumentRenderer >       GetRenderers       ( DocumentType type ) => GetServices < IDocumentRenderer >       ( type );
         IEnumerable < IDocumentWriter >         GetWriters         ( DocumentType type ) => GetServices < IDocumentWriter >         ( type );
 
-        IEnumerable < IDocumentWriter > GetWriters < TContent > ( DocumentType type ) where TContent : DocumentContent
+        IEnumerable < IDocumentWriter > GetWriters < TContent > ( DocumentType type ) where TContent : Content
         {
             return GetServices < IDocumentWriter > ( type ).Where ( writer => writer.Supports < TContent > ( ) );
         }
@@ -50,7 +50,7 @@ namespace Omnidoc
         IDocumentRenderer?       GetRenderer       ( DocumentType type ) => GetRenderers       ( type ).FirstOrDefault ( );
         IDocumentWriter?         GetWriter         ( DocumentType type ) => GetWriters         ( type ).FirstOrDefault ( );
 
-        IDocumentWriter? GetWriter < TContent > ( DocumentType type ) where TContent : DocumentContent
+        IDocumentWriter? GetWriter < TContent > ( DocumentType type ) where TContent : Content
         {
             return GetWriters < TContent > ( type ).FirstOrDefault ( );
         }
