@@ -6,6 +6,6 @@ namespace Omnidoc.Services
 {
     public interface IDocumentMetadataReader : IDocumentService
     {
-        Task < DocumentMetadata > ReadAsync ( Stream stream, CancellationToken cancellationToken = default );
+        Task < DocumentMetadata > ReadMetadataAsync ( Stream stream, CancellationToken cancellationToken = default );
     }
 }

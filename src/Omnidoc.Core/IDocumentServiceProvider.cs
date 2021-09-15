@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Omnidoc.Content;
 using Omnidoc.Services;
 
 namespace Omnidoc
@@ -23,7 +24,14 @@ namespace Omnidoc
         IEnumerable < IDocumentMetadataReader > GetMetadataReaders ( DocumentType type ) => GetServices < IDocumentMetadataReader > ( type );
         IEnumerable < IDocumentParser >         GetParsers         ( DocumentType type ) => GetServices < IDocumentParser >         ( type );
         IEnumerable < IDocumentPreviewer >      GetPreviewers      ( DocumentType type ) => GetServices < IDocumentPreviewer >      ( type );
+        IEnumerable < IDocumentReader >         GetReaders         ( DocumentType type ) => GetServices < IDocumentReader >         ( type );
         IEnumerable < IDocumentRenderer >       GetRenderers       ( DocumentType type ) => GetServices < IDocumentRenderer >       ( type );
+        IEnumerable < IDocumentWriter >         GetWriters         ( DocumentType type ) => GetServices < IDocumentWriter >         ( type );
+
+        IEnumerable < IDocumentWriter > GetWriters < TContent > ( DocumentType type ) where TContent : DocumentContent
+        {
+            return GetServices < IDocumentWriter > ( type ).Where ( writer => writer.Supports < TContent > ( ) );
+        }
 
         T? GetService < T > ( DocumentType type ) where T : IDocumentService
         {
@@ -37,7 +45,14 @@ namespace Omnidoc
 
         IDocumentMetadataReader? GetMetadataReader ( DocumentType type ) => GetMetadataReaders ( type ).FirstOrDefault ( );
         IDocumentParser?         GetParser         ( DocumentType type ) => GetParsers         ( type ).FirstOrDefault ( );
+        IDocumentReader?         GetReader         ( DocumentType type ) => GetReaders         ( type ).FirstOrDefault ( );
         IDocumentPreviewer?      GetPreviewer      ( DocumentType type ) => GetPreviewers      ( type ).FirstOrDefault ( );
         IDocumentRenderer?       GetRenderer       ( DocumentType type ) => GetRenderers       ( type ).FirstOrDefault ( );
+        IDocumentWriter?         GetWriter         ( DocumentType type ) => GetWriters         ( type ).FirstOrDefault ( );
+
+        IDocumentWriter? GetWriter < TContent > ( DocumentType type ) where TContent : DocumentContent
+        {
+            return GetWriters < TContent > ( type ).FirstOrDefault ( );
+        }
     }
 }

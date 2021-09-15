@@ -32,9 +32,9 @@ namespace Omnidoc.Xps
             return Task.FromResult ( Document.Entries.Count ( IsPage ) );
         }
 
-        public Task < T > GetPageAsync ( int page, CancellationToken cancellationToken )
+        public Task < T > GetPageAsync ( int index, CancellationToken cancellationToken )
         {
-            return Task.FromResult ( Factory ( FindPage ( Document, page ) ) );
+            return Task.FromResult ( Factory ( FindPage ( Document, index ) ) );
         }
 
         // TODO: Improve page counting
@@ -44,9 +44,9 @@ namespace Omnidoc.Xps
         }
 
         // TODO: Improve page finding
-        private static ZipArchiveEntry FindPage ( ZipArchive document, int page )
+        private static ZipArchiveEntry FindPage ( ZipArchive document, int index )
         {
-            return document.GetEntry ( $"/Documents/1/Pages/{ page + 1 }.fpage" );
+            return document.GetEntry ( $"/Documents/1/Pages/{ index + 1 }.fpage" );
         }
 
         private bool isDisposed;

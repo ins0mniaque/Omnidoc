@@ -34,9 +34,9 @@ namespace Omnidoc.Pdf
             return Task.FromResult ( FPDF_GetPageCount ( Document ) );
         }
 
-        public Task < T > GetPageAsync ( int page, CancellationToken cancellationToken )
+        public Task < T > GetPageAsync ( int index, CancellationToken cancellationToken )
         {
-            return Task.FromResult ( Factory ( FPDF_LoadPage ( Document, page ) ) );
+            return Task.FromResult ( Factory ( FPDF_LoadPage ( Document, index ) ) );
         }
 
         private bool isDisposed;

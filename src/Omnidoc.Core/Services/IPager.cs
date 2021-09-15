@@ -7,6 +7,6 @@ namespace Omnidoc.Services
     public interface IPager < T > : IDisposable
     {
         Task < int > GetPageCountAsync ( CancellationToken cancellationToken = default );
-        Task < T >   GetPageAsync      ( int page, CancellationToken cancellationToken = default );
+        Task < T >   GetPageAsync      ( int index, CancellationToken cancellationToken = default );
     }
 }

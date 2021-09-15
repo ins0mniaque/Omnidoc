@@ -53,9 +53,21 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_FailedToAddContent {
+            get {
+                return ResourceManager.GetString("Error_FailedToAddContent", resourceCulture);
+            }
+        }
+        
         internal static string Error_FailedToCreateBufferStream {
             get {
                 return ResourceManager.GetString("Error_FailedToCreateBufferStream", resourceCulture);
+            }
+        }
+        
+        internal static string Error_FailedToRemoveContent {
+            get {
+                return ResourceManager.GetString("Error_FailedToRemoveContent", resourceCulture);
             }
         }
         

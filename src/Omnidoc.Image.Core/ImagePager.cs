@@ -32,7 +32,7 @@ namespace Omnidoc.Image
             return Task.FromResult ( 1 );
         }
 
-        public Task < T > GetPageAsync ( int page, CancellationToken cancellationToken )
+        public Task < T > GetPageAsync ( int index, CancellationToken cancellationToken )
         {
             return Task.FromResult ( Factory ( Document ) );
         }
