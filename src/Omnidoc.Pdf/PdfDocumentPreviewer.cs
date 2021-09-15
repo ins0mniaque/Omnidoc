@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Omnidoc.Interop;
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using PDFiumCore;
 
+using Omnidoc.Interop;
+
 namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
