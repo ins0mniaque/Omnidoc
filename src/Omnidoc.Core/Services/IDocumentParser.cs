@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
-
-using Omnidoc.Content;
+using System.Threading.Tasks;
 
 namespace Omnidoc.Services
 {
     public interface IDocumentParser : IDocumentService
     {
-        IAsyncEnumerable < DocumentContent > ParseAsync ( Stream document, CancellationToken cancellationToken = default );
+        Task < IPager < IPageParser > > PrepareAsync ( Stream document, CancellationToken cancellationToken = default );
     }
 }

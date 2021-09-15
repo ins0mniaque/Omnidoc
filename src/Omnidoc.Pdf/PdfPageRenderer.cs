@@ -27,16 +27,16 @@ namespace Omnidoc.Pdf
             return Page.RenderAsync ( output, options, cancellationToken );
         }
 
-        private bool closed;
+        private bool isDisposed;
 
         public void Dispose ( )
         {
-            if ( closed )
+            if ( isDisposed )
                 return;
 
             FPDF_ClosePage ( Page );
 
-            closed = true;
+            isDisposed = true;
         }
     }
 }

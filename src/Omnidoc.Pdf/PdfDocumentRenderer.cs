@@ -20,9 +20,9 @@ namespace Omnidoc.Pdf
 
         private static IPager < IPageRenderer > Prepare ( Stream document )
         {
-            using var fileAccess = document.ToFileAccess ( );
+            var fileAccess = document.ToFileAccess ( );
 
-            return new PdfPager < IPageRenderer > ( FPDF_LoadCustomDocument ( fileAccess, null ),
+            return new PdfPager < IPageRenderer > ( FPDF_LoadCustomDocument ( fileAccess, null ), fileAccess,
                                                     page => new PdfPageRenderer ( page ) );
         }
     }

@@ -1,42 +1,40 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-using PDFiumCore;
-
 using Omnidoc.Services;
 
-namespace Omnidoc.Pdf
+namespace Omnidoc.Image
 {
-    using static PDFiumCore.fpdfview;
-
-    public sealed class PdfPager < T > : IPager < T >
+    // TODO: Implement multi-page TIFF support
+    public sealed class ImagePager < T > : IPager < T >
     {
-        public PdfPager ( FpdfDocumentT document, Func < FpdfPageT, T > factory )
+        public ImagePager ( Stream document, Func < Stream, T > factory )
         {
             Document = document;
             Factory  = factory;
         }
 
-        public PdfPager ( FpdfDocumentT document, IDisposable disposable, Func < FpdfPageT, T > factory )
+        public ImagePager ( Stream document, IDisposable disposable, Func < Stream, T > factory )
         {
             Document   = document;
             Disposable = disposable;
             Factory    = factory;
         }
 
-        public  FpdfDocumentT         Document   { get; }
-        private IDisposable?          Disposable { get; }
-        private Func < FpdfPageT, T > Factory    { get; }
+        public  Stream             Document   { get; }
+        private IDisposable?       Disposable { get; }
+        private Func < Stream, T > Factory    { get; }
 
         public Task < int > GetPageCountAsync ( CancellationToken cancellationToken )
         {
-            return Task.FromResult ( FPDF_GetPageCount ( Document ) );
+            return Task.FromResult ( 1 );
         }
 
         public Task < T > GetPageAsync ( int page, CancellationToken cancellationToken )
         {
-            return Task.FromResult ( Factory ( FPDF_LoadPage ( Document, page ) ) );
+            return Task.FromResult ( Factory ( Document ) );
         }
 
         private bool isDisposed;
@@ -45,7 +43,7 @@ namespace Omnidoc.Pdf
         {
             if ( ! isDisposed )
             {
-                FPDF_CloseDocument  ( Document );
+                Document   .Dispose ( );
                 Disposable?.Dispose ( );
 
                 isDisposed = true;
