@@ -4,7 +4,7 @@ using System.Globalization;
 
 using Omnidoc.Collections;
 
-namespace Omnidoc.Model
+namespace Omnidoc
 {
     [ Serializable ]
     public struct Size : IEquatable < Size >, IFormattable

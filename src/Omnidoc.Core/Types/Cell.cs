@@ -3,7 +3,7 @@ using System.Globalization;
 
 using Omnidoc.Collections;
 
-namespace Omnidoc.Model
+namespace Omnidoc
 {
     [ Serializable ]
     public struct Cell : IEquatable < Cell >, IFormattable
