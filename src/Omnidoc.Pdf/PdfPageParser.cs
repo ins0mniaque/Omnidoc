@@ -25,7 +25,7 @@ namespace Omnidoc.Pdf
 
         public FpdfPageT Page { get; }
 
-        public async IAsyncEnumerable < Content > ParseAsync ( [ EnumeratorCancellation ] CancellationToken cancellationToken )
+        public async IAsyncEnumerable < Content > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken )
         {
             using var contents = new BlockingCollection < Content > ( );
 

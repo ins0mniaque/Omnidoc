@@ -23,7 +23,7 @@ namespace Omnidoc.Image
         public TesseractEngine Engine { get; }
         public Stream          Page   { get; }
 
-        public async IAsyncEnumerable < Content > ParseAsync ( [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
+        public async IAsyncEnumerable < Content > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
         {
             using var contents = new BlockingCollection < Content > ( );
 
@@ -86,7 +86,8 @@ namespace Omnidoc.Image
                                  ( paragraphStart ? Levels.ParagraphStart : Levels.None ) |
                                  ( paragraphEnd   ? Levels.ParagraphEnd   : Levels.None ) |
                                  ( lineStart      ? Levels.LineStart      : Levels.None ) |
-                                 ( lineEnd        ? Levels.LineEnd        : Levels.None );
+                                 ( lineEnd        ? Levels.LineEnd        : Levels.None ) |
+                                 Levels.WordStart | Levels.WordEnd;
 
             var font    = iterator.GetWordFontAttributes ( );
             var content = new Glyphs ( iterator.GetText ( PageIteratorLevel.Word ) )

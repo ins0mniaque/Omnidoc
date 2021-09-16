@@ -8,6 +8,6 @@ namespace Omnidoc.Services
 {
     public interface IPageParser : IDisposable
     {
-        IAsyncEnumerable < Content > ParseAsync ( CancellationToken cancellationToken = default );
+        IAsyncEnumerable < Content > ParseAsync ( ParserOptions options, CancellationToken cancellationToken = default );
     }
 }
