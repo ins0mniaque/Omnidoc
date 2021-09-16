@@ -89,6 +89,12 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_MalformedDocument {
+            get {
+                return ResourceManager.GetString("Error_MalformedDocument", resourceCulture);
+            }
+        }
+        
         internal static string Error_MustBeNonNegative {
             get {
                 return ResourceManager.GetString("Error_MustBeNonNegative", resourceCulture);

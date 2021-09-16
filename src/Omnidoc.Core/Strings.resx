@@ -33,6 +33,9 @@
 	<data name="Error_InvalidFormat" xml:space="preserve">
 		<value>Invalid {0} format: {1}</value>
 	</data>
+	<data name="Error_MalformedDocument" xml:space="preserve">
+		<value>Document is malformed: {0} {1} without {2}</value>
+	</data>
 	<data name="Error_MustBeNonNegative" xml:space="preserve">
 		<value>{0} must be non-negative</value>
 	</data>
