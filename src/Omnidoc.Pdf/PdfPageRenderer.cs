@@ -19,8 +19,8 @@ namespace Omnidoc.Pdf
 
         public FpdfPageT Page { get; }
 
-        public double PageWidth  => FPDF_GetPageWidth  ( Page );
-        public double PageHeight => FPDF_GetPageHeight ( Page );
+        public Size PageSize => new Size ( FPDF_GetPageWidth  ( Page ),
+                                           FPDF_GetPageHeight ( Page ) );
 
         public Task RenderAsync ( Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {

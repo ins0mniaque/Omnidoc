@@ -7,8 +7,7 @@ namespace Omnidoc.Services
 {
     public interface IPageRenderer : IDisposable
     {
-        public double PageWidth  { get; }
-        public double PageHeight { get; }
+        public Size PageSize { get; }
 
         Task RenderAsync ( Stream output, RenderingOptions options, CancellationToken cancellationToken = default );
     }
