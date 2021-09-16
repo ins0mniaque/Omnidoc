@@ -24,6 +24,20 @@ namespace Omnidoc
         Paragraph = 1 << Level.Paragraph,
         Line      = 1 << Level.Line,
         Word      = 1 << Level.Word,
+        All       = Document  |
+                    Page      |
+                    Link      |
+                    Block     |
+                    Table     |
+                    Header    |
+                    Footer    |
+                    Row       |
+                    Cell      |
+                    Vertex    |
+                    Edge      |
+                    Paragraph |
+                    Line      |
+                    Word,
 
         DocumentStart  = Document  | Start,
         PageStart      = Page      | Start,
