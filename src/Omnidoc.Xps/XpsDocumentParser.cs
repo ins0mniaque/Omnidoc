@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Omnidoc.Model;
 using Omnidoc.Services;
 
 namespace Omnidoc.Xps
 {
     public class XpsDocumentParser : IDocumentParser
     {
-        public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps };
+        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        (
+            new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps },
+            new [ ] { typeof ( Content ) }
+        );
+
+        public IDocumentServiceDescriptor Descriptor => descriptor;
 
         public Task < IPager < IPageParser > > PrepareAsync ( Stream document, CancellationToken cancellationToken = default )
         {

@@ -107,6 +107,12 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_TypeMismatch {
+            get {
+                return ResourceManager.GetString("Error_TypeMismatch", resourceCulture);
+            }
+        }
+        
         internal static string Error_UnsupportedConverterChain {
             get {
                 return ResourceManager.GetString("Error_UnsupportedConverterChain", resourceCulture);

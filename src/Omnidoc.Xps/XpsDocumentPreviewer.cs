@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -13,10 +12,15 @@ namespace Omnidoc.Xps
 {
     public class XpsDocumentPreviewer : IDocumentPreviewer
     {
+        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        (
+            new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps }
+        );
+
         private static readonly XNamespace xmlns         = "http://schemas.openxmlformats.org/package/2006/relationships";
         private const           string     thumbnailType = "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail";
 
-        public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps };
+        public IDocumentServiceDescriptor Descriptor => descriptor;
 
         public async Task PreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {

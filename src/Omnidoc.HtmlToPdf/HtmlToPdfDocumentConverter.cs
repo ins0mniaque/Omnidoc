@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,8 +12,13 @@ namespace Omnidoc.HtmlToPdf
 {
     public class HtmlToPdfDocumentConverter : IDocumentConverter
     {
-        public IReadOnlyCollection < DocumentType > Types       { get; } = new [ ] { DocumentTypes.Html };
-        public IReadOnlyCollection < DocumentType > OutputTypes { get; } = new [ ] { DocumentTypes.Pdf  };
+        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        (
+            new [ ] { DocumentTypes.Html },
+            new [ ] { DocumentTypes.Pdf }
+        );
+
+        public IDocumentServiceDescriptor Descriptor => descriptor;
 
         public async Task ConvertAsync ( Stream document, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
         {

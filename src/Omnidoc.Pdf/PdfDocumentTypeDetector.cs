@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 using Omnidoc.IO;
@@ -9,16 +8,24 @@ namespace Omnidoc.Pdf
 {
     public class PdfDocumentTypeDetector : IDocumentTypeDetector
     {
-        public static IReadOnlyCollection < byte [ ] > MagicNumbers { get; } = new [ ] { MagicNumber.From ( "%PDF" ) };
+        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        (
+            new [ ] { DocumentTypes.Pdf }
+        );
 
-        public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Pdf };
+        private static readonly byte [ ] [ ] magicNumbers = new [ ]
+        {
+            MagicNumber.From ( "%PDF" )
+        };
+
+        public IDocumentServiceDescriptor Descriptor => descriptor;
 
         public DocumentType? DetectType ( Stream stream )
         {
             if ( stream is null )
                 throw new ArgumentNullException ( nameof ( stream ) );
 
-            return stream.Match ( MagicNumbers ) switch
+            return stream.Match ( magicNumbers ) switch
             {
                 0 => DocumentTypes.Pdf,
                 _ => null

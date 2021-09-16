@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +11,13 @@ namespace Omnidoc.Pdf
 
     public class PdfDocumentPreviewer : IDocumentPreviewer
     {
-        public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Pdf };
+        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        (
+            new [ ] { DocumentTypes.Pdf },
+            new [ ] { DocumentTypes.Bmp }
+        );
+
+        public IDocumentServiceDescriptor Descriptor => descriptor;
 
         public async Task PreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {

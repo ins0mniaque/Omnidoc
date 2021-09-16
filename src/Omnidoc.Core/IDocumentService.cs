@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Omnidoc.Services;
 
 namespace Omnidoc
 {
     public interface IDocumentService
     {
-        IReadOnlyCollection < DocumentType > Types { get; }
+        IDocumentServiceDescriptor Descriptor { get; }
     }
 }

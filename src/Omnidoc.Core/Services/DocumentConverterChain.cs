@@ -15,13 +15,14 @@ namespace Omnidoc.Services
         public DocumentConverterChain ( IEnumerable < IDocumentConverter > chain ) : this ( chain.ToArray ( ) ) { }
         public DocumentConverterChain ( params IDocumentConverter [ ] chain )
         {
-            Chain = chain;
+            Chain      = chain;
+            Descriptor = new DocumentServiceDescriptor ( chain [  0 ].Descriptor.Types,
+                                                         chain [ ^1 ].Descriptor.OutputTypes );
         }
 
         protected IReadOnlyList < IDocumentConverter > Chain { get; }
 
-        public virtual IReadOnlyCollection < DocumentType > Types       => Chain [  0 ].Types;
-        public virtual IReadOnlyCollection < DocumentType > OutputTypes => Chain [ ^1 ].OutputTypes;
+        public IDocumentServiceDescriptor Descriptor { get; }
 
         public virtual async Task ConvertAsync ( Stream document, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
         {
@@ -67,7 +68,7 @@ namespace Omnidoc.Services
             if ( converter     is null ) throw new ArgumentNullException ( nameof ( converter     ) );
             if ( nextConverter is null ) throw new ArgumentNullException ( nameof ( nextConverter ) );
 
-            return converter.OutputTypes.Intersect ( nextConverter.Types ).FirstOrDefault ( ) ??
+            return converter.Descriptor.OutputTypes.Intersect ( nextConverter.Descriptor.Types ).FirstOrDefault ( ) ??
                    throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture,
                                                                      Strings.Error_UnsupportedConverterChain,
                                                                      converter    .GetType ( ).Name,

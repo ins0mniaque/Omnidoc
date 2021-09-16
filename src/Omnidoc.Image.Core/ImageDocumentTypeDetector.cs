@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 using Omnidoc.IO;
@@ -9,7 +8,12 @@ namespace Omnidoc.Image
 {
     public class ImageDocumentTypeDetector : IDocumentTypeDetector
     {
-        public static IReadOnlyCollection < byte [ ] > MagicNumbers { get; } = new [ ]
+        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        (
+            new [ ] { DocumentTypes.Bmp, DocumentTypes.Gif, DocumentTypes.Jpeg, DocumentTypes.Png, DocumentTypes.Tiff }
+        );
+
+        private static readonly byte [ ] [ ] magicNumbers = new [ ]
         {
             MagicNumber.From ( "BM" ),
             MagicNumber.From ( "GIF87a" ),
@@ -22,14 +26,14 @@ namespace Omnidoc.Image
             MagicNumber.From ( "MM.+" )
         };
 
-        public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Bmp, DocumentTypes.Gif, DocumentTypes.Jpeg, DocumentTypes.Png, DocumentTypes.Tiff };
+        public IDocumentServiceDescriptor Descriptor => descriptor;
 
         public DocumentType? DetectType ( Stream stream )
         {
             if ( stream is null )
                 throw new ArgumentNullException ( nameof ( stream ) );
 
-            return stream.Match ( MagicNumbers ) switch
+            return stream.Match ( magicNumbers ) switch
             {
                 0 => DocumentTypes.Bmp,
                 1 => DocumentTypes.Gif,

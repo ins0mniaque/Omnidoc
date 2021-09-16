@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using Omnidoc.Model;
@@ -13,12 +12,12 @@ namespace Omnidoc
 
         IEnumerable < T > GetServices < T > ( DocumentType type ) where T : IDocumentService
         {
-            return GetServices ( ).OfType < T > ( ).Where ( service => service.Types.Contains ( type ) );
+            return GetServices ( ).OfType < T > ( ).Where ( service => service.Descriptor.Supports ( type ) );
         }
 
         IEnumerable < IDocumentConverter > GetConverters ( DocumentType inputType, DocumentType outputType )
         {
-            return GetServices < IDocumentConverter > ( inputType ).Where ( converter => converter.OutputTypes.Contains ( outputType ) );
+            return GetServices < IDocumentConverter > ( inputType ).Where ( converter => converter.Descriptor.Outputs ( outputType ) );
         }
 
         IEnumerable < IDocumentMetadataReader > GetMetadataReaders ( DocumentType type ) => GetServices < IDocumentMetadataReader > ( type );

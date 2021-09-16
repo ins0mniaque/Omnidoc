@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 using Omnidoc.IO;
@@ -9,9 +8,18 @@ namespace Omnidoc.HtmlToPdf
 {
     public class HtmlToPdfDocumentTypeDetector : IDocumentTypeDetector
     {
-        public static IReadOnlyCollection < byte [ ] > MagicNumbers { get; } = new [ ] { MagicNumber.From ( "<" ), MagicNumber.From ( "%PDF" ) };
+        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        (
+            new [ ] { DocumentTypes.Html, DocumentTypes.Pdf }
+        );
 
-        public IReadOnlyCollection < DocumentType > Types { get; } = new [ ] { DocumentTypes.Html, DocumentTypes.Pdf };
+        private static readonly byte [ ] [ ] magicNumbers = new [ ]
+        {
+            MagicNumber.From ( "<" ),
+            MagicNumber.From ( "%PDF" )
+        };
+
+        public IDocumentServiceDescriptor Descriptor => descriptor;
 
         public DocumentType? DetectType ( Stream stream )
         {
@@ -19,7 +27,7 @@ namespace Omnidoc.HtmlToPdf
                 throw new ArgumentNullException ( nameof ( stream ) );
 
             // TODO: Improve HTML detection
-            return stream.Match ( MagicNumbers ) switch
+            return stream.Match ( magicNumbers ) switch
             {
                 0 => DocumentTypes.Html,
                 1 => DocumentTypes.Pdf,
