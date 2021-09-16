@@ -1,18 +1,19 @@
 ﻿using System;
 
-namespace Omnidoc.Model
+namespace Omnidoc
 {
     [ Flags ]
     public enum Levels
     {
         None = 0,
 
+        Start = End >> 1,
+        End   = 1   << 31,
+
         Document  = 1 << Level.Document,
         Page      = 1 << Level.Page,
-        Block     = 1 << Level.Block,
-        Paragraph = 1 << Level.Paragraph,
-        Line      = 1 << Level.Line,
         Link      = 1 << Level.Link,
+        Block     = 1 << Level.Block,
         Table     = 1 << Level.Table,
         Header    = 1 << Level.Header,
         Footer    = 1 << Level.Footer,
@@ -20,35 +21,38 @@ namespace Omnidoc.Model
         Cell      = 1 << Level.Cell,
         Vertex    = 1 << Level.Vertex,
         Edge      = 1 << Level.Edge,
-
-        Start = End >> 1,
-        End   = 1   << 31,
+        Paragraph = 1 << Level.Paragraph,
+        Line      = 1 << Level.Line,
+        Word      = 1 << Level.Word,
 
         DocumentStart  = Document  | Start,
-        DocumentEnd    = Document  | End,
         PageStart      = Page      | Start,
-        PageEnd        = Page      | End,
-        BlockStart     = Block     | Start,
-        BlockEnd       = Block     | End,
-        ParagraphStart = Paragraph | Start,
-        ParagraphEnd   = Paragraph | End,
-        LineStart      = Line      | Start,
-        LineEnd        = Line      | End,
         LinkStart      = Link      | Start,
-        LinkEnd        = Link      | End,
+        BlockStart     = Block     | Start,
         TableStart     = Table     | Start,
-        TableEnd       = Table     | End,
         HeaderStart    = Header    | Start,
-        HeaderEnd      = Header    | End,
         FooterStart    = Footer    | Start,
-        FooterEnd      = Footer    | End,
         RowStart       = Row       | Start,
-        RowEnd         = Row       | End,
         CellStart      = Cell      | Start,
-        CellEnd        = Cell      | End,
         VertexStart    = Vertex    | Start,
-        VertexEnd      = Vertex    | End,
         EdgeStart      = Edge      | Start,
-        EdgeEnd        = Edge      | End
+        ParagraphStart = Paragraph | Start,
+        LineStart      = Line      | Start,
+        WordStart      = Word      | Start,
+
+        DocumentEnd    = Document  | End,
+        PageEnd        = Page      | End,
+        LinkEnd        = Link      | End,
+        BlockEnd       = Block     | End,
+        TableEnd       = Table     | End,
+        HeaderEnd      = Header    | End,
+        FooterEnd      = Footer    | End,
+        RowEnd         = Row       | End,
+        CellEnd        = Cell      | End,
+        VertexEnd      = Vertex    | End,
+        EdgeEnd        = Edge      | End,
+        ParagraphEnd   = Paragraph | End,
+        LineEnd        = Line      | End,
+        WordEnd        = Word      | End
     }
 }

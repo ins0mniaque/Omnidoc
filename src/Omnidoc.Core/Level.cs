@@ -1,19 +1,22 @@
-﻿namespace Omnidoc.Model
+﻿namespace Omnidoc
 {
     public enum Level
     {
+        None = -1,
+
         Document,
         Page,
-        Block,
-        Paragraph,
-        Line,
         Link,
+        Block,
         Table,
         Header,
         Footer,
         Row,
         Cell,
         Vertex,
-        Edge
+        Edge,
+        Paragraph,
+        Line,
+        Word
     }
 }
