@@ -2,15 +2,15 @@
 {
     public class Node
     {
-        public Node ( Level level, Content content )
+        public Node ( Level level, Element element )
         {
             Level    = level;
-            Content  = content;
+            Element  = element;
             Children = new NodeCollection ( );
         }
 
         public Level          Level    { get; }
-        public Content        Content  { get; }
+        public Element        Element  { get; }
         public NodeCollection Children { get; }
     }
 }

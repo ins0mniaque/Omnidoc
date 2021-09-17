@@ -23,19 +23,19 @@ namespace Omnidoc.Image
         public TesseractEngine Engine { get; }
         public Stream          Page   { get; }
 
-        public async IAsyncEnumerable < Content > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
+        public async IAsyncEnumerable < Element > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
         {
-            using var contents = new BlockingCollection < Content > ( );
+            using var elements = new BlockingCollection < Element > ( );
 
-            var reading = Task.Run ( ( ) => ParseWords ( Engine, Page, contents, cancellationToken ), cancellationToken );
+            var reading = Task.Run ( ( ) => ParseWords ( Engine, Page, elements, cancellationToken ), cancellationToken );
 
-            foreach ( var content in contents )
-                yield return content;
+            foreach ( var element in elements )
+                yield return element;
 
             await reading.ConfigureAwait ( false );
         }
 
-        private static void ParseWords ( TesseractEngine engine, Stream stream, BlockingCollection < Content > contents, CancellationToken cancellationToken )
+        private static void ParseWords ( TesseractEngine engine, Stream stream, BlockingCollection < Element > elements, CancellationToken cancellationToken )
         {
             using var buffer = new MemoryStream ( );
 
@@ -62,7 +62,7 @@ namespace Omnidoc.Image
                         {
                             cancellationToken.ThrowIfCancellationRequested ( );
 
-                            contents.Add ( ParseWord ( iterator ) );
+                            elements.Add ( ParseWord ( iterator ) );
                         }
                         while ( iterator.Next ( PageIteratorLevel.TextLine, PageIteratorLevel.Word ) );
                     }
@@ -90,7 +90,7 @@ namespace Omnidoc.Image
                                  Levels.WordStart | Levels.WordEnd;
 
             var font    = iterator.GetWordFontAttributes ( );
-            var content = new Glyphs ( iterator.GetText ( PageIteratorLevel.Word ) )
+            var element = new Glyphs ( iterator.GetText ( PageIteratorLevel.Word ) )
             {
                 Levels = levels,
                 Font   = new Font { Name   = font.FontInfo.Name,
@@ -100,11 +100,11 @@ namespace Omnidoc.Image
 
             if ( iterator.TryGetBoundingBox ( PageIteratorLevel.Word, out var bounds ) )
             {
-                content.Position = new Point ( bounds.X1, bounds.Y1 );
-                content.Size     = new Size  ( bounds.X2 - bounds.X1, bounds.Y2 - bounds.Y1 );
+                element.Position = new Point ( bounds.X1, bounds.Y1 );
+                element.Size     = new Size  ( bounds.X2 - bounds.X1, bounds.Y2 - bounds.Y1 );
             }
 
-            return content;
+            return element;
         }
 
         private bool isDisposed;

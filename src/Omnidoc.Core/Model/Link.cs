@@ -2,7 +2,7 @@
 
 namespace Omnidoc.Model
 {
-    public class Link : Content
+    public class Link : Element
     {
         public Link ( Uri uri )
         {

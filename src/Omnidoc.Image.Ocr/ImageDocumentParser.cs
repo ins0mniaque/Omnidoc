@@ -16,7 +16,7 @@ namespace Omnidoc.Image
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
             new [ ] { FileFormats.Bmp, FileFormats.Gif, FileFormats.Jpeg, FileFormats.Png, FileFormats.Tiff },
-            new [ ] { typeof ( Content ) }
+            new [ ] { typeof ( Element ) }
         );
 
         public static Func < TesseractEngine > CreateDefaultEngine { get; set; } = ( ) => new TesseractEngine ( @"tessdata", "eng" );

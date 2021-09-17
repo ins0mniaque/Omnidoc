@@ -26,24 +26,24 @@ namespace Omnidoc.Model
                 yield return nodes.Dequeue ( );
         }
 
-        public void Add ( Content content )
+        public void Add ( Element element )
         {
-            if ( content is null )
-                throw new ArgumentNullException ( nameof ( content ) );
+            if ( element is null )
+                throw new ArgumentNullException ( nameof ( element ) );
 
-            var level = content.Levels.Match ( Options.Levels ).Top ( );
+            var level = element.Levels.Match ( Options.Levels ).Top ( );
 
             if ( level != Level.None )
             {
-                if ( content.Levels.Is ( Levels.Start ) )
+                if ( element.Levels.Is ( Levels.Start ) )
                 {
                     if ( node != null )
                         stack.Push ( node );
 
-                    node = new Node ( level, content );
+                    node = new Node ( level, element );
                 }
 
-                if ( content.Levels.Is ( Levels.End ) )
+                if ( element.Levels.Is ( Levels.End ) )
                 {
                     if ( Options.Strict && node == null )
                         throw new InvalidOperationException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_MalformedDocument, level, Levels.End, Levels.Start ) );
@@ -61,7 +61,7 @@ namespace Omnidoc.Model
             }
 
             if ( node != null )
-                node.Children.Add ( new Node ( content.Levels.Top ( ), content ) );
+                node.Children.Add ( new Node ( element.Levels.Top ( ), element ) );
         }
 
         public void Flush ( )

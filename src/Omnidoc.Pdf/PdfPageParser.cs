@@ -25,19 +25,19 @@ namespace Omnidoc.Pdf
 
         public FpdfPageT Page { get; }
 
-        public async IAsyncEnumerable < Content > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken )
+        public async IAsyncEnumerable < Element > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken )
         {
-            using var contents = new BlockingCollection < Content > ( );
+            using var elements = new BlockingCollection < Element > ( );
 
-            var reading = Task.Run ( ( ) => Parse ( Page, contents, cancellationToken ), cancellationToken );
+            var reading = Task.Run ( ( ) => Parse ( Page, elements, cancellationToken ), cancellationToken );
 
-            foreach ( var content in contents )
-                yield return content;
+            foreach ( var element in elements )
+                yield return element;
 
             await reading.ConfigureAwait ( false );
         }
 
-        private static void Parse ( FpdfPageT page, BlockingCollection < Content > contents, CancellationToken cancellationToken )
+        private static void Parse ( FpdfPageT page, BlockingCollection < Element > elements, CancellationToken cancellationToken )
         {
             using var textPage = FPDFTextLoadPage ( page ).AsDisposable ( FPDFTextClosePage );
 
@@ -57,7 +57,7 @@ namespace Omnidoc.Pdf
                 FPDFTextGetFillColor ( textPage, index, ref r, ref g, ref b, ref a );
 
                 var text    = PdfString.Alloc ( (ref ushort buffer, int length) => FPDFTextGetBoundedText ( textPage, left, top, right, bottom, ref buffer, length ) );
-                var content = new Glyphs ( text )
+                var element = new Glyphs ( text )
                 {
                     Position = new Point ( left, top ),
                     Size     = new Size  ( right - left, bottom - top ),
@@ -67,10 +67,10 @@ namespace Omnidoc.Pdf
                                           Weight = FPDFTextGetFontWeight ( textPage, index ) }
                 };
 
-                contents.Add ( content );
+                elements.Add ( element );
             }
 
-            contents.CompleteAdding ( );
+            elements.CompleteAdding ( );
         }
 
         private bool isDisposed;

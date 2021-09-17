@@ -59,9 +59,9 @@ namespace Omnidoc {
             }
         }
         
-        internal static string Error_FailedToAddContent {
+        internal static string Error_FailedToAddElement {
             get {
-                return ResourceManager.GetString("Error_FailedToAddContent", resourceCulture);
+                return ResourceManager.GetString("Error_FailedToAddElement", resourceCulture);
             }
         }
         
@@ -71,9 +71,9 @@ namespace Omnidoc {
             }
         }
         
-        internal static string Error_FailedToRemoveContent {
+        internal static string Error_FailedToRemoveElement {
             get {
-                return ResourceManager.GetString("Error_FailedToRemoveContent", resourceCulture);
+                return ResourceManager.GetString("Error_FailedToRemoveElement", resourceCulture);
             }
         }
         

@@ -11,13 +11,13 @@ namespace Omnidoc.Services
     {
         IEnumerable < FileFormat > Formats       { get; }
         IEnumerable < FileFormat > OutputFormats { get; }
-        IEnumerable < Type >       ContentTypes  { get; }
+        IEnumerable < Type >       ElementTypes  { get; }
 
         bool Supports ( FileFormat format ) => Formats      .Contains ( format );
         bool Outputs  ( FileFormat format ) => OutputFormats.Contains ( format );
 
-        bool Supports < TContent > ( )        => Supports ( typeof ( TContent ) );
-        bool Supports ( Content content     ) => Supports ( content?.GetType ( ) ?? throw new ArgumentNullException ( nameof ( content ) ) );
-        bool Supports ( Type    contentType ) => ContentTypes.Any ( type => type.IsAssignableFrom ( contentType ) );
+        bool Supports < TElement > ( )        => Supports ( typeof ( TElement ) );
+        bool Supports ( Element element     ) => Supports ( element?.GetType ( ) ?? throw new ArgumentNullException ( nameof ( element ) ) );
+        bool Supports ( Type    elementType ) => ElementTypes.Any ( type => type.IsAssignableFrom ( elementType ) );
     }
 }

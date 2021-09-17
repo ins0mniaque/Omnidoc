@@ -18,7 +18,7 @@ namespace Omnidoc.Xps
 
         public ZipArchiveEntry Page { get; }
 
-        public async IAsyncEnumerable < Content > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
+        public async IAsyncEnumerable < Element > ParseAsync ( ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken = default )
         {
             var page = await XDocument.LoadAsync      ( Page.Open ( ), LoadOptions.None, cancellationToken )
                                       .ConfigureAwait ( false );

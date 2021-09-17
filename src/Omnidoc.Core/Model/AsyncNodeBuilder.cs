@@ -9,16 +9,16 @@ namespace Omnidoc.Model
 {
     public static class AsyncNodeBuilder
     {
-        public static async IAsyncEnumerable < Node > BuildAsync ( this IAsyncEnumerable < Content > contents, ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken )
+        public static async IAsyncEnumerable < Node > BuildAsync ( this IAsyncEnumerable < Element > elements, ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken )
         {
-            if ( contents is null )
-                throw new ArgumentNullException ( nameof ( contents ) );
+            if ( elements is null )
+                throw new ArgumentNullException ( nameof ( elements ) );
 
             var builder = new NodeBuilder ( options );
 
-            await foreach ( var content in contents.WithCancellation ( cancellationToken ) )
+            await foreach ( var element in elements.WithCancellation ( cancellationToken ) )
             {
-                builder.Add ( content );
+                builder.Add ( element );
 
                 while ( builder.HasNodes )
                     yield return builder.ReadNode ( );

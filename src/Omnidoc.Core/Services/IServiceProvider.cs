@@ -3,7 +3,6 @@ using System.Linq;
 
 using Omnidoc.Core;
 using Omnidoc.IO;
-using Omnidoc.Model;
 
 namespace Omnidoc.Services
 {
@@ -21,17 +20,12 @@ namespace Omnidoc.Services
             return GetServices < IFileFormatConverter > ( inputFormat ).Where ( converter => converter.Descriptor.Outputs ( outputFormat ) );
         }
 
+        IEnumerable < IDocumentBuilder >    GetBuilders        ( FileFormat format ) => GetServices < IDocumentBuilder >    ( format );
+        IEnumerable < IDocumentComposer >   GetComposers       ( FileFormat format ) => GetServices < IDocumentComposer >   ( format );
         IEnumerable < IFileMetadataReader > GetMetadataReaders ( FileFormat format ) => GetServices < IFileMetadataReader > ( format );
         IEnumerable < IDocumentParser >     GetParsers         ( FileFormat format ) => GetServices < IDocumentParser >     ( format );
         IEnumerable < IDocumentPreviewer >  GetPreviewers      ( FileFormat format ) => GetServices < IDocumentPreviewer >  ( format );
-        IEnumerable < IDocumentBuilder >    GetBuilders        ( FileFormat format ) => GetServices < IDocumentBuilder >    ( format );
         IEnumerable < IDocumentRenderer >   GetRenderers       ( FileFormat format ) => GetServices < IDocumentRenderer >   ( format );
-        IEnumerable < IDocumentComposer >   GetComposers       ( FileFormat format ) => GetServices < IDocumentComposer >   ( format );
-
-        IEnumerable < IDocumentComposer > GetComposers < TContent > ( FileFormat format ) where TContent : Content
-        {
-            return GetServices < IDocumentComposer > ( format ).Where ( writer => writer.Descriptor.Supports < TContent > ( ) );
-        }
 
         T? GetService < T > ( FileFormat format ) where T : IService
         {
@@ -43,16 +37,11 @@ namespace Omnidoc.Services
             return GetConverters ( inputFormat, outputFormat ).FirstOrDefault ( );
         }
 
+        IDocumentBuilder?    GetBuilder        ( FileFormat format ) => GetBuilders        ( format ).FirstOrDefault ( );
+        IDocumentComposer?   GetComposer       ( FileFormat format ) => GetComposers       ( format ).FirstOrDefault ( );
         IFileMetadataReader? GetMetadataReader ( FileFormat format ) => GetMetadataReaders ( format ).FirstOrDefault ( );
         IDocumentParser?     GetParser         ( FileFormat format ) => GetParsers         ( format ).FirstOrDefault ( );
-        IDocumentBuilder?    GetBuilder        ( FileFormat format ) => GetBuilders        ( format ).FirstOrDefault ( );
         IDocumentPreviewer?  GetPreviewer      ( FileFormat format ) => GetPreviewers      ( format ).FirstOrDefault ( );
         IDocumentRenderer?   GetRenderer       ( FileFormat format ) => GetRenderers       ( format ).FirstOrDefault ( );
-        IDocumentComposer?   GetComposer       ( FileFormat format ) => GetComposers       ( format ).FirstOrDefault ( );
-
-        IDocumentComposer? GetComposer < TContent > ( FileFormat format ) where TContent : Content
-        {
-            return GetComposers < TContent > ( format ).FirstOrDefault ( );
-        }
     }
 }

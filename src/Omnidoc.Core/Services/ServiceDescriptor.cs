@@ -11,20 +11,20 @@ namespace Omnidoc.Services
     public sealed class ServiceDescriptor : IServiceDescriptor
     {
         public ServiceDescriptor ( IEnumerable < FileFormat > formats )                                           : this ( formats, Array.Empty < FileFormat > ( ), Type.EmptyTypes ) { }
-        public ServiceDescriptor ( IEnumerable < FileFormat > formats, IEnumerable < Type >       contentTypes  ) : this ( formats, Array.Empty < FileFormat > ( ), contentTypes    ) { }
+        public ServiceDescriptor ( IEnumerable < FileFormat > formats, IEnumerable < Type >       elementTypes  ) : this ( formats, Array.Empty < FileFormat > ( ), elementTypes    ) { }
         public ServiceDescriptor ( IEnumerable < FileFormat > formats, IEnumerable < FileFormat > outputFormats ) : this ( formats, outputFormats,                  Type.EmptyTypes ) { }
-        public ServiceDescriptor ( IEnumerable < FileFormat > formats, IEnumerable < FileFormat > outputFormats, IEnumerable < Type > contentTypes )
+        public ServiceDescriptor ( IEnumerable < FileFormat > formats, IEnumerable < FileFormat > outputFormats, IEnumerable < Type > elementTypes )
         {
-            if ( contentTypes.FirstOrDefault ( type => ! typeof ( Content ).IsAssignableFrom ( type ) ) is Type nonContentType )
-                throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_TypeMismatch, nonContentType.Name, nameof ( Content ) ), nameof ( contentTypes ) );
+            if ( elementTypes.FirstOrDefault ( type => ! typeof ( Element ).IsAssignableFrom ( type ) ) is Type nonElementType )
+                throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_TypeMismatch, nonElementType.Name, nameof ( Element ) ), nameof ( elementTypes ) );
 
             Formats       = formats      .ToHashSet ( );
             OutputFormats = outputFormats.ToHashSet ( );
-            ContentTypes  = contentTypes .ToHashSet ( );
+            ElementTypes  = elementTypes .ToHashSet ( );
         }
 
-        public IEnumerable < FileFormat > Formats        { get; }
-        public IEnumerable < FileFormat > OutputFormats  { get; }
-        public IEnumerable < Type >       ContentTypes { get; }
+        public IEnumerable < FileFormat > Formats       { get; }
+        public IEnumerable < FileFormat > OutputFormats { get; }
+        public IEnumerable < Type >       ElementTypes  { get; }
     }
 }

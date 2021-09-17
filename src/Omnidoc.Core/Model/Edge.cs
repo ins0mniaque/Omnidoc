@@ -1,18 +1,18 @@
 ﻿namespace Omnidoc.Model
 {
-    public class Edge : Content
+    public class Edge : Element
     {
-        public Edge ( EdgeType type, Content source, Content target, Content content )
+        public Edge ( EdgeType type, Element element, Element source, Element target )
         {
             Type    = type;
+            Element = element;
             Source  = source;
             Target  = target;
-            Content = content;
         }
 
         public EdgeType Type    { get; }
-        public Content  Source  { get; }
-        public Content  Target  { get; }
-        public Content  Content { get; }
+        public Element  Element { get; }
+        public Element  Source  { get; }
+        public Element  Target  { get; }
     }
 }
