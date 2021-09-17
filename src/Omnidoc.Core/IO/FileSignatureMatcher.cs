@@ -106,14 +106,14 @@ namespace Omnidoc.IO
 
         private static void Split ( this FileSignature [ ] signatures, out FileSignature [ ] prefixes, out FileSignature [ ] suffixes )
         {
-            prefixes = signatures.Where ( signature => ! signature.Index.IsFromEnd ).OrderByDescending ( prefix => prefix.Length ).ToArray ( );
-            suffixes = signatures.Where ( signature =>   signature.Index.IsFromEnd ).OrderByDescending ( suffix => suffix.Length ).ToArray ( );
+            prefixes = signatures.Where ( signature => ! signature.Offset.IsFromEnd ).OrderByDescending ( prefix => prefix.Length ).ToArray ( );
+            suffixes = signatures.Where ( signature =>   signature.Offset.IsFromEnd ).OrderByDescending ( suffix => suffix.Length ).ToArray ( );
         }
 
         private static void Range ( this FileSignature [ ] signatures, out int offset, out int length )
         {
-            offset = signatures.Min ( signature => signature.Index.Value );
-            length = signatures.Max ( signature => signature.Index.Value + signature.Length );
+            offset = signatures.Min ( signature => signature.Offset.Value );
+            length = signatures.Max ( signature => signature.Offset.Value + signature.Length );
         }
 
         private static FileSignature? Match ( this byte [ ] buffer, int offset, FileSignature [ ] signatures )
@@ -121,7 +121,7 @@ namespace Omnidoc.IO
             var span = buffer.AsSpan ( );
 
             foreach ( var signature in signatures )
-                if ( signature.Matches ( span.Slice ( signature.Index.GetOffset ( span.Length ) - offset, signature.Length ) ) )
+                if ( signature.Matches ( span.Slice ( signature.Offset.GetOffset ( span.Length ) - offset, signature.Length ) ) )
                     return signature;
 
             return null;
