@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Omnidoc.IO;
 using Omnidoc.Services;
@@ -13,21 +15,21 @@ namespace Omnidoc.HtmlToPdf
             new [ ] { DocumentTypes.Html, DocumentTypes.Pdf }
         );
 
-        private static readonly byte [ ] [ ] magicNumbers = new [ ]
+        private static readonly FileSignature [ ] signatures = new [ ]
         {
-            MagicNumber.From ( "<" ),
-            MagicNumber.From ( "%PDF" )
+            new FileSignature ( "<" ),
+            new FileSignature ( "%PDF" )
         };
 
         public IDocumentServiceDescriptor Descriptor => descriptor;
 
-        public DocumentType? DetectType ( Stream stream )
+        public async Task < DocumentType? > DetectTypeAsync ( Stream stream, CancellationToken cancellationToken = default )
         {
             if ( stream is null )
                 throw new ArgumentNullException ( nameof ( stream ) );
 
             // TODO: Improve HTML detection
-            return stream.Match ( magicNumbers ) switch
+            return await stream.MatchAsync ( signatures ).ConfigureAwait ( false ) switch
             {
                 0 => DocumentTypes.Html,
                 1 => DocumentTypes.Pdf,

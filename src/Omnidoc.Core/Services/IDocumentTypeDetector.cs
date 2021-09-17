@@ -1,9 +1,11 @@
 ﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Omnidoc.Services
 {
     public interface IDocumentTypeDetector : IDocumentService
     {
-        DocumentType? DetectType ( Stream stream );
+        Task < DocumentType? > DetectTypeAsync ( Stream stream, CancellationToken cancellationToken = default );
     }
 }

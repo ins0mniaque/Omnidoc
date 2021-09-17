@@ -1,9 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-using Omnidoc.IO;
 using Omnidoc.Services;
 
 namespace Omnidoc
@@ -12,27 +11,13 @@ namespace Omnidoc
     {
         IDocumentServiceProvider Services { get; }
 
-        DocumentType? DetectType ( Stream stream )
+        async Task < DocumentType? > DetectTypeAsync ( Stream stream, CancellationToken cancellationToken )
         {
-            return Services.GetServices ( )
-                           .OfType < IDocumentTypeDetector > ( )
-                           .Select         ( reader      => DetectTypeAndSeekBack ( reader, stream ) )
-                           .FirstOrDefault ( contentType => contentType != null );
-        }
+            foreach ( var detector in Services.GetServices ( ).OfType < IDocumentTypeDetector > ( ) )
+                if ( await detector.DetectTypeAsync ( stream ).ConfigureAwait ( false ) is DocumentType type )
+                    return type;
 
-        private static DocumentType? DetectTypeAndSeekBack ( IDocumentTypeDetector reader, Stream stream )
-        {
-            if ( stream is null )
-                throw new ArgumentNullException ( nameof ( stream ) );
-
-            var contentType = reader.DetectType ( stream );
-
-            if ( ! stream.CanSeek )
-                throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_StreamMustBeSeekable, $"{ nameof ( Seekable ) }.{ nameof ( Seekable.AsSeekable ) }" ) );
-
-            stream.Seek ( 0, SeekOrigin.Begin );
-
-            return contentType;
+            return null;
         }
     }
 }

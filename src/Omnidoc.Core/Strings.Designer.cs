@@ -53,6 +53,12 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_EmptyFileSignature {
+            get {
+                return ResourceManager.GetString("Error_EmptyFileSignature", resourceCulture);
+            }
+        }
+        
         internal static string Error_FailedToAddContent {
             get {
                 return ResourceManager.GetString("Error_FailedToAddContent", resourceCulture);

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Omnidoc.IO;
 using Omnidoc.Services;
@@ -13,27 +15,27 @@ namespace Omnidoc.Image
             new [ ] { DocumentTypes.Bmp, DocumentTypes.Gif, DocumentTypes.Jpeg, DocumentTypes.Png, DocumentTypes.Tiff }
         );
 
-        private static readonly byte [ ] [ ] magicNumbers = new [ ]
+        private static readonly FileSignature [ ] signatures = new [ ]
         {
-            MagicNumber.From ( "BM" ),
-            MagicNumber.From ( "GIF87a" ),
-            MagicNumber.From ( "GIF89a" ),
-            MagicNumber.From ( 0xFF, 0xD8 ),
-            MagicNumber.From ( 0x89, (byte) 'P', (byte) 'N', (byte) 'G', 0x0D, 0x0A, 0x1A, 0x0A ),
-            MagicNumber.From ( "I I"  ),
-            MagicNumber.From ( "II*." ),
-            MagicNumber.From ( "MM.*" ),
-            MagicNumber.From ( "MM.+" )
+            new FileSignature ( "BM" ),
+            new FileSignature ( "GIF87a" ),
+            new FileSignature ( "GIF89a" ),
+            new FileSignature ( 0xFF, 0xD8 ),
+            new FileSignature ( 0x89, (byte) 'P', (byte) 'N', (byte) 'G', 0x0D, 0x0A, 0x1A, 0x0A ),
+            new FileSignature ( "I I"  ),
+            new FileSignature ( "II*." ),
+            new FileSignature ( "MM.*" ),
+            new FileSignature ( "MM.+" )
         };
 
         public IDocumentServiceDescriptor Descriptor => descriptor;
 
-        public DocumentType? DetectType ( Stream stream )
+        public async Task < DocumentType? > DetectTypeAsync ( Stream stream, CancellationToken cancellationToken = default )
         {
             if ( stream is null )
                 throw new ArgumentNullException ( nameof ( stream ) );
 
-            return stream.Match ( magicNumbers ) switch
+            return await stream.MatchAsync ( signatures ).ConfigureAwait ( false ) switch
             {
                 0 => DocumentTypes.Bmp,
                 1 => DocumentTypes.Gif,
