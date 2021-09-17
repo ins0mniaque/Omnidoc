@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 using PDFiumCore;
 
+using Omnidoc.Core;
 using Omnidoc.Interop;
 using Omnidoc.Model;
-using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {

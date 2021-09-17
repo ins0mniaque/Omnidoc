@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Omnidoc.Core;
 using Omnidoc.Model;
 using Omnidoc.Services;
 
@@ -10,20 +11,20 @@ namespace Omnidoc.Xps
 {
     public class XpsDocumentParser : IDocumentParser
     {
-        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
-            new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps },
+            new [ ] { FileFormats.Xps, FileFormats.Oxps },
             new [ ] { typeof ( Content ) }
         );
 
-        public IDocumentServiceDescriptor Descriptor => descriptor;
+        public IServiceDescriptor Descriptor => descriptor;
 
-        public Task < IPager < IPageParser > > PrepareAsync ( Stream document, CancellationToken cancellationToken = default )
+        public Task < IPager < IPageParser > > LoadAsync ( Stream document, CancellationToken cancellationToken = default )
         {
-            return Task.Run ( ( ) => Prepare ( document ), cancellationToken );
+            return Task.Run ( ( ) => Load ( document ), cancellationToken );
         }
 
-        private static IPager < IPageParser > Prepare ( Stream document )
+        private static IPager < IPageParser > Load ( Stream document )
         {
             return new XpsPager < IPageParser > ( new ZipArchive ( document ),
                                                   page => new XpsPageParser ( page ) );

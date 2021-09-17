@@ -1,6 +1,6 @@
 ﻿namespace Omnidoc
 {
-    public class RenderingOptions
+    public class RenderingOptions : Options
     {
         public double? Dpi    { get; set; }
         public double? Width  { get; set; }

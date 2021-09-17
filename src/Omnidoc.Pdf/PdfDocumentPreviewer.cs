@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Omnidoc.Core;
 using Omnidoc.Interop;
 using Omnidoc.Services;
 
@@ -11,13 +12,13 @@ namespace Omnidoc.Pdf
 
     public class PdfDocumentPreviewer : IDocumentPreviewer
     {
-        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
-            new [ ] { DocumentTypes.Pdf },
-            new [ ] { DocumentTypes.Bmp }
+            new [ ] { FileFormats.Pdf },
+            new [ ] { FileFormats.Bmp }
         );
 
-        public IDocumentServiceDescriptor Descriptor => descriptor;
+        public IServiceDescriptor Descriptor => descriptor;
 
         public async Task PreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {

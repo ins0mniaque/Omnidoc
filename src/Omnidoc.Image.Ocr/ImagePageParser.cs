@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 using Tesseract;
 
+using Omnidoc.Core;
 using Omnidoc.Model;
-using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {

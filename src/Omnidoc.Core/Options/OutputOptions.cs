@@ -1,12 +1,14 @@
-﻿namespace Omnidoc
+﻿using Omnidoc.IO;
+
+namespace Omnidoc
 {
-    public class OutputOptions
+    public class OutputOptions : Options
     {
-        public OutputOptions ( DocumentType type )
+        public OutputOptions ( FileFormat format )
         {
-            Type = type;
+            Format = format;
         }
 
-        public DocumentType Type { get; }
+        public FileFormat Format { get; }
     }
 }

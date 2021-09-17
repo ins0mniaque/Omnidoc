@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Tesseract;
 
+using Omnidoc.Core;
 using Omnidoc.Model;
 using Omnidoc.Services;
 
@@ -12,9 +13,9 @@ namespace Omnidoc.Image
 {
     public class ImageDocumentParser : IDocumentParser
     {
-        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
-            new [ ] { DocumentTypes.Bmp, DocumentTypes.Gif, DocumentTypes.Jpeg, DocumentTypes.Png, DocumentTypes.Tiff },
+            new [ ] { FileFormats.Bmp, FileFormats.Gif, FileFormats.Jpeg, FileFormats.Png, FileFormats.Tiff },
             new [ ] { typeof ( Content ) }
         );
 
@@ -28,14 +29,14 @@ namespace Omnidoc.Image
 
         private Func < TesseractEngine > CreateEngine { get; }
 
-        public IDocumentServiceDescriptor Descriptor => descriptor;
+        public IServiceDescriptor Descriptor => descriptor;
 
-        public Task < IPager < IPageParser > > PrepareAsync ( Stream document, CancellationToken cancellationToken = default )
+        public Task < IPager < IPageParser > > LoadAsync ( Stream document, CancellationToken cancellationToken = default )
         {
-            return Task.Run ( ( ) => Prepare ( document ), cancellationToken );
+            return Task.Run ( ( ) => Load ( document ), cancellationToken );
         }
 
-        private IPager < IPageParser > Prepare ( Stream document )
+        private IPager < IPageParser > Load ( Stream document )
         {
             var engine = CreateEngine ( );
 

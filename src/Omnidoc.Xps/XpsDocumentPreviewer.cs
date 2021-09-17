@@ -6,21 +6,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
+using Omnidoc.Core;
 using Omnidoc.Services;
 
 namespace Omnidoc.Xps
 {
     public class XpsDocumentPreviewer : IDocumentPreviewer
     {
-        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
-            new [ ] { DocumentTypes.Xps, DocumentTypes.Oxps }
+            new [ ] { FileFormats.Xps, FileFormats.Oxps }
         );
 
         private static readonly XNamespace xmlns         = "http://schemas.openxmlformats.org/package/2006/relationships";
         private const           string     thumbnailType = "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail";
 
-        public IDocumentServiceDescriptor Descriptor => descriptor;
+        public IServiceDescriptor Descriptor => descriptor;
 
         public async Task PreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {

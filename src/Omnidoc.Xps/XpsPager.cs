@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Omnidoc.Services;
+using Omnidoc.Core;
 
 namespace Omnidoc.Xps
 {

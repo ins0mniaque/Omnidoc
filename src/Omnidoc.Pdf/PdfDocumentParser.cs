@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Omnidoc.Core;
 using Omnidoc.Model;
 using Omnidoc.Services;
 
@@ -11,20 +12,20 @@ namespace Omnidoc.Pdf
 
     public class PdfDocumentParser : IDocumentParser
     {
-        private static readonly IDocumentServiceDescriptor descriptor = new DocumentServiceDescriptor
+        private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
-            new [ ] { DocumentTypes.Pdf },
+            new [ ] { FileFormats.Pdf },
             new [ ] { typeof ( Content ) }
         );
 
-        public IDocumentServiceDescriptor Descriptor => descriptor;
+        public IServiceDescriptor Descriptor => descriptor;
 
-        public Task < IPager < IPageParser > > PrepareAsync ( Stream document, CancellationToken cancellationToken = default )
+        public Task < IPager < IPageParser > > LoadAsync ( Stream document, CancellationToken cancellationToken = default )
         {
-            return Task.Run ( ( ) => Prepare ( document ), cancellationToken );
+            return Task.Run ( ( ) => Load ( document ), cancellationToken );
         }
 
-        private IPager < IPageParser > Prepare ( Stream document )
+        private IPager < IPageParser > Load ( Stream document )
         {
             var fileAccess = document.ToFileAccess ( );
 
