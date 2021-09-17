@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Omnidoc.Model
+namespace Omnidoc.Model.Elements
 {
     public class Link : Element
     {

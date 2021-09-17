@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Omnidoc.Model
+namespace Omnidoc.Model.Elements
 {
     public class Image : Attachment
     {

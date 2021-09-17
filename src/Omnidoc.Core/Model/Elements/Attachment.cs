@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Omnidoc.Model
+namespace Omnidoc.Model.Elements
 {
     public class Attachment
     {

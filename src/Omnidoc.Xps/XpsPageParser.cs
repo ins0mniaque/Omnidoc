@@ -6,6 +6,7 @@ using System.Xml.Linq;
 
 using Omnidoc.Core;
 using Omnidoc.Model;
+using Omnidoc.Model.Elements;
 
 namespace Omnidoc.Xps
 {

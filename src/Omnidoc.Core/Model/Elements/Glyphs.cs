@@ -1,4 +1,4 @@
-﻿namespace Omnidoc.Model
+﻿namespace Omnidoc.Model.Elements
 {
     public class Glyphs : Shape
     {

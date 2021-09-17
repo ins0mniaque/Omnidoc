@@ -10,6 +10,7 @@ using PDFiumCore;
 using Omnidoc.Core;
 using Omnidoc.Interop;
 using Omnidoc.Model;
+using Omnidoc.Model.Elements;
 
 namespace Omnidoc.Pdf
 {
