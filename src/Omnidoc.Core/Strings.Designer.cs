@@ -47,6 +47,12 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_ArchiveEntryNotFound {
+            get {
+                return ResourceManager.GetString("Error_ArchiveEntryNotFound", resourceCulture);
+            }
+        }
+        
         internal static string Error_BufferingStreamMustBeSeekable {
             get {
                 return ResourceManager.GetString("Error_BufferingStreamMustBeSeekable", resourceCulture);
