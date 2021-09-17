@@ -29,7 +29,7 @@ namespace Omnidoc
 
         IEnumerable < IDocumentWriter > GetWriters < TContent > ( DocumentType type ) where TContent : Content
         {
-            return GetServices < IDocumentWriter > ( type ).Where ( writer => writer.Supports < TContent > ( ) );
+            return GetServices < IDocumentWriter > ( type ).Where ( writer => writer.Descriptor.Supports < TContent > ( ) );
         }
 
         T? GetService < T > ( DocumentType type ) where T : IDocumentService
