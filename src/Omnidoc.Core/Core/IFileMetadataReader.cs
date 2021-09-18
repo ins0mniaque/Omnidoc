@@ -8,6 +8,6 @@ namespace Omnidoc.Core
 {
     public interface IFileMetadataReader : IService
     {
-        Task < FileMetadata > ReadAsync ( Stream file, CancellationToken cancellationToken = default );
+        Task < FileMetadata? > TryReadAsync ( Stream file, CancellationToken cancellationToken = default );
     }
 }
