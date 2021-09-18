@@ -113,6 +113,12 @@ namespace Omnidoc {
             }
         }
         
+        internal static string Error_NonAcyclicGraph {
+            get {
+                return ResourceManager.GetString("Error_NonAcyclicGraph", resourceCulture);
+            }
+        }
+        
         internal static string Error_NoServicesRegistered {
             get {
                 return ResourceManager.GetString("Error_NoServicesRegistered", resourceCulture);

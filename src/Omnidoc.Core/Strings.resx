@@ -45,6 +45,9 @@
 	<data name="Error_MustBeNonNegative" xml:space="preserve">
 		<value>{0} must be non-negative</value>
 	</data>
+	<data name="Error_NonAcyclicGraph" xml:space="preserve">
+		<value>Non-acyclic graph</value>
+	</data>
 	<data name="Error_NoServicesRegistered" xml:space="preserve">
 		<value>No services of type {0} have been registered</value>
 	</data>

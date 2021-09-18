@@ -1,6 +1,8 @@
-﻿namespace Omnidoc.Model.Elements
+﻿using Omnidoc.Collections;
+
+namespace Omnidoc.Model.Elements
 {
-    public class Edge : Element
+    public class Edge : Element, IEdge < Element >
     {
         public Edge ( Element element, Element source, Element target )
         {
