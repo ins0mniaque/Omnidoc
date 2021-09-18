@@ -14,7 +14,7 @@ namespace Omnidoc.Collections
         /// <exception cref="InvalidOperationException">The graph is not acyclic</exception>
         public static TVertex [ ] TopologicalSort < TVertex, TEdge > ( this IGraph < TVertex, TEdge > graph )
             where TVertex : notnull
-            where TEdge   : IEdge < TVertex >
+            where TEdge   : notnull, IEdge < TVertex >
         {
             if ( graph is null )
                 throw new ArgumentNullException ( nameof ( graph ) );

@@ -7,7 +7,7 @@ namespace Omnidoc.Collections
     [ SuppressMessage ( "Naming", "CA1710:Identifiers should have correct suffix", Justification = "Graph is the correct suffix" ) ]
     public class Graph < TVertex, TEdge > : HashSet < TVertex >, IGraph < TVertex, TEdge >
         where TVertex : notnull
-        where TEdge   : IEdge < TVertex >
+        where TEdge   : notnull, IEdge < TVertex >
     {
         protected const int DefaultCapacity = 16;
 

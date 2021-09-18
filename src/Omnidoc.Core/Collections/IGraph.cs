@@ -7,7 +7,7 @@ namespace Omnidoc.Collections
     [ SuppressMessage ( "Naming", "CA1710:Identifiers should have correct suffix", Justification = "Graph is the correct suffix" ) ]
     public interface IGraph < TVertex, TEdge > : ISet < TVertex >
         where TVertex : notnull
-        where TEdge   : IEdge < TVertex >
+        where TEdge   : notnull, IEdge < TVertex >
     {
         ISet < TEdge > Edges { get; }
 
