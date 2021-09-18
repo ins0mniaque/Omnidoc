@@ -11,25 +11,25 @@ namespace Omnidoc
     {
         private readonly Lazy < IService [ ] > services;
 
-        private Engine ( Func < IService [ ] > services )
+        private Engine ( Func < IEnumerable < IService > > services )
         {
-            this.services = new Lazy < IService [ ] > ( services );
+            this.services = new Lazy < IService [ ] > ( ( ) => services ( ).OrderByDependency ( ).ToArray ( ) );
         }
 
         public Engine ( )                                   : this ( new ServiceProvider ( )             ) { }
-        public Engine ( IEnumerable < IService > services ) : this ( services.ToArray ( )                ) { }
         public Engine ( IServiceProvider         provider ) : this ( ( ) => ResolveServices ( provider ) ) { }
-        public Engine ( params IService [ ]      services ) : this ( ( ) => services                     ) { }
+        public Engine ( IEnumerable < IService > services ) : this ( ( ) => services                     ) { }
+        public Engine ( params IService [ ]      services ) : this ( services.AsEnumerable ( )           ) { }
 
         public IEnumerable < IService > Services => services.Value;
 
-        private static IService [ ] ResolveServices ( IServiceProvider provider )
+        private static IEnumerable < IService > ResolveServices ( IServiceProvider provider )
         {
             if ( provider is null )
                 throw new ArgumentNullException ( nameof ( provider ) );
 
             if ( provider.GetService ( typeof ( IEnumerable < IService > ) ) is IEnumerable < IService > services )
-                return services.ToArray ( );
+                return services;
 
             throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_NoServicesRegistered, typeof ( IService ).FullName ), nameof ( provider ) );
         }

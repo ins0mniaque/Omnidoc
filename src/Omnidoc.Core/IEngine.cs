@@ -36,29 +36,11 @@ namespace Omnidoc
 
         async Task < FileFormat? > DetectFileFormatAsync ( Stream file, CancellationToken cancellationToken )
         {
-            foreach ( var detector in Services.OfType < IFileFormatDetector > ( ).OrderBy ( Depth ) )
+            foreach ( var detector in Services.OfType < IFileFormatDetector > ( ) )
                 if ( await detector.DetectAsync ( file ).ConfigureAwait ( false ) is FileFormat format )
                     return format;
 
             return null;
-        }
-
-        private static int Depth ( IFileFormatDetector detector )
-        {
-            return detector.Descriptor.Formats.Max ( Depth );
-        }
-
-        private static int Depth ( FileFormat format )
-        {
-            var depth = 0;
-
-            while ( format.Base is FileFormat basedOn )
-            {
-                format = basedOn;
-                depth--;
-            }
-
-            return depth;
         }
     }
 }
