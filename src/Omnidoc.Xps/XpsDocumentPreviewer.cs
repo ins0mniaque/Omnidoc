@@ -15,7 +15,7 @@ namespace Omnidoc.Xps
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
-            new [ ] { FileFormats.Xps, FileFormats.Oxps }
+            new [ ] { FileFormats.Xps, FileFormats.OpenXps }
         );
 
         private static readonly XNamespace xmlns         = "http://schemas.openxmlformats.org/package/2006/relationships";

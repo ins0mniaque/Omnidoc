@@ -13,7 +13,7 @@ namespace Omnidoc.Xps
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
-            new [ ] { FileFormats.Xps, FileFormats.Oxps },
+            new [ ] { FileFormats.Xps, FileFormats.OpenXps },
             new [ ] { typeof ( Element ) }
         );
 
