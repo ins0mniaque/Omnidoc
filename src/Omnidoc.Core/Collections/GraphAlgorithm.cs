@@ -12,21 +12,23 @@ namespace Omnidoc.Collections
         /// </summary>
         /// <remarks>O(V + E)</remarks>
         /// <exception cref="InvalidOperationException">The graph is not acyclic</exception>
-        public static IEnumerable < TVertex > TopologicalSort < TVertex, TEdge > ( this IGraph < TVertex, TEdge > graph ) where TVertex : notnull where TEdge : IEdge < TVertex >
+        public static TVertex [ ] TopologicalSort < TVertex, TEdge > ( this IGraph < TVertex, TEdge > graph )
+            where TVertex : notnull
+            where TEdge   : IEdge < TVertex >
         {
             if ( graph is null )
                 throw new ArgumentNullException ( nameof ( graph ) );
 
             var frames   = new Stack < (TVertex, IEnumerator < TVertex >) > ( );
             var colors   = new Dictionary < TVertex, GraphColor > ( graph.Count );
-            var sorted   = new List < TVertex > ( graph.Count );
-            var vertices = new List < TVertex > ( graph );
+            var sorted   = new TVertex [ graph.Count ];
+            var index    = graph.Count - 1;
             var outEdges = graph.OutEdges ( );
 
-            foreach ( var v in vertices )
+            foreach ( var v in graph )
                 colors [ v ] = GraphColor.White;
 
-            foreach ( var root in vertices )
+            foreach ( var root in graph )
             {
                 if ( colors [ root ] != GraphColor.White )
                     continue;
@@ -61,12 +63,11 @@ namespace Omnidoc.Collections
                     edges.Dispose ( );
 
                     colors [ u ] = GraphColor.Black;
-                    sorted.Add ( u );
+                    sorted [ index-- ] = u;
                 }
             }
 
-            for ( var index = sorted.Count - 1; index >= 0; index-- )
-                yield return sorted [ index ];
+            return sorted;
         }
     }
 }
