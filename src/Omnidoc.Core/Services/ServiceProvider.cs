@@ -28,15 +28,18 @@ namespace Omnidoc.Services
         {
             var services = new List < IService > ( );
 
-            foreach ( var serviceType in GetReferencedAssemblies ( ).SelectMany ( ServiceTypes ) )
-                services.Add ( (IService) Activator.CreateInstance ( serviceType ) );
+            foreach ( var assembly in GetReferencedAssemblies ( ) )
+                foreach ( var serviceType in assembly.ExportedTypes.Where ( IsServiceType ) )
+                    services.Add ( (IService) Activator.CreateInstance ( serviceType ) );
 
             return services.ToArray ( );
         }
 
-        private static IEnumerable < Type > ServiceTypes ( Assembly assembly )
+        private static bool IsServiceType ( Type type )
         {
-            return assembly.ExportedTypes.Where ( typeof ( IService ).IsAssignableFrom );
+            return type.IsClass && ! type.IsAbstract &&
+                   typeof ( IService ).IsAssignableFrom ( type ) &&
+                   type.GetConstructor ( Type.EmptyTypes ) != null;
         }
 
         private static IEnumerable < Assembly > GetReferencedAssemblies ( )
@@ -44,7 +47,14 @@ namespace Omnidoc.Services
             var loaded = new HashSet < string   > ( );
             var queue  = new Queue   < Assembly > ( );
 
-            queue.Enqueue ( Assembly.GetEntryAssembly ( ) );
+            foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies ( ) )
+            {
+                if ( ! assembly.IsDynamic )
+                {
+                    loaded.Add     ( assembly.GetName ( ).FullName );
+                    queue .Enqueue ( assembly );
+                }
+            }
 
             while ( queue.TryDequeue ( out var assembly ) )
             {
