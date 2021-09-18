@@ -20,7 +20,7 @@ namespace Omnidoc.Pdf
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task PreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
+        public async Task < bool > TryPreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {
             using var fileAccess = document.ToFileAccess ( );
 
@@ -29,6 +29,8 @@ namespace Omnidoc.Pdf
 
             await page.RenderAsync    ( output, options, cancellationToken )
                       .ConfigureAwait ( false );
+
+            return true;
         }
     }
 }

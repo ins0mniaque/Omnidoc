@@ -6,6 +6,6 @@ namespace Omnidoc.Core
 {
     public interface IDocumentPreviewer : IService
     {
-        Task PreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default );
+        Task < bool > TryPreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default );
     }
 }
