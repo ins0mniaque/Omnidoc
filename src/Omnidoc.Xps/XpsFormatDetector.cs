@@ -1,15 +1,16 @@
-﻿using System;
-using System.IO.Compression;
+﻿using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Omnidoc.IO;
 using Omnidoc.Services;
-using Omnidoc.Zip;
+using Omnidoc.Zip.Opc;
 
 namespace Omnidoc.Xps
 {
-    public class XpsFormatDetector : ZipContainerFormatDetector
+    public class XpsFormatDetector : OpcPackageFormatDetector
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -18,13 +19,13 @@ namespace Omnidoc.Xps
 
         public override IServiceDescriptor Descriptor => descriptor;
 
-        protected override Task < FileFormat? > DetectAsync ( ZipArchive archive, CancellationToken cancellationToken )
+        protected override Task < FileFormat? > DetectAsync ( ZipArchive package, OpcRelationship [ ] relationships, CancellationToken cancellationToken )
         {
-            if ( archive is null )
-                throw new ArgumentNullException ( nameof ( archive ) );
+            return Task.FromResult ( Contains ( XpsSchema    .FixedDocumentSequence ) ? FileFormats.Xps     :
+                                     Contains ( OpenXpsSchema.FixedDocumentSequence ) ? FileFormats.OpenXps :
+                                                                                        null );
 
-            // TODO: Detect OpenXPS files
-            return Task.FromResult ( archive.GetEntry ( "_rels/.rels" ) != null ? FileFormats.Xps : null );
+            bool Contains ( XNamespace type ) => relationships.Any ( relationship => relationship.Type == type );
         }
     }
 }
