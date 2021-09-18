@@ -1,8 +1,6 @@
 ﻿using System.IO.Compression;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using Omnidoc.IO;
 using Omnidoc.Services;
@@ -21,11 +19,9 @@ namespace Omnidoc.Xps
 
         protected override Task < FileFormat? > DetectAsync ( ZipArchive package, OpcRelationship [ ] relationships, CancellationToken cancellationToken )
         {
-            return Task.FromResult ( Contains ( XpsSchema    .FixedDocumentSequence ) ? FileFormats.Xps     :
-                                     Contains ( OpenXpsSchema.FixedDocumentSequence ) ? FileFormats.OpenXps :
-                                                                                        null );
-
-            bool Contains ( XNamespace type ) => relationships.Any ( relationship => relationship.Type == type );
+            return Task.FromResult ( relationships.Find ( XpsSchema    .FixedDocumentSequence ) != null ? FileFormats.Xps     :
+                                     relationships.Find ( OpenXpsSchema.FixedDocumentSequence ) != null ? FileFormats.OpenXps :
+                                                                                                          null );
         }
     }
 }

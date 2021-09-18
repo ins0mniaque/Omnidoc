@@ -3,8 +3,10 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Omnidoc.Core;
+using Omnidoc.Zip.Opc;
 
 namespace Omnidoc.Xps
 {
@@ -26,27 +28,59 @@ namespace Omnidoc.Xps
         public  ZipArchive                  Document   { get; }
         private IDisposable?                Disposable { get; }
         private Func < ZipArchiveEntry, T > Factory    { get; }
+        private string [ ]?                 Pages      { get; set; }
 
-        public Task < int > GetPageCountAsync ( CancellationToken cancellationToken )
+        public async Task < int > GetPageCountAsync ( CancellationToken cancellationToken )
         {
-            return Task.FromResult ( Document.Entries.Count ( IsPage ) );
+            Pages ??= await LoadPagesAsync ( cancellationToken ).ConfigureAwait ( false );
+
+            return Pages.Length;
         }
 
-        public Task < T > GetPageAsync ( int index, CancellationToken cancellationToken )
+        public async Task < T > GetPageAsync ( int index, CancellationToken cancellationToken )
         {
-            return Task.FromResult ( Factory ( FindPage ( Document, index ) ) );
+            Pages ??= await LoadPagesAsync ( cancellationToken ).ConfigureAwait ( false );
+
+            return Factory ( Document.GetEntry ( Pages [ index ] ) );
         }
 
-        // TODO: Improve page counting
-        private static bool IsPage ( ZipArchiveEntry entry )
+        private async Task < string [ ] > LoadPagesAsync ( CancellationToken cancellationToken )
         {
-            return entry.FullName.EndsWith ( ".fpage", StringComparison.OrdinalIgnoreCase );
-        }
+            var relationships = await Document.TryReadRelationshipsAsync ( cancellationToken ).ConfigureAwait ( false );
+            if ( relationships is null )
+                return Array.Empty < string > ( );
 
-        // TODO: Improve page finding
-        private static ZipArchiveEntry FindPage ( ZipArchive document, int index )
-        {
-            return document.GetEntry ( $"/Documents/1/Pages/{ index + 1 }.fpage" );
+            var xmlns = XpsSchema.Namespace;
+            var fdseq = relationships.Find ( XpsSchema.FixedDocumentSequence );
+
+            if ( fdseq is null )
+            {
+                xmlns = OpenXpsSchema.Namespace;
+                fdseq = relationships.Find ( OpenXpsSchema.FixedDocumentSequence );
+            }
+
+            if ( fdseq is null || fdseq.Entry is null )
+                return Array.Empty < string > ( );
+
+            var xml = await XDocument.LoadAsync      ( fdseq.Entry.Open ( ), LoadOptions.None, cancellationToken )
+                                     .ConfigureAwait ( false );
+
+            var document = xml.Element  ( xmlns + "FixedDocumentSequence" )
+                              .Elements ( xmlns + "DocumentReference"  )
+                              .Select   ( element => element.Attribute ( "Source" ).Value )
+                              .FirstOrDefault ( );
+
+            var documentEntry = document is null ? null : Document.GetEntry ( document );
+            if ( documentEntry is null )
+                return Array.Empty < string > ( );
+
+            xml = await XDocument.LoadAsync      ( documentEntry.Open ( ), LoadOptions.None, cancellationToken )
+                                 .ConfigureAwait ( false );
+
+            return xml.Element  ( xmlns + "FixedDocument" )
+                      .Elements ( xmlns + "PageContent"   )
+                      .Select   ( element => element.Attribute ( "Source" ).Value )
+                      .ToArray  ( );
         }
 
         private bool isDisposed;
