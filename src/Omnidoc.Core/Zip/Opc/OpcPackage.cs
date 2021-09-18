@@ -13,12 +13,12 @@ namespace Omnidoc.Zip.Opc
 {
     public static class OpcPackage
     {
-        public static async Task < FileFormat [ ]? > TryReadContentTypesAsync ( this ZipArchive archive, CancellationToken cancellationToken = default )
+        public static async Task < FileFormat [ ]? > TryReadContentTypesAsync ( this ZipArchive package, CancellationToken cancellationToken = default )
         {
-            if ( archive is null )
-                throw new ArgumentNullException ( nameof ( archive ) );
+            if ( package is null )
+                throw new ArgumentNullException ( nameof ( package ) );
 
-            var contentTypes = archive.GetEntry ( OpcPath.ContentTypes );
+            var contentTypes = package.GetEntry ( OpcPath.ContentTypes );
             if ( contentTypes is null )
                 return null;
 
@@ -39,12 +39,12 @@ namespace Omnidoc.Zip.Opc
             }
         }
 
-        public static async Task < OpcRelationship [ ]? > TryReadRelationshipsAsync ( this ZipArchive archive, CancellationToken cancellationToken = default )
+        public static async Task < OpcRelationship [ ]? > TryReadRelationshipsAsync ( this ZipArchive package, CancellationToken cancellationToken = default )
         {
-            if ( archive is null )
-                throw new ArgumentNullException ( nameof ( archive ) );
+            if ( package is null )
+                throw new ArgumentNullException ( nameof ( package ) );
 
-            var relationships = archive.GetEntry ( OpcPath.Relationships );
+            var relationships = package.GetEntry ( OpcPath.Relationships );
             if ( relationships is null )
                 return null;
 
@@ -61,18 +61,18 @@ namespace Omnidoc.Zip.Opc
                 var id     = relationship.Attribute ( "Id"     ).Value;
                 var type   = relationship.Attribute ( "Type"   ).Value;
                 var target = relationship.Attribute ( "Target" ).Value;
-                var entry  = archive.GetEntry ( target.TrimStart ( '/' ) );
+                var entry  = package.GetEntry ( target.TrimStart ( '/' ) );
 
                 return new OpcRelationship ( id, type, target, entry );
             }
         }
 
-        public static async Task < FileMetadata? > TryReadMetadataAsync ( this ZipArchive archive, CancellationToken cancellationToken = default )
+        public static async Task < FileMetadata? > TryReadMetadataAsync ( this ZipArchive package, CancellationToken cancellationToken = default )
         {
-            if ( archive is null )
-                throw new ArgumentNullException ( nameof ( archive ) );
+            if ( package is null )
+                throw new ArgumentNullException ( nameof ( package ) );
 
-            var relationships = await TryReadRelationshipsAsync ( archive, cancellationToken ).ConfigureAwait ( false );
+            var relationships = await TryReadRelationshipsAsync ( package, cancellationToken ).ConfigureAwait ( false );
             if ( relationships is null )
                 return null;
 
@@ -98,12 +98,12 @@ namespace Omnidoc.Zip.Opc
             return metadata;
         }
 
-        public static async Task < Stream? > TryOpenThumbnailAsync ( this ZipArchive archive, CancellationToken cancellationToken = default )
+        public static async Task < Stream? > TryOpenThumbnailAsync ( this ZipArchive package, CancellationToken cancellationToken = default )
         {
-            if ( archive is null )
-                throw new ArgumentNullException ( nameof ( archive ) );
+            if ( package is null )
+                throw new ArgumentNullException ( nameof ( package ) );
 
-            var relationships = await TryReadRelationshipsAsync ( archive, cancellationToken ).ConfigureAwait ( false );
+            var relationships = await TryReadRelationshipsAsync ( package, cancellationToken ).ConfigureAwait ( false );
             if ( relationships is null )
                 return null;
 
