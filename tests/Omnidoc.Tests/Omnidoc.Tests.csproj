@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Omnidoc.HtmlToPdf\Omnidoc.HtmlToPdf.csproj" />
+    <ProjectReference Include="..\..\src\Omnidoc.Image\Omnidoc.Image.csproj" />
+    <ProjectReference Include="..\..\src\Omnidoc.Image.Ocr\Omnidoc.Image.Ocr.csproj" />
+    <ProjectReference Include="..\..\src\Omnidoc.Pdf\Omnidoc.Pdf.csproj" />
+    <ProjectReference Include="..\..\src\Omnidoc.Xps\Omnidoc.Xps.csproj" />
+  </ItemGroup>
+
+</Project>
