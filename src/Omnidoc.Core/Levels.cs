@@ -8,7 +8,7 @@ namespace Omnidoc
         None = 0,
 
         Start = End >> 1,
-        End   = 1   << 31,
+        End   = 0b1000000000000000,
 
         Document  = 1 << Level.Document,
         Page      = 1 << Level.Page,
