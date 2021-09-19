@@ -7,7 +7,7 @@ namespace Omnidoc.IO
     [ SuppressMessage ( "Performance", "CA1819:Properties should not return arrays", Justification = "ReadOnlySpan" ) ]
     public sealed class FileSignature
     {
-        private static byte [ ] Cast ( string signature ) => signature.Cast < byte > ( ).ToArray ( );
+        private static byte [ ] Cast ( string signature ) => signature.Select ( character => (byte) character ).ToArray ( );
 
         public FileSignature (               string          signature ) : this ( 0,      signature          ) { }
         public FileSignature (               params byte [ ] signature ) : this ( 0,      signature          ) { }
