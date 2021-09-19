@@ -31,7 +31,7 @@ namespace Omnidoc
 
         public static   bool Equals ( Size left, Size right ) => left.Equals ( right );
         public          bool Equals ( Size   other )          => width == other.width && height == other.height;
-        public override bool Equals ( object other )          => other is Size ? Equals ( (Size) other ) : false;
+        public override bool Equals ( object obj   )          => obj is Size other ? Equals ( other ) : false;
         public override int  GetHashCode ( )                  => HashCode.Combine ( width, height );
 
         [ SuppressMessage ( "Usage", "CA2225:Operator overloads have named alternates", Justification = "System.Drawing.Size" ) ]
@@ -52,8 +52,8 @@ namespace Omnidoc
             throw new FormatException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_InvalidFormat, nameof ( Size ), source ) );
         }
 
-        public override string ToString ( )                                           => ToString ( null, null );
-        public          string ToString (                 IFormatProvider? provider ) => ToString ( null, provider );
-        public          string ToString ( string? format, IFormatProvider? provider ) => NumberListParser.Format ( provider, format, width, height );
+        public override string ToString ( )                                                 => ToString ( null, null );
+        public          string ToString (                 IFormatProvider? formatProvider ) => ToString ( null, formatProvider );
+        public          string ToString ( string? format, IFormatProvider? formatProvider ) => NumberListParser.Format ( formatProvider, format, width, height );
     }
 }

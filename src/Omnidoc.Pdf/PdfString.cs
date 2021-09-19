@@ -11,8 +11,8 @@ namespace Omnidoc.Pdf
 
         public static string Alloc ( Handler handler, Encoding encoding )
         {
-            if ( handler is null )
-                throw new ArgumentNullException ( nameof ( handler ) );
+            if ( handler  is null ) throw new ArgumentNullException ( nameof ( handler  ) );
+            if ( encoding is null ) throw new ArgumentNullException ( nameof ( encoding ) );
 
             var length = handler ( IntPtr.Zero, 0 );
             if ( length == 0 )

@@ -14,7 +14,7 @@ using Omnidoc.Model.Elements;
 
 namespace Omnidoc.Image
 {
-    public sealed class ImagePageParser : AsyncDisposable, IPageParser
+    public class ImagePageParser : AsyncDisposable, IPageParser
     {
         public ImagePageParser ( TesseractEngine engine, Stream page )
         {
@@ -64,7 +64,7 @@ namespace Omnidoc.Image
                         {
                             cancellationToken.ThrowIfCancellationRequested ( );
 
-                            elements.Add ( ParseWord ( iterator ) );
+                            elements.Add ( ParseWord ( iterator ), cancellationToken );
                         }
                         while ( iterator.Next ( PageIteratorLevel.TextLine, PageIteratorLevel.Word ) );
                     }
@@ -113,6 +113,8 @@ namespace Omnidoc.Image
         {
             if ( disposing )
                 Page.Dispose ( );
+
+            base.Dispose ( disposing );
         }
     }
 }

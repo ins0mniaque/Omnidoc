@@ -10,7 +10,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Xps
 {
-    public sealed class XpsDocumentParser : AsyncDisposable, IDocumentParser
+    public class XpsDocumentParser : AsyncDisposable, IDocumentParser
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

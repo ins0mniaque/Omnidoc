@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.Formats.Gif;
@@ -17,6 +18,8 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {
+    using static SixLabors.ImageSharp.Image;
+
     public class ImageFormatConverter : AsyncDisposable, IFileFormatConverter
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
@@ -41,9 +44,9 @@ namespace Omnidoc.Image
                           options.Format == FileFormats.Tiff ? new TiffEncoder ( ) :
                                                (IImageEncoder) new PngEncoder  ( );
 
-            using var reader = await SixLabors.ImageSharp.Image.LoadAsync ( file ).ConfigureAwait ( false );
+            using var reader = await LoadAsync ( Configuration.Default, file, cancellationToken ).ConfigureAwait ( false );
 
-            await reader.SaveAsync ( output, encoder ).ConfigureAwait ( false );
+            await reader.SaveAsync ( output, encoder, cancellationToken ).ConfigureAwait ( false );
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Omnidoc.Core.Disposables
             if ( BeginDispose ( ) is { } disposables && disposing )
                 foreach ( var disposable in disposables )
                     disposable.Dispose ( );
+
+            base.Dispose ( disposing );
         }
 
         protected override async ValueTask DisposeAsyncCore ( )

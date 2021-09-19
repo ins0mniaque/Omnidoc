@@ -17,6 +17,13 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <AnalysisLevel>5</AnalysisLevel>
+    <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>$(CLSCompliant)</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 
 </Project>

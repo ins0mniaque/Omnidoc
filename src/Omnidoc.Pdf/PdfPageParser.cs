@@ -68,7 +68,7 @@ namespace Omnidoc.Pdf
                                           Weight = FPDFTextGetFontWeight ( textPage, index ) }
                 };
 
-                elements.Add ( element );
+                elements.Add ( element, cancellationToken );
             }
 
             elements.CompleteAdding ( );
@@ -78,6 +78,8 @@ namespace Omnidoc.Pdf
         {
             if ( disposing )
                 FPDF_ClosePage ( Page );
+
+            base.Dispose ( disposing );
         }
     }
 }

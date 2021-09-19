@@ -83,7 +83,7 @@ namespace Omnidoc.IO
 
             stream.Seek ( offset, SeekOrigin.Begin );
 
-            length = await stream.ReadAsync      ( buffer, offset, length, cancellationToken )
+            length = await stream.ReadAsync      ( buffer.AsMemory ( ), cancellationToken )
                                  .ConfigureAwait ( false );
 
             if ( buffer.Match ( offset, signatures ) is FileSignature prefixMatch )
@@ -95,7 +95,7 @@ namespace Omnidoc.IO
 
             stream.Seek ( offset, SeekOrigin.End );
 
-            length = await stream.ReadAsync      ( buffer, offset, length, cancellationToken )
+            length = await stream.ReadAsync      ( buffer.AsMemory ( ), cancellationToken )
                                  .ConfigureAwait ( false );
 
             if ( buffer.Match ( offset, signatures ) is FileSignature suffixMatch )

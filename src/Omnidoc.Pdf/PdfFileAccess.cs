@@ -6,7 +6,7 @@ using PDFiumCore.Delegates;
 
 namespace Omnidoc.Pdf
 {
-    public static class PdfStream
+    public static class PdfFileAccess
     {
         public static FPDF_FILEACCESS ToFileAccess ( this Stream stream, long? length = null )
         {

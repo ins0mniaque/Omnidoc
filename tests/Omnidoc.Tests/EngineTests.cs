@@ -1,17 +1,22 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 using Xunit;
 
 namespace Omnidoc.Tests
 {
+    [ SuppressMessage ( "Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive on await using with ConfigureAwait" ) ]
     public class EngineTests
     {
         [ Fact ]
         public async Task ResolvesServices ( )
         {
-            await using var engine = new Engine ( );
+            var engine = new Engine ( );
 
-            Assert.NotEmpty ( engine.Services );
+            await using ( engine.ConfigureAwait ( false ) )
+            {
+                Assert.NotEmpty ( engine.Services );
+            }
         }
     }
 }

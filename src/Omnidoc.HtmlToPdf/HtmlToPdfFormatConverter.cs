@@ -12,7 +12,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.HtmlToPdf
 {
-    public sealed class HtmlToPdfFormatConverter : AsyncDisposable, IFileFormatConverter
+    public class HtmlToPdfFormatConverter : AsyncDisposable, IFileFormatConverter
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

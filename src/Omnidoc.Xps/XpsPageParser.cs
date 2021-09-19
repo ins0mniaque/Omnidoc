@@ -11,7 +11,7 @@ using Omnidoc.Model.Elements;
 
 namespace Omnidoc.Xps
 {
-    public sealed class XpsPageParser : AsyncDisposable, IPageParser
+    public class XpsPageParser : AsyncDisposable, IPageParser
     {
         public XpsPageParser ( ZipArchiveEntry page )
         {

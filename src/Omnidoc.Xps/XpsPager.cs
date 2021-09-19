@@ -93,6 +93,8 @@ namespace Omnidoc.Xps
                 Document   .Dispose ( );
                 Disposable?.Dispose ( );
             }
+
+            base.Dispose ( disposing );
         }
     }
 }

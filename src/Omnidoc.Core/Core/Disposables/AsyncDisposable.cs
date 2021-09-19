@@ -32,13 +32,12 @@ namespace Omnidoc.Core.Disposables
             GC.SuppressFinalize ( this );
         }
 
-        [ SuppressMessage ( "Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "IAsyncDisposable" ) ]
         public async ValueTask DisposeAsync ( )
         {
             if ( ! BeginDispose ( ) )
                 return;
 
-            await DisposeAsyncCore ( );
+            await DisposeAsyncCore ( ).ConfigureAwait ( false );
 
             Dispose ( disposing: false );
             GC.SuppressFinalize ( this );

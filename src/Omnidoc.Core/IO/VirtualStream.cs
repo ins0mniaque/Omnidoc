@@ -10,14 +10,11 @@ namespace Omnidoc.IO
     /// </summary>
     public sealed class VirtualStream : Stream
     {
-        /// <summary>
-        /// Memory handling
-        /// </summary>
-        public enum MemoryFlag
+        public enum BufferMode
         {
-            AutoOverFlowToDisk = 0,
-            OnlyInMemory       = 1,
-            OnlyToDisk         = 2
+            AutoOverFlowToDisk,
+            OnlyInMemory,
+            OnlyToDisk
         }
 
         private const int MemoryThreshold   = 4 * 1024 * 1024; // The maximum possible memory consumption (4Mb)
@@ -28,14 +25,14 @@ namespace Omnidoc.IO
         private bool       isDisposed;
         private bool       isInMemory;
         private int        thresholdSize;
-        private MemoryFlag memoryFlag;
+        private BufferMode mode;
 
         /// <summary>
         /// Initializes a VirtualStream instance with default parameters (4K memory buffer,
         /// allow overflow to disk).
         /// </summary>
         public VirtualStream ( )
-            : this ( DefaultMemorySize, MemoryFlag.AutoOverFlowToDisk, new MemoryStream ( ) )
+            : this ( DefaultMemorySize, BufferMode.AutoOverFlowToDisk, new MemoryStream ( ) )
         {
         }
 
@@ -44,28 +41,28 @@ namespace Omnidoc.IO
         /// </summary>
         /// <param name="bufferSize">Memory buffer size</param>
         public VirtualStream ( int bufferSize )
-            : this ( bufferSize, MemoryFlag.AutoOverFlowToDisk, new MemoryStream ( bufferSize ) )
+            : this ( bufferSize, BufferMode.AutoOverFlowToDisk, new MemoryStream ( bufferSize ) )
         {
         }
 
         /// <summary>
-        /// Initializes a VirtualStream instance with a default memory size and memory flag specified.
+        /// Initializes a VirtualStream instance with a default memory size and buffer mode specified.
         /// </summary>
-        /// <param name="flag">Memory flag</param>
-        public VirtualStream ( MemoryFlag flag )
-            : this ( DefaultMemorySize, flag,
-            ( flag == MemoryFlag.OnlyToDisk ) ? CreateVirtualMemoryStream ( ) : new MemoryStream ( ) )
+        /// <param name="bufferMode">Buffer mode</param>
+        public VirtualStream ( BufferMode bufferMode )
+            : this ( DefaultMemorySize, bufferMode,
+            ( bufferMode == BufferMode.OnlyToDisk ) ? CreateVirtualMemoryStream ( ) : new MemoryStream ( ) )
         {
         }
 
         /// <summary>
-        /// Initializes a VirtualStream instance with a memory buffer size and memory flag specified.
+        /// Initializes a VirtualStream instance with a memory buffer size and buffer mode specified.
         /// </summary>
         /// <param name="bufferSize">Memory buffer size</param>
-        /// <param name="flag">Memory flag</param>
-        public VirtualStream ( int bufferSize, MemoryFlag flag )
-            : this ( bufferSize, flag,
-            ( flag == MemoryFlag.OnlyToDisk ) ? CreateVirtualMemoryStream ( ) : new MemoryStream ( bufferSize ) )
+        /// <param name="bufferMode">Buffer mode</param>
+        public VirtualStream ( int bufferSize, BufferMode bufferMode )
+            : this ( bufferSize, bufferMode,
+            ( bufferMode == BufferMode.OnlyToDisk ) ? CreateVirtualMemoryStream ( ) : new MemoryStream ( bufferSize ) )
         {
         }
 
@@ -81,19 +78,19 @@ namespace Omnidoc.IO
         }
 
         /// <summary>
-        /// Initializes a VirtualStream instance with a memory buffer size, memory flag and underlying stream
+        /// Initializes a VirtualStream instance with a memory buffer size, buffer mode and underlying stream
         /// specified.
         /// </summary>
         /// <param name="bufferSize">Memory buffer size</param>
-        /// <param name="flag">Memory flag</param>
+        /// <param name="bufferMode">Buffer mode</param>
         /// <param name="dataStream">Underlying stream</param>
-        private VirtualStream ( int bufferSize, MemoryFlag flag, Stream dataStream )
+        private VirtualStream ( int bufferSize, BufferMode bufferMode, Stream dataStream )
         {
             if ( null == dataStream )
                 throw new ArgumentNullException ( nameof ( dataStream ) );
 
-            isInMemory = ( flag != MemoryFlag.OnlyToDisk );
-            memoryFlag = flag;
+            isInMemory = ( bufferMode != BufferMode.OnlyToDisk );
+            mode = bufferMode;
             bufferSize = Math.Min ( bufferSize, MemoryThreshold );
             thresholdSize = bufferSize;
 
@@ -215,18 +212,18 @@ namespace Omnidoc.IO
         /// <summary>
         /// <see cref="Stream.SetLength()" />
         /// </summary>
-        /// <param name="length"></param>
+        /// <param name="value">The stream length</param>
         /// <remarks>
         /// May throw <see cref="ObjectDisposedException" />.
         /// </remarks>
-        public override void SetLength ( long length )
+        public override void SetLength ( long value )
         {
             ThrowIfDisposed ( );
 
             // Check if new position is greater than allowed by threshold
-            if ( memoryFlag == MemoryFlag.AutoOverFlowToDisk &&
+            if ( mode == BufferMode.AutoOverFlowToDisk &&
                 isInMemory &&
-                length > thresholdSize )
+                value > thresholdSize )
             {
                 // Currently in memory, and the new write will push it over the limit
                 // Switching to Persist Stream
@@ -243,7 +240,7 @@ namespace Omnidoc.IO
             }
 
             // Set new length for the wrapped stream
-            wrappedStream.SetLength ( length );
+            wrappedStream.SetLength ( value );
         }
 
         /// <summary>
@@ -260,7 +257,7 @@ namespace Omnidoc.IO
             ThrowIfDisposed ( );
 
             // Check if new position after write is greater than allowed by threshold
-            if ( memoryFlag == MemoryFlag.AutoOverFlowToDisk &&
+            if ( mode == BufferMode.AutoOverFlowToDisk &&
                 isInMemory &&
                 ( count + wrappedStream.Position ) > thresholdSize )
             {

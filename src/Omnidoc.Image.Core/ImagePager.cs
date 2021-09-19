@@ -9,7 +9,7 @@ using Omnidoc.Core.Disposables;
 namespace Omnidoc.Image
 {
     // TODO: Implement multi-page TIFF support
-    public sealed class ImagePager < T > : AsyncDisposable, IPager < T >
+    public class ImagePager < T > : AsyncDisposable, IPager < T >
     {
         public ImagePager ( Stream document, Func < Stream, T > factory )
         {
@@ -40,11 +40,13 @@ namespace Omnidoc.Image
 
         protected override void Dispose ( bool disposing )
         {
-            if ( ! disposing )
+            if ( disposing )
             {
                 Document   .Dispose ( );
                 Disposable?.Dispose ( );
             }
+
+            base.Dispose ( disposing );
         }
     }
 }

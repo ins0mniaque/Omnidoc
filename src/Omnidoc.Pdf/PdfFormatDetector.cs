@@ -29,7 +29,7 @@ namespace Omnidoc.Pdf
             if ( file is null )
                 throw new ArgumentNullException ( nameof ( file ) );
 
-            return await file.MatchAsync ( signatures ).ConfigureAwait ( false ) switch
+            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
                 0 => FileFormats.Pdf,
                 _ => null

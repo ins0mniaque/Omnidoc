@@ -10,7 +10,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.HtmlToPdf
 {
-    public sealed class HtmlToPdfFormatDetector : AsyncDisposable, IFileFormatDetector
+    public class HtmlToPdfFormatDetector : AsyncDisposable, IFileFormatDetector
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -31,7 +31,7 @@ namespace Omnidoc.HtmlToPdf
                 throw new ArgumentNullException ( nameof ( file ) );
 
             // TODO: Improve HTML detection
-            return await file.MatchAsync ( signatures ).ConfigureAwait ( false ) switch
+            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
                 0 => FileFormats.Html,
                 1 => FileFormats.Pdf,

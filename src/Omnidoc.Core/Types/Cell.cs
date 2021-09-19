@@ -24,7 +24,7 @@ namespace Omnidoc
 
         public static   bool Equals ( Cell left, Cell right ) => left.Equals ( right );
         public          bool Equals ( Cell   other )          => Column == other.Column && Row == other.Row && ColumnSpan == other.ColumnSpan && RowSpan == other.RowSpan;
-        public override bool Equals ( object other )          => other is Cell ? Equals ( (Cell) other ) : false;
+        public override bool Equals ( object obj   )          => obj is Cell other ? Equals ( other ) : false;
         public override int  GetHashCode ( )                  => HashCode.Combine ( Column, Row, ColumnSpan, RowSpan );
 
         public static bool operator == ( Cell left, Cell right ) =>   left.Equals ( right );
@@ -47,12 +47,12 @@ namespace Omnidoc
             throw new FormatException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_InvalidFormat, nameof ( Cell ), source ) );
         }
 
-        public override string ToString ( )                                           => ToString ( null, null );
-        public          string ToString (                 IFormatProvider? provider ) => ToString ( null, provider );
-        public          string ToString ( string? format, IFormatProvider? provider )
+        public override string ToString ( )                                                 => ToString ( null, null );
+        public          string ToString (                 IFormatProvider? formatProvider ) => ToString ( null, formatProvider );
+        public          string ToString ( string? format, IFormatProvider? formatProvider )
         {
-            return ColumnSpan == 1 && RowSpan == 1 ? NumberListParser.Format ( provider, format, Column, Row ) :
-                                                     NumberListParser.Format ( provider, format, Column, Row, ColumnSpan, RowSpan );
+            return ColumnSpan == 1 && RowSpan == 1 ? NumberListParser.Format ( formatProvider, format, Column, Row ) :
+                                                     NumberListParser.Format ( formatProvider, format, Column, Row, ColumnSpan, RowSpan );
         }
     }
 }

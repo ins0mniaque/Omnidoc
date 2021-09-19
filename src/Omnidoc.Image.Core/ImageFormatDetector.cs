@@ -10,7 +10,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {
-    public sealed class ImageFormatDetector : AsyncDisposable, IFileFormatDetector
+    public class ImageFormatDetector : AsyncDisposable, IFileFormatDetector
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -37,7 +37,7 @@ namespace Omnidoc.Image
             if ( file is null )
                 throw new ArgumentNullException ( nameof ( file ) );
 
-            return await file.MatchAsync ( signatures ).ConfigureAwait ( false ) switch
+            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
                 0 => FileFormats.Bmp,
                 1 => FileFormats.Gif,

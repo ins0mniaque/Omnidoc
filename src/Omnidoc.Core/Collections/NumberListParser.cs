@@ -6,9 +6,9 @@ namespace Omnidoc.Collections
 {
     public static class NumberListParser
     {
-        public delegate bool TryParseDelegate < T > ( ReadOnlySpan < char > span, NumberStyles style, IFormatProvider provider, [ NotNullWhen ( true ) ] out T number );
+        public delegate bool TryParseFunc < T > ( ReadOnlySpan < char > span, NumberStyles style, IFormatProvider provider, [ NotNullWhen ( true ) ] out T number );
 
-        public static bool TryParse < T > ( TryParseDelegate < T > tryParse, string source, ref int index, NumberStyles style, IFormatProvider provider, [ NotNullWhen ( true ) ] out T numberA, [ NotNullWhen ( true ) ] out T numberB )
+        public static bool TryParse < T > ( TryParseFunc < T > tryParse, string source, ref int index, NumberStyles style, IFormatProvider provider, [ NotNullWhen ( true ) ] out T numberA, [ NotNullWhen ( true ) ] out T numberB )
         {
             if ( tryParse == null ) throw new ArgumentNullException ( nameof ( tryParse ) );
             if ( source   == null ) throw new ArgumentNullException ( nameof ( source   ) );

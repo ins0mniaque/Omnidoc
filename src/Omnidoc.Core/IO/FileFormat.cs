@@ -22,7 +22,7 @@ namespace Omnidoc.IO
         public FileFormat? Base        { get; }
 
         public bool            Equals      ( FileFormat? other ) => ! ( other is null ) && ContentType == other.ContentType;
-        public override bool   Equals      ( object      other ) => other is FileFormat format ? Equals ( format ) : false;
+        public override bool   Equals      ( object      obj   ) => obj is FileFormat other ? Equals ( other ) : false;
         public override int    GetHashCode ( )                   => ContentType.GetHashCode ( StringComparison.Ordinal );
         public override string ToString    ( )                   => ContentType;
     }

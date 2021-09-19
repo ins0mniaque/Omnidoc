@@ -45,7 +45,7 @@ namespace Omnidoc.Model.Elements
 
             using var buffer = new MemoryStream ( );
 
-            await Content.CopyToAsync ( buffer ).ConfigureAwait ( false );
+            await Content.CopyToAsync ( buffer, cancellationToken ).ConfigureAwait ( false );
 
             return Uri = DataUri.Generate ( buffer.ToArray ( ), ContentType );
         }

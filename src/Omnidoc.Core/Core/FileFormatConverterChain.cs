@@ -17,7 +17,7 @@ namespace Omnidoc.Core
         public FileFormatConverterChain ( IEnumerable < IFileFormatConverter > chain ) : this ( chain.ToArray ( ) ) { }
         public FileFormatConverterChain ( params IFileFormatConverter [ ]      chain )
         {
-            Chain      = chain;
+            Chain      = chain ?? throw new ArgumentNullException ( nameof ( chain ) );
             Descriptor = new ServiceDescriptor ( chain [  0 ].Descriptor.Formats,
                                                  chain [ ^1 ].Descriptor.OutputFormats );
         }

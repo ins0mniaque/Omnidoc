@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -6,6 +7,7 @@ using Xunit.Sdk;
 
 namespace Omnidoc
 {
+    [ CLSCompliant ( false ) ]
     public sealed class SampleAttribute : DataAttribute
     {
         public SampleAttribute ( params string [ ] paths )

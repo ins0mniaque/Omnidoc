@@ -26,7 +26,7 @@ namespace Omnidoc.Pdf
             return Task.Run ( ( ) => Load ( document ), cancellationToken );
         }
 
-        private IPager < IPageParser > Load ( Stream document )
+        private static IPager < IPageParser > Load ( Stream document )
         {
             var fileAccess = document.ToFileAccess ( );
 

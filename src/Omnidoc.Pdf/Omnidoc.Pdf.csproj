@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CLSCompliant>false</CLSCompliant>
     <NeutralLanguage>en</NeutralLanguage>
 
     <Description>Omnidoc.Pdf adds Pdf support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>

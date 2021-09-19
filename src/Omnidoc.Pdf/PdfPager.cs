@@ -47,6 +47,8 @@ namespace Omnidoc.Pdf
                 FPDF_CloseDocument  ( Document );
                 Disposable?.Dispose ( );
             }
+
+            base.Dispose ( disposing );
         }
     }
 }

@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.IO;
 using Omnidoc.Services;
 
 namespace Omnidoc.Zip
 {
-    public abstract class ZipContainerFormatDetector : IFileFormatDetector
+    public abstract class ZipContainerFormatDetector : AsyncDisposable, IFileFormatDetector
     {
         private static FileSignature [ ] signatures = new [ ]
         {
@@ -25,7 +25,7 @@ namespace Omnidoc.Zip
             if ( file is null )
                 throw new ArgumentNullException ( nameof ( file ) );
 
-            return await file.MatchAsync ( signatures ).ConfigureAwait ( false ) switch
+            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
                 0 => await DetectContainerAsync ( file, cancellationToken ).ConfigureAwait ( false ),
                 _ => null
@@ -42,23 +42,5 @@ namespace Omnidoc.Zip
         }
 
         protected abstract Task < FileFormat? > DetectAsync ( ZipArchive archive, CancellationToken cancellationToken );
-
-        public void Dispose ( )
-        {
-            Dispose ( disposing: true );
-            GC.SuppressFinalize ( this );
-        }
-
-        [ SuppressMessage ( "Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "DisposeAsync" ) ]
-        public async ValueTask DisposeAsync ( )
-        {
-            await DisposeAsyncCore ( );
-
-            Dispose ( disposing: false );
-            GC.SuppressFinalize ( this );
-        }
-
-        protected virtual void      Dispose          ( bool disposing ) { }
-        protected virtual ValueTask DisposeAsyncCore ( ) => default;
     }
 }

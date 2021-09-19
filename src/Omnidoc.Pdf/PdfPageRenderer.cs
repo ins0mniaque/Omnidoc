@@ -32,6 +32,8 @@ namespace Omnidoc.Pdf
         {
             if ( disposing )
                 FPDF_ClosePage ( Page );
+
+            base.Dispose ( disposing );
         }
     }
 }

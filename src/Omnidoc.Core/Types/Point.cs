@@ -25,8 +25,8 @@ namespace Omnidoc
         }
 
         public static   bool Equals ( Point left, Point right ) => left.Equals ( right );
-        public override bool Equals ( object other )            => other is Point ? Equals ( (Point) other ) : false;
         public          bool Equals ( Point  other )            => X == other.X && Y == other.Y;
+        public override bool Equals ( object obj   )            => obj is Point other ? Equals ( other ) : false;
         public override int  GetHashCode ( )                    => HashCode.Combine ( X, Y );
 
         public static Point Add         ( Point left, Point right ) => new Point ( left.X + right.X, left.Y + right.Y );
@@ -51,8 +51,8 @@ namespace Omnidoc
             throw new FormatException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_InvalidFormat, nameof ( Point ), source ) );
         }
 
-        public override string ToString ( )                                           => ToString ( null, null );
-        public          string ToString (                 IFormatProvider? provider ) => ToString ( null, provider );
-        public          string ToString ( string? format, IFormatProvider? provider ) => NumberListParser.Format ( provider, format, X, Y );
+        public override string ToString ( )                                                 => ToString ( null, null );
+        public          string ToString (                 IFormatProvider? formatProvider ) => ToString ( null, formatProvider );
+        public          string ToString ( string? format, IFormatProvider? formatProvider ) => NumberListParser.Format ( formatProvider, format, X, Y );
     }
 }

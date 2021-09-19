@@ -21,8 +21,8 @@ namespace Omnidoc.Collections
         public bool Equals ( Edge < TVertex > other ) => ! ( other is null ) && Comparer.Equals ( Source, other.Source ) &&
                                                                                 Comparer.Equals ( Target, other.Target );
 
-        public override bool   Equals      ( object other ) => other is Edge < TVertex > format ? Equals ( format ) : false;
-        public override int    GetHashCode ( )              => HashCode.Combine ( Source, Target );
-        public override string ToString    ( )              => $"{ Source } => { Target }";
+        public override bool   Equals      ( object obj ) => obj is Edge < TVertex > other ? Equals ( other ) : false;
+        public override int    GetHashCode ( )            => HashCode.Combine ( Source, Target );
+        public override string ToString    ( )            => $"{ Source } => { Target }";
     }
 }
