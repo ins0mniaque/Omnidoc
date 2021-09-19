@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using PDFiumCore;
 
 using Omnidoc.Core;
-using Omnidoc.Interop;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Model;
 using Omnidoc.Model.Elements;
 
@@ -17,7 +17,7 @@ namespace Omnidoc.Pdf
     using static PDFiumCore.fpdfview;
     using static PDFiumCore.fpdf_text;
 
-    public sealed class PdfPageParser : IPageParser
+    public sealed class PdfPageParser : AsyncDisposable, IPageParser
     {
         public PdfPageParser ( FpdfPageT page )
         {
@@ -74,16 +74,10 @@ namespace Omnidoc.Pdf
             elements.CompleteAdding ( );
         }
 
-        private bool isDisposed;
-
-        public void Dispose ( )
+        protected override void Dispose ( bool disposing )
         {
-            if ( isDisposed )
-                return;
-
-            FPDF_ClosePage ( Page );
-
-            isDisposed = true;
+            if ( disposing )
+                FPDF_ClosePage ( Page );
         }
     }
 }

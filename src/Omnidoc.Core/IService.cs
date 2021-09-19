@@ -1,8 +1,10 @@
-﻿using Omnidoc.Services;
+﻿using System;
+
+using Omnidoc.Services;
 
 namespace Omnidoc
 {
-    public interface IService
+    public interface IService : IAsyncDisposable, IDisposable
     {
         IServiceDescriptor Descriptor { get; }
     }

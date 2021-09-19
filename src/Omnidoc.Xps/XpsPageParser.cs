@@ -5,12 +5,13 @@ using System.Threading;
 using System.Xml.Linq;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Model;
 using Omnidoc.Model.Elements;
 
 namespace Omnidoc.Xps
 {
-    public sealed class XpsPageParser : IPageParser
+    public sealed class XpsPageParser : AsyncDisposable, IPageParser
     {
         public XpsPageParser ( ZipArchiveEntry page )
         {
@@ -38,11 +39,6 @@ namespace Omnidoc.Xps
                     };
                 }
             }
-        }
-
-        public void Dispose ( )
-        {
-
         }
     }
 }

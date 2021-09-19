@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.IO;
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
-    public class PdfFormatDetector : IFileFormatDetector
+    public sealed class PdfFormatDetector : AsyncDisposable, IFileFormatDetector
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

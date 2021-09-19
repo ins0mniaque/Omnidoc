@@ -12,11 +12,12 @@ using SixLabors.ImageSharp.Formats.Tga;
 using SixLabors.ImageSharp.Formats.Tiff;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {
-    public class ImageFormatConverter : IFileFormatConverter
+    public class ImageFormatConverter : AsyncDisposable, IFileFormatConverter
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

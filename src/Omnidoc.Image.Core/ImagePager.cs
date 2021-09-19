@@ -4,11 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 
 namespace Omnidoc.Image
 {
     // TODO: Implement multi-page TIFF support
-    public sealed class ImagePager < T > : IPager < T >
+    public sealed class ImagePager < T > : AsyncDisposable, IPager < T >
     {
         public ImagePager ( Stream document, Func < Stream, T > factory )
         {
@@ -37,16 +38,12 @@ namespace Omnidoc.Image
             return Task.FromResult ( Factory ( Document ) );
         }
 
-        private bool isDisposed;
-
-        public void Dispose ( )
+        protected override void Dispose ( bool disposing )
         {
-            if ( ! isDisposed )
+            if ( ! disposing )
             {
                 Document   .Dispose ( );
                 Disposable?.Dispose ( );
-
-                isDisposed = true;
             }
         }
     }

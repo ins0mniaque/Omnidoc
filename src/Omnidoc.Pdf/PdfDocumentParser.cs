@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Model;
 using Omnidoc.Services;
 
@@ -10,7 +11,7 @@ namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public class PdfDocumentParser : IDocumentParser
+    public sealed class PdfDocumentParser : AsyncDisposable, IDocumentParser
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

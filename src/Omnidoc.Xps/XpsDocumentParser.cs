@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Model;
 using Omnidoc.Services;
 
 namespace Omnidoc.Xps
 {
-    public class XpsDocumentParser : IDocumentParser
+    public sealed class XpsDocumentParser : AsyncDisposable, IDocumentParser
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Omnidoc.Core
 {
-    public interface IPageRenderer : IDisposable
+    public interface IPageRenderer : IPage
     {
         public Size PageSize { get; }
 

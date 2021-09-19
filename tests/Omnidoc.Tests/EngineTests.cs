@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 using Xunit;
 
 namespace Omnidoc.Tests
@@ -5,9 +7,9 @@ namespace Omnidoc.Tests
     public class EngineTests
     {
         [ Fact ]
-        public void ResolvesServices ( )
+        public async Task ResolvesServices ( )
         {
-            var engine = new Engine ( );
+            await using var engine = new Engine ( );
 
             Assert.NotEmpty ( engine.Services );
         }

@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using PdfSharpCore;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.HtmlRenderer.PdfSharp;
 using Omnidoc.Services;
 
 namespace Omnidoc.HtmlToPdf
 {
-    public class HtmlToPdfFormatConverter : IFileFormatConverter
+    public sealed class HtmlToPdfFormatConverter : AsyncDisposable, IFileFormatConverter
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

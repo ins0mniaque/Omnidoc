@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Tesseract;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Model;
 using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {
-    public class ImageDocumentParser : IDocumentParser
+    public class ImageDocumentParser : AsyncDisposable, IDocumentParser
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

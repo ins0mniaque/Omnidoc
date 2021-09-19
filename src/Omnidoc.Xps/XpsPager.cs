@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Zip.Opc;
 
 namespace Omnidoc.Xps
 {
-    public sealed class XpsPager < T > : IPager < T >
+    public class XpsPager < T > : AsyncDisposable, IPager < T >
     {
         public XpsPager ( ZipArchive document, Func < ZipArchiveEntry, T > factory )
         {
@@ -46,6 +47,8 @@ namespace Omnidoc.Xps
 
         private async Task < string [ ] > LoadPagesAsync ( CancellationToken cancellationToken )
         {
+            ThrowIfDisposed ( );
+
             var relationships = await Document.TryReadRelationshipsAsync ( cancellationToken ).ConfigureAwait ( false );
             if ( relationships is null )
                 return Array.Empty < string > ( );
@@ -83,16 +86,12 @@ namespace Omnidoc.Xps
                       .ToArray  ( );
         }
 
-        private bool isDisposed;
-
-        public void Dispose ( )
+        protected override void Dispose ( bool disposing )
         {
-            if ( ! isDisposed )
+            if ( disposing )
             {
                 Document   .Dispose ( );
                 Disposable?.Dispose ( );
-
-                isDisposed = true;
             }
         }
     }

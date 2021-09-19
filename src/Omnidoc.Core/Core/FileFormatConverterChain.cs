@@ -6,30 +6,32 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Omnidoc.Core.Disposables;
 using Omnidoc.IO;
 using Omnidoc.Services;
 
 namespace Omnidoc.Core
 {
-    public class FileFormatConverterChain : IFileFormatConverter
+    public class FileFormatConverterChain : AsyncDisposableContainer < IService >, IFileFormatConverter
     {
         public FileFormatConverterChain ( IEnumerable < IFileFormatConverter > chain ) : this ( chain.ToArray ( ) ) { }
-        public FileFormatConverterChain ( params IFileFormatConverter [ ] chain )
+        public FileFormatConverterChain ( params IFileFormatConverter [ ]      chain )
         {
             Chain      = chain;
             Descriptor = new ServiceDescriptor ( chain [  0 ].Descriptor.Formats,
                                                  chain [ ^1 ].Descriptor.OutputFormats );
         }
 
-        protected IReadOnlyList < IFileFormatConverter > Chain { get; }
+        protected IReadOnlyList < IFileFormatConverter > Chain { get; private set; }
 
         public IServiceDescriptor Descriptor { get; }
 
         public virtual async Task ConvertAsync ( Stream file, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
         {
-            if ( file    is null ) throw new ArgumentNullException ( nameof ( file    ) );
-            if ( output  is null ) throw new ArgumentNullException ( nameof ( output  ) );
-            if ( options is null ) throw new ArgumentNullException ( nameof ( options ) );
+            if ( file    is null ) throw new ArgumentNullException   ( nameof ( file    ) );
+            if ( output  is null ) throw new ArgumentNullException   ( nameof ( output  ) );
+            if ( options is null ) throw new ArgumentNullException   ( nameof ( options ) );
+            if ( Chain   is null ) throw new ObjectDisposedException ( GetType ( ).Name );
 
             var buffer = (Stream?) null;
 
@@ -75,5 +77,7 @@ namespace Omnidoc.Core
                                                                      converter    .GetType ( ).Name,
                                                                      nextConverter.GetType ( ).Name ) );
         }
+
+        protected override IEnumerable < IService >? BeginDispose ( ) => Chain;
     }
 }

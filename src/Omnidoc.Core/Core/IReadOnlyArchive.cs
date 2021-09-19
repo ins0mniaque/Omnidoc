@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Omnidoc.Core
 {
-    public interface IReadOnlyArchive
+    public interface IReadOnlyArchive : IAsyncDisposable, IDisposable
     {
         Task < IArchiveEntry? > TryGetEntryAsync ( int    index, CancellationToken cancellationToken = default );
         Task < IArchiveEntry? > TryGetEntryAsync ( string path,  CancellationToken cancellationToken = default );

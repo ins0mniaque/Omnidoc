@@ -2,8 +2,5 @@
 
 namespace Omnidoc.Core
 {
-    public interface IPage : IDisposable
-    {
-
-    }
+    public interface IPage : IAsyncDisposable, IDisposable { }
 }

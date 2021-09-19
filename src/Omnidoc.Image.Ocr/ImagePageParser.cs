@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 using Tesseract;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Model;
 using Omnidoc.Model.Elements;
 
 namespace Omnidoc.Image
 {
-    public sealed class ImagePageParser : IPageParser
+    public sealed class ImagePageParser : AsyncDisposable, IPageParser
     {
         public ImagePageParser ( TesseractEngine engine, Stream page )
         {
@@ -108,16 +109,10 @@ namespace Omnidoc.Image
             return element;
         }
 
-        private bool isDisposed;
-
-        public void Dispose ( )
+        protected override void Dispose ( bool disposing )
         {
-            if ( isDisposed )
-                return;
-
-            Page.Dispose ( );
-
-            isDisposed = true;
+            if ( disposing )
+                Page.Dispose ( );
         }
     }
 }

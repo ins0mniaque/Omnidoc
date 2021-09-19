@@ -4,11 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Services;
 
 namespace Omnidoc.Zip.Opc
 {
-    public class OpcDocumentPreviewer : IDocumentPreviewer
+    public class OpcDocumentPreviewer : AsyncDisposable, IDocumentPreviewer
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

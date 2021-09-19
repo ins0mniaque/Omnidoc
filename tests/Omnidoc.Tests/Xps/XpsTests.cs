@@ -11,8 +11,9 @@ namespace Omnidoc.Xps.Tests
         [ Samples ( "Xps/" ) ]
         public async Task DetectsXpsFiles ( Stream sample )
         {
-            var detector = new XpsFormatDetector ( );
-            var format   = await detector.DetectAsync ( sample ).ConfigureAwait ( false );
+            await using var detector = new XpsFormatDetector ( );
+
+            var format = await detector.DetectAsync ( sample ).ConfigureAwait ( false );
 
             Assert.Equal ( FileFormats.Xps, format );
         }
@@ -21,8 +22,9 @@ namespace Omnidoc.Xps.Tests
         [ Samples ( "Zip/" ) ]
         public async Task DoesNotDetectZipFilesAsXpsFiles ( Stream sample )
         {
-            var detector = new XpsFormatDetector ( );
-            var format   = await detector.DetectAsync ( sample ).ConfigureAwait ( false );
+            await using var detector = new XpsFormatDetector ( );
+
+            var format = await detector.DetectAsync ( sample ).ConfigureAwait ( false );
 
             Assert.Null ( format );
         }

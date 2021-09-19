@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.IO;
 using Omnidoc.Services;
 
 namespace Omnidoc.Zip.Opc
 {
-    public class OpcMetadataReader : IFileMetadataReader
+    public sealed class OpcMetadataReader : AsyncDisposable, IFileMetadataReader
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

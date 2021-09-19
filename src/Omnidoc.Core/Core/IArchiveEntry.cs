@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,7 +6,7 @@ using Omnidoc.IO;
 
 namespace Omnidoc.Core
 {
-    public interface IArchiveEntry : IDisposable
+    public interface IArchiveEntry
     {
         string        Path     { get; }
         FileMetadata? Metadata { get; }

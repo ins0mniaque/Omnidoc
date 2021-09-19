@@ -3,14 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
-using Omnidoc.Interop;
+using Omnidoc.Core.Disposables;
 using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public class PdfDocumentPreviewer : IDocumentPreviewer
+    public sealed class PdfDocumentPreviewer : AsyncDisposable, IDocumentPreviewer
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

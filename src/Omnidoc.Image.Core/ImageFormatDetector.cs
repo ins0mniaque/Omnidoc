@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.IO;
 using Omnidoc.Services;
 
 namespace Omnidoc.Image
 {
-    public class ImageFormatDetector : IFileFormatDetector
+    public sealed class ImageFormatDetector : AsyncDisposable, IFileFormatDetector
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (

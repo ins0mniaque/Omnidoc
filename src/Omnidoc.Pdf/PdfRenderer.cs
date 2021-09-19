@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using PDFiumCore;
 
-using Omnidoc.Interop;
+using Omnidoc.Core.Disposables;
 
 namespace Omnidoc.Pdf
 {

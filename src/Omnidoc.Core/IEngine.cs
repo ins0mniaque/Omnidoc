@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using Omnidoc.IO;
 
 namespace Omnidoc
 {
-    public interface IEngine
+    public interface IEngine : IAsyncDisposable, IDisposable
     {
         IEnumerable < IService > Services { get; }
 

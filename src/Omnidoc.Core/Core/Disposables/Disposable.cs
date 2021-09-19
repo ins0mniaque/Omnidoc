@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Omnidoc.Interop
+namespace Omnidoc.Core.Disposables
 {
     public static class Disposable
     {

@@ -7,12 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 using Omnidoc.IO;
 using Omnidoc.Services;
 
 namespace Omnidoc
 {
-    public class Engine : IEngine
+    public class Engine : AsyncDisposableContainer < IService >, IEngine
     {
         private readonly Lazy < ICollection < IService > > services;
 
@@ -22,7 +23,7 @@ namespace Omnidoc
         public Engine ( params IService [ ]      services ) : this ( services.AsEnumerable ( )           ) { }
 
         protected Engine ( Func < IEnumerable < IService > > services )
-            : this ( new Lazy < ICollection < IService > > ( ( ) => services ( ).OrderByDependency ( ).ToList ( ) ) ) { }
+            : this ( new Lazy < ICollection < IService > > ( ( ) => services ( ).OrderByFileFormatDependency ( service => service.Descriptor.Formats ).ToList ( ) ) ) { }
 
         protected Engine ( Lazy < ICollection < IService > > services )
         {
@@ -40,7 +41,15 @@ namespace Omnidoc
             throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_NoServicesRegistered, typeof ( IService ).FullName ), nameof ( provider ) );
         }
 
-        public IEnumerable < IService > Services => services.Value;
+        public IEnumerable < IService > Services
+        {
+            get
+            {
+                ThrowIfDisposed ( );
+
+                return services.Value;
+            }
+        }
 
         public virtual async Task < FileFormat? > DetectFileFormatAsync ( Stream file, CancellationToken cancellationToken = default )
         {
@@ -71,5 +80,7 @@ namespace Omnidoc
             return Services.OfType < T > ( ).Where ( service => service.Descriptor.Supports ( inputFormat  ) &&
                                                                 service.Descriptor.Outputs  ( outputFormat ) );
         }
+
+        protected override IEnumerable < IService >? BeginDispose ( ) => services != null && services.IsValueCreated ? services.Value : null;
     }
 }

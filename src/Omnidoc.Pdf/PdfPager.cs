@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using PDFiumCore;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 
 namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public sealed class PdfPager < T > : IPager < T >
+    public sealed class PdfPager < T > : AsyncDisposable, IPager < T >
     {
         public PdfPager ( FpdfDocumentT document, Func < FpdfPageT, T > factory )
         {
@@ -39,16 +40,12 @@ namespace Omnidoc.Pdf
             return Task.FromResult ( Factory ( FPDF_LoadPage ( Document, index ) ) );
         }
 
-        private bool isDisposed;
-
-        public void Dispose ( )
+        protected override void Dispose ( bool disposing )
         {
-            if ( ! isDisposed )
+            if ( disposing )
             {
                 FPDF_CloseDocument  ( Document );
                 Disposable?.Dispose ( );
-
-                isDisposed = true;
             }
         }
     }

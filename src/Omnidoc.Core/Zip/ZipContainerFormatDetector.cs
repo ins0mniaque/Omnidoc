@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
@@ -41,5 +42,23 @@ namespace Omnidoc.Zip
         }
 
         protected abstract Task < FileFormat? > DetectAsync ( ZipArchive archive, CancellationToken cancellationToken );
+
+        public void Dispose ( )
+        {
+            Dispose ( disposing: true );
+            GC.SuppressFinalize ( this );
+        }
+
+        [ SuppressMessage ( "Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "DisposeAsync" ) ]
+        public async ValueTask DisposeAsync ( )
+        {
+            await DisposeAsyncCore ( );
+
+            Dispose ( disposing: false );
+            GC.SuppressFinalize ( this );
+        }
+
+        protected virtual void      Dispose          ( bool disposing ) { }
+        protected virtual ValueTask DisposeAsyncCore ( ) => default;
     }
 }

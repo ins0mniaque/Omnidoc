@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using PDFiumCore;
 
 using Omnidoc.Core;
+using Omnidoc.Core.Disposables;
 
 namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public sealed class PdfPageRenderer : IPageRenderer
+    public sealed class PdfPageRenderer : AsyncDisposable, IPageRenderer
     {
         public PdfPageRenderer ( FpdfPageT page )
         {
@@ -27,16 +28,10 @@ namespace Omnidoc.Pdf
             return Page.RenderAsync ( output, options, cancellationToken );
         }
 
-        private bool isDisposed;
-
-        public void Dispose ( )
+        protected override void Dispose ( bool disposing )
         {
-            if ( isDisposed )
-                return;
-
-            FPDF_ClosePage ( Page );
-
-            isDisposed = true;
+            if ( disposing )
+                FPDF_ClosePage ( Page );
         }
     }
 }

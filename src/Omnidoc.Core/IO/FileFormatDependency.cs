@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Omnidoc.Collections;
-using Omnidoc.IO;
 
-namespace Omnidoc.Services
+namespace Omnidoc.IO
 {
     public static class FileFormatDependency
     {
-        public static IEnumerable < IService > OrderByDependency ( this IEnumerable < IService > services )
+        public static IEnumerable < T > OrderByFileFormatDependency < T > ( this IEnumerable < T > source, Func < T, IEnumerable < FileFormat > > formats )
         {
-            var sorted = services.SelectMany ( service => service.Descriptor.Formats )
-                                 .OrderByDependency ( );
+            var sorted = source.SelectMany ( formats )
+                               .OrderByDependency ( );
 
-            return services.OrderBy ( FileFormatDependency );
+            return source.OrderBy ( FileFormatDependency );
 
-            int FileFormatDependency ( IService service )
+            int FileFormatDependency ( T service )
             {
-                return service.Descriptor.Formats.Select ( format => Array.IndexOf ( sorted, format ) )
-                                                 .Min    ( );
+                return formats ( service ).Select ( format => Array.IndexOf ( sorted, format ) )
+                                          .Min    ( );
             }
         }
 
