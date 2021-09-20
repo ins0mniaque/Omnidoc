@@ -7,8 +7,4 @@
     <PackageTags>Omnidoc;document;extract;convert;preview;render</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE" Visible="false" Pack="true" PackagePath="" />
-  </ItemGroup>
-
 </Project>
