@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -67,8 +68,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             _imageWord = new CssRectImage(this);
             Words.Add(_imageWord);
 
-            Uri uri;
-            if (Uri.TryCreate(GetAttribute("src"), UriKind.Absolute, out uri))
+            if (Uri.TryCreate(GetAttribute("src"), UriKind.Absolute, out var uri))
             {
                 if (uri.Host.IndexOf("youtube.com", StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
@@ -134,14 +134,12 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             {
                 try
                 {
-                    var apiUri = new Uri(string.Format("http://gdata.youtube.com/feeds/api/videos/{0}?v=2&alt=json", uri.Segments[2]));
+                    var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&alt=json", uri.Segments[2]));
 
-                    using (var client = new WebClient())
-                    {
-                        client.Encoding = Encoding.UTF8;
-                        client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
-                        client.DownloadStringAsync(apiUri);
-                    }
+                    using var client = new WebClient();
+                    client.Encoding = Encoding.UTF8;
+                    client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
+                    client.DownloadStringAsync(apiUri);
                 }
                 catch (Exception ex)
                 {
@@ -165,7 +163,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         var idx = e.Result.IndexOf("\"media$title\"", StringComparison.Ordinal);
                         if (idx > -1)
                         {
-                            idx = e.Result.IndexOf("\"$t\"", idx);
+                            idx = e.Result.IndexOf("\"$t\"", idx, StringComparison.Ordinal);
                             if (idx > -1)
                             {
                                 idx = e.Result.IndexOf('"', idx + 4);
@@ -176,7 +174,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                                         endIdx = e.Result.IndexOf('"', endIdx + 1);
                                     if (endIdx > -1)
                                     {
-                                        _videoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
+                                        _videoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"", StringComparison.Ordinal);
                                     }
                                 }
                             }
@@ -185,7 +183,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         idx = e.Result.IndexOf("\"media$thumbnail\"", StringComparison.Ordinal);
                         if (idx > -1)
                         {
-                            var iidx = e.Result.IndexOf("sddefault", idx);
+                            var iidx = e.Result.IndexOf("sddefault", idx, StringComparison.Ordinal);
                             if (iidx > -1)
                             {
                                 if (string.IsNullOrEmpty(Width))
@@ -195,7 +193,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                             }
                             else
                             {
-                                iidx = e.Result.IndexOf("hqdefault", idx);
+                                iidx = e.Result.IndexOf("hqdefault", idx, StringComparison.Ordinal);
                                 if (iidx > -1)
                                 {
                                     if (string.IsNullOrEmpty(Width))
@@ -205,7 +203,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                                 }
                                 else
                                 {
-                                    iidx = e.Result.IndexOf("mqdefault", idx);
+                                    iidx = e.Result.IndexOf("mqdefault", idx, StringComparison.Ordinal);
                                     if (iidx > -1)
                                     {
                                         if (string.IsNullOrEmpty(Width))
@@ -215,7 +213,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                                     }
                                     else
                                     {
-                                        iidx = e.Result.IndexOf("default", idx);
+                                        iidx = e.Result.IndexOf("default", idx, StringComparison.Ordinal);
                                         if (string.IsNullOrEmpty(Width))
                                             Width = "120px";
                                         if (string.IsNullOrEmpty(Height))
@@ -230,7 +228,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                                 var endIdx = e.Result.IndexOf('"', iidx);
                                 if (endIdx > -1)
                                 {
-                                    _videoImageUrl = e.Result.Substring(iidx, endIdx - iidx).Replace("\\\"", "\"").Replace("\\", "");
+                                    _videoImageUrl = e.Result[iidx..endIdx].Replace("\\\"", "\"", StringComparison.Ordinal).Replace("\\", "", StringComparison.Ordinal);
                                 }
                             }
                         }
@@ -238,13 +236,13 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         idx = e.Result.IndexOf("\"link\"", StringComparison.Ordinal);
                         if (idx > -1)
                         {
-                            idx = e.Result.IndexOf("http:", idx);
+                            idx = e.Result.IndexOf("http:", idx, StringComparison.Ordinal);
                             if (idx > -1)
                             {
                                 var endIdx = e.Result.IndexOf('"', idx);
                                 if (endIdx > -1)
                                 {
-                                    _videoLinkUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                                    _videoLinkUrl = e.Result[idx..endIdx].Replace("\\\"", "\"", StringComparison.Ordinal).Replace("\\", "", StringComparison.Ordinal);
                                 }
                             }
                         }
@@ -272,10 +270,12 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             {
                 try
                 {
-                    var apiUri = new Uri(string.Format("http://vimeo.com/api/v2/video/{0}.json", uri.Segments[2]));
+                    var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://vimeo.com/api/v2/video/{0}.json", uri.Segments[2]));
 
-                    var client = new WebClient();
-                    client.Encoding = Encoding.UTF8;
+                    var client = new WebClient
+                    {
+                        Encoding = Encoding.UTF8
+                    };
                     client.DownloadStringCompleted += OnDownloadVimeoApiCompleted;
                     client.DownloadStringAsync(apiUri);
                 }
@@ -311,7 +311,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                                     endIdx = e.Result.IndexOf('"', endIdx + 1);
                                 if (endIdx > -1)
                                 {
-                                    _videoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
+                                    _videoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"", StringComparison.Ordinal);
                                 }
                             }
                         }
@@ -326,7 +326,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         }
                         else
                         {
-                            idx = e.Result.IndexOf("thumbnail_medium", idx);
+                            idx = e.Result.IndexOf("thumbnail_medium", idx, StringComparison.Ordinal);
                             if (idx > -1)
                             {
                                 if (string.IsNullOrEmpty(Width))
@@ -336,7 +336,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                             }
                             else
                             {
-                                idx = e.Result.IndexOf("thumbnail_small", idx);
+                                idx = e.Result.IndexOf("thumbnail_small", idx, StringComparison.Ordinal);
                                 if (string.IsNullOrEmpty(Width))
                                     Width = "100";
                                 if (string.IsNullOrEmpty(Height))
@@ -345,13 +345,13 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         }
                         if (idx > -1)
                         {
-                            idx = e.Result.IndexOf("http:", idx);
+                            idx = e.Result.IndexOf("http:", idx, StringComparison.Ordinal);
                             if (idx > -1)
                             {
                                 var endIdx = e.Result.IndexOf('"', idx);
                                 if (endIdx > -1)
                                 {
-                                    _videoImageUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                                    _videoImageUrl = e.Result[idx..endIdx].Replace("\\\"", "\"", StringComparison.Ordinal).Replace("\\", "", StringComparison.Ordinal);
                                 }
                             }
                         }
@@ -359,13 +359,13 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         idx = e.Result.IndexOf("\"url\"", StringComparison.Ordinal);
                         if (idx > -1)
                         {
-                            idx = e.Result.IndexOf("http:", idx);
+                            idx = e.Result.IndexOf("http:", idx, StringComparison.Ordinal);
                             if (idx > -1)
                             {
                                 var endIdx = e.Result.IndexOf('"', idx);
                                 if (endIdx > -1)
                                 {
-                                    _videoLinkUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                                    _videoLinkUrl = e.Result[idx..endIdx].Replace("\\\"", "\"", StringComparison.Ordinal).Replace("\\", "", StringComparison.Ordinal);
                                 }
                             }
                         }
@@ -391,8 +391,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="source">the name of the video source (YouTube/Vimeo/Etc.)</param>
         private void HandleDataLoadFailure(Exception ex, string source)
         {
-            var webError = ex as WebException;
-            var webResponse = webError != null ? webError.Response as HttpWebResponse : null;
+            var webResponse = ex is WebException webError ? webError.Response as HttpWebResponse : null;
             if (webResponse != null && webResponse.StatusCode == HttpStatusCode.NotFound)
             {
                 _videoTitle = "The video is not found, possibly removed by the user.";
@@ -436,12 +435,12 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             if (_videoImageUrl != null && _imageLoadHandler == null)
             {
                 _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
-                _imageLoadHandler.LoadImage(_videoImageUrl, HtmlTag != null ? HtmlTag.Attributes : null);
+                _imageLoadHandler.LoadImage(_videoImageUrl, HtmlTag?.Attributes);
             }
 
             var rects = CommonUtils.GetFirstValueOrDefault(Rectangles);
 
-            RPoint offset = (HtmlContainer != null && !IsFixed) ? HtmlContainer.ScrollOffset : RPoint.Empty;
+            var offset = (HtmlContainer != null && !IsFixed) ? HtmlContainer.ScrollOffset : RPoint.Empty;
             rects.Offset(offset);
 
             var clipped = RenderUtils.ClipGraphicsByOverflow(g, this);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Omnidoc.HtmlRenderer.Core.Utils
 {
@@ -51,9 +52,9 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             ArgChecker.AssertArgNotNull(fullString, "fullString");
             if (startIdx < 0 || startIdx >= fullString.Length)
-                throw new ArgumentOutOfRangeException("startIdx", "Must within fullString boundries");
+                throw new ArgumentOutOfRangeException(nameof(startIdx), "Must within fullString boundries");
             if (length < 0 || startIdx + length > fullString.Length)
-                throw new ArgumentOutOfRangeException("length", "Must within fullString boundries");
+                throw new ArgumentOutOfRangeException(nameof(length), "Must within fullString boundries");
 
             _fullString = fullString;
             _startIdx = startIdx;
@@ -94,7 +95,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             get
             {
                 if (idx < 0 || idx > _length)
-                    throw new ArgumentOutOfRangeException("idx", "must be within the string range");
+                    throw new ArgumentOutOfRangeException(nameof(idx), "must be within the string range");
                 return _fullString[_startIdx + idx];
             }
         }
@@ -114,7 +115,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>true - empty or whitespace string, false - otherwise</returns>
         public bool IsEmptyOrWhitespace()
         {
-            for (int i = 0; i < _length; i++)
+            for (var i = 0; i < _length; i++)
             {
                 if (!char.IsWhiteSpace(_fullString, _startIdx + i))
                     return false;
@@ -130,7 +131,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             if (_length < 1)
                 return false;
-            for (int i = 0; i < _length; i++)
+            for (var i = 0; i < _length; i++)
             {
                 if (!char.IsWhiteSpace(_fullString, _startIdx + i))
                     return false;
@@ -158,18 +159,18 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         public string Substring(int startIdx, int length)
         {
             if (startIdx < 0 || startIdx > _length)
-                throw new ArgumentOutOfRangeException("startIdx");
+                throw new ArgumentOutOfRangeException(nameof(startIdx));
             if (length > _length)
-                throw new ArgumentOutOfRangeException("length");
+                throw new ArgumentOutOfRangeException(nameof(length));
             if (startIdx + length > _length)
-                throw new ArgumentOutOfRangeException("length");
+                throw new ArgumentOutOfRangeException(nameof(length));
 
             return _fullString.Substring(_startIdx + startIdx, length);
         }
 
         public override string ToString()
         {
-            return string.Format("Sub-string: {0}", _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty);
+            return string.Format(CultureInfo.InvariantCulture, "Sub-string: {0}", _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty);
         }
     }
 }

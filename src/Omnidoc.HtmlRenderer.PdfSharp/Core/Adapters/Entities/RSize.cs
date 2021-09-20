@@ -28,7 +28,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     value of 0.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public static readonly RSize Empty = new RSize();
+        public static readonly RSize Empty;
 
         #endregion
 
@@ -111,6 +111,18 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// </returns>
         /// <filterpriority>1</filterpriority>
         public double Height { get; set; }
+
+        /// <summary>
+        ///     Converts the specified <see cref="RSize" /> structure to a
+        ///     <see cref="RPoint" /> structure.
+        /// </summary>
+        /// <returns>The <see cref="RPoint" /> structure to which this operator converts.</returns>
+        /// <param name="size">The <see cref="RSize" /> structure to be converted
+        /// </param>
+        public static RPoint ToRPoint(RSize size)
+        {
+            return new RPoint(size.Width, size.Height);
+        }
 
         /// <summary>
         ///     Converts the specified <see cref="RSize" /> structure to a
@@ -261,7 +273,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     ; otherwise, false.
         /// </returns>
         /// <param name="obj">
-        ///     The <see cref="T:System.Object" /> to test.
+        ///     The <see cref="object" /> to test.
         /// </param>
         /// <filterpriority>1</filterpriority>
         public override bool Equals(object obj)
@@ -284,7 +296,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return HashCode.Combine(Width, Height);
         }
 
         /// <summary>

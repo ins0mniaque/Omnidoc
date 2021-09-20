@@ -21,7 +21,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         private readonly CssBox _tableBox;
 
         /// <summary>
-        /// 
+        /// table caption
         /// </summary>
         private CssBox _caption;
 
@@ -32,17 +32,17 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <summary>
         /// collection of all rows boxes
         /// </summary>
-        private readonly List<CssBox> _bodyrows = new List<CssBox>();
+        private readonly List<CssBox> _bodyrows = new();
 
         /// <summary>
         /// collection of all columns boxes
         /// </summary>
-        private readonly List<CssBox> _columns = new List<CssBox>();
+        private readonly List<CssBox> _columns = new();
 
         /// <summary>
         /// 
         /// </summary>
-        private readonly List<CssBox> _allRows = new List<CssBox>();
+        private readonly List<CssBox> _allRows = new();
 
         private int _columnCount;
 
@@ -72,8 +72,8 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns>the calculated spacing</returns>
         public static double GetTableSpacing(CssBox tableBox)
         {
-            int count = 0;
-            int columns = 0;
+            var count = 0;
+            var columns = 0;
             foreach (var box in tableBox.Boxes)
             {
                 if (box.Display == CssConstants.TableColumn)
@@ -82,7 +82,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 }
                 else if (box.Display == CssConstants.TableRowGroup)
                 {
-                    foreach (CssBox cr in tableBox.Boxes)
+                    foreach (var cr in tableBox.Boxes)
                     {
                         count++;
                         if (cr.Display == CssConstants.TableRow)
@@ -176,7 +176,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         _bodyrows.Add(box);
                         break;
                     case CssConstants.TableRowGroup:
-                        foreach (CssBox childBox in box.Boxes)
+                        foreach (var childBox in box.Boxes)
                             if (childBox.Display == CssConstants.TableRow)
                                 _bodyrows.Add(childBox);
                         break;
@@ -193,24 +193,24 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                             _footerBox = box;
                         break;
                     case CssConstants.TableColumn:
-                        for (int i = 0; i < GetSpan(box); i++)
+                        for (var i = 0; i < GetSpan(box); i++)
                             _columns.Add(box);
                         break;
                     case CssConstants.TableColumnGroup:
                         if (box.Boxes.Count == 0)
                         {
-                            int gspan = GetSpan(box);
-                            for (int i = 0; i < gspan; i++)
+                            var gspan = GetSpan(box);
+                            for (var i = 0; i < gspan; i++)
                             {
                                 _columns.Add(box);
                             }
                         }
                         else
                         {
-                            foreach (CssBox bb in box.Boxes)
+                            foreach (var bb in box.Boxes)
                             {
-                                int bbspan = GetSpan(bb);
-                                for (int i = 0; i < bbspan; i++)
+                                var bbspan = GetSpan(bb);
+                                for (var i = 0; i < bbspan; i++)
                                 {
                                     _columns.Add(bb);
                                 }
@@ -236,23 +236,23 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         {
             if (!_tableBox._tableFixed)
             {
-                int currow = 0;
-                List<CssBox> rows = _bodyrows;
+                var currow = 0;
+                var rows = _bodyrows;
 
-                foreach (CssBox row in rows)
+                foreach (var row in rows)
                 {
-                    for (int k = 0; k < row.Boxes.Count; k++)
+                    for (var k = 0; k < row.Boxes.Count; k++)
                     {
-                        CssBox cell = row.Boxes[k];
-                        int rowspan = GetRowSpan(cell);
-                        int realcol = GetCellRealColumnIndex(row, cell); //Real column of the cell
+                        var cell = row.Boxes[k];
+                        var rowspan = GetRowSpan(cell);
+                        var realcol = GetCellRealColumnIndex(row, cell); //Real column of the cell
 
-                        for (int i = currow + 1; i < currow + rowspan; i++)
+                        for (var i = currow + 1; i < currow + rowspan; i++)
                         {
                             if (rows.Count > i)
                             {
-                                int colcount = 0;
-                                for (int j = 0; j < rows[i].Boxes.Count; j++)
+                                var colcount = 0;
+                                for (var j = 0; j < rows[i].Boxes.Count; j++)
                                 {
                                     if (colcount == realcol)
                                     {
@@ -285,23 +285,23 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
             else
             {
-                foreach (CssBox b in _allRows)
+                foreach (var b in _allRows)
                     _columnCount = Math.Max(_columnCount, b.Boxes.Count);
             }
 
             //Initialize column widths array with NaNs
             _columnWidths = new double[_columnCount];
-            for (int i = 0; i < _columnWidths.Length; i++)
+            for (var i = 0; i < _columnWidths.Length; i++)
                 _columnWidths[i] = double.NaN;
 
-            double availCellSpace = GetAvailableCellWidth();
+            var availCellSpace = GetAvailableCellWidth();
 
             if (_columns.Count > 0)
             {
                 // Fill ColumnWidths array by scanning column widths
-                for (int i = 0; i < _columns.Count; i++)
+                for (var i = 0; i < _columns.Count; i++)
                 {
-                    CssLength len = new CssLength(_columns[i].Width); //Get specified width
+                    var len = new CssLength(_columns[i].Width); //Get specified width
 
                     if (len.Number > 0) //If some width specified
                     {
@@ -319,21 +319,21 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             else
             {
                 // Fill ColumnWidths array by scanning width in table-cell definitions
-                foreach (CssBox row in _allRows)
+                foreach (var row in _allRows)
                 {
                     //Check for column width in table-cell definitions
-                    for (int i = 0; i < _columnCount; i++)
+                    for (var i = 0; i < _columnCount; i++)
                     {
                         if (i < 20 || double.IsNaN(_columnWidths[i])) // limit column width check
                         {
                             if (i < row.Boxes.Count && row.Boxes[i].Display == CssConstants.TableCell)
                             {
-                                double len = CssValueParser.ParseLength(row.Boxes[i].Width, availCellSpace, row.Boxes[i]);
+                                var len = CssValueParser.ParseLength(row.Boxes[i].Width, availCellSpace, row.Boxes[i]);
                                 if (len > 0) //If some width specified
                                 {
-                                    int colspan = GetColSpan(row.Boxes[i]);
+                                    var colspan = GetColSpan(row.Boxes[i]);
                                     len /= Convert.ToSingle(colspan);
-                                    for (int j = i; j < i + colspan; j++)
+                                    for (var j = i; j < i + colspan; j++)
                                     {
                                         _columnWidths[j] = double.IsNaN(_columnWidths[j]) ? len : Math.Max(_columnWidths[j], len);
                                     }
@@ -356,10 +356,10 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             if (_widthSpecified) //If a width was specified,
             {
                 //Assign NaNs equally with space left after gathering not-NaNs
-                int numOfNans = 0;
+                var numOfNans = 0;
 
                 //Calculate number of NaNs and occupied space
-                foreach (double colWidth in _columnWidths)
+                foreach (var colWidth in _columnWidths)
                 {
                     if (double.IsNaN(colWidth))
                         numOfNans++;
@@ -372,15 +372,14 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 if (numOfNans < _columnWidths.Length)
                 {
                     orgColWidths = new double[_columnWidths.Length];
-                    for (int i = 0; i < _columnWidths.Length; i++)
+                    for (var i = 0; i < _columnWidths.Length; i++)
                         orgColWidths[i] = _columnWidths[i];
                 }
 
                 if (numOfNans > 0)
                 {
                     // Determine the max width for each column
-                    double[] minFullWidths, maxFullWidths;
-                    GetColumnsMinMaxWidthByContent(true, out minFullWidths, out maxFullWidths);
+                    GetColumnsMinMaxWidthByContent(true, out _, out var maxFullWidths);
 
                     // set the columns that can fulfill by the max width in a loop because it changes the nanWidth
                     int oldNumOfNans;
@@ -388,7 +387,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     {
                         oldNumOfNans = numOfNans;
 
-                        for (int i = 0; i < _columnWidths.Length; i++)
+                        for (var i = 0; i < _columnWidths.Length; i++)
                         {
                             var nanWidth = (availCellSpace - occupedSpace) / numOfNans;
                             if (double.IsNaN(_columnWidths[i]) && nanWidth > maxFullWidths[i])
@@ -403,9 +402,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     if (numOfNans > 0)
                     {
                         // Determine width that will be assigned to un assigned widths
-                        double nanWidth = (availCellSpace - occupedSpace) / numOfNans;
+                        var nanWidth = (availCellSpace - occupedSpace) / numOfNans;
 
-                        for (int i = 0; i < _columnWidths.Length; i++)
+                        for (var i = 0; i < _columnWidths.Length; i++)
                         {
                             if (double.IsNaN(_columnWidths[i]))
                                 _columnWidths[i] = nanWidth;
@@ -418,15 +417,15 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     if (orgNumOfNans > 0)
                     {
                         // spread extra width between all non width specified columns
-                        double extWidth = (availCellSpace - occupedSpace) / orgNumOfNans;
-                        for (int i = 0; i < _columnWidths.Length; i++)
+                        var extWidth = (availCellSpace - occupedSpace) / orgNumOfNans;
+                        for (var i = 0; i < _columnWidths.Length; i++)
                             if (orgColWidths == null || double.IsNaN(orgColWidths[i]))
                                 _columnWidths[i] += extWidth;
                     }
                     else
                     {
                         // spread extra width between all columns with respect to relative sizes
-                        for (int i = 0; i < _columnWidths.Length; i++)
+                        for (var i = 0; i < _columnWidths.Length; i++)
                             _columnWidths[i] += (availCellSpace - occupedSpace) * (_columnWidths[i] / occupedSpace);
                     }
                 }
@@ -434,10 +433,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             else
             {
                 //Get the minimum and maximum full length of NaN boxes
-                double[] minFullWidths, maxFullWidths;
-                GetColumnsMinMaxWidthByContent(true, out minFullWidths, out maxFullWidths);
+                GetColumnsMinMaxWidthByContent(true, out var minFullWidths, out var maxFullWidths);
 
-                for (int i = 0; i < _columnWidths.Length; i++)
+                for (var i = 0; i < _columnWidths.Length; i++)
                 {
                     if (double.IsNaN(_columnWidths[i]))
                         _columnWidths[i] = minFullWidths[i];
@@ -445,7 +443,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 }
 
                 // spread extra width between all columns
-                for (int i = 0; i < _columnWidths.Length; i++)
+                for (var i = 0; i < _columnWidths.Length; i++)
                 {
                     if (maxFullWidths[i] > _columnWidths[i])
                     {
@@ -463,7 +461,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// </summary>
         private void EnforceMaximumSize()
         {
-            int curCol = 0;
+            var curCol = 0;
             var widthSum = GetWidthSum();
             while (widthSum > GetAvailableTableWidth() && CanReduceWidth())
             {
@@ -486,11 +484,10 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 if (maxWidth < widthSum)
                 {
                     //Get the minimum and maximum full length of NaN boxes
-                    double[] minFullWidths, maxFullWidths;
-                    GetColumnsMinMaxWidthByContent(false, out minFullWidths, out maxFullWidths);
+                    GetColumnsMinMaxWidthByContent(false, out var minFullWidths, out var maxFullWidths);
 
                     // lower all the columns to the minimum
-                    for (int i = 0; i < _columnWidths.Length; i++)
+                    for (var i = 0; i < _columnWidths.Length; i++)
                         _columnWidths[i] = minFullWidths[i];
 
                     // either min for all column is not enought and we need to lower it more resulting in clipping
@@ -499,11 +496,11 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     if (maxWidth < widthSum)
                     {
                         // lower the width of columns starting from the largest one until the max width is satisfied
-                        for (int a = 0; a < 15 && maxWidth < widthSum - 0.1; a++) // limit iteration so bug won't create infinite loop
+                        for (var a = 0; a < 15 && maxWidth < widthSum - 0.1; a++) // limit iteration so bug won't create infinite loop
                         {
-                            int nonMaxedColumns = 0;
+                            var nonMaxedColumns = 0;
                             double largeWidth = 0f, secLargeWidth = 0f;
-                            for (int i = 0; i < _columnWidths.Length; i++)
+                            for (var i = 0; i < _columnWidths.Length; i++)
                             {
                                 if (_columnWidths[i] > largeWidth + 0.1)
                                 {
@@ -517,10 +514,10 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                                 }
                             }
 
-                            double decrease = secLargeWidth > 0 ? largeWidth - secLargeWidth : (widthSum - maxWidth) / _columnWidths.Length;
+                            var decrease = secLargeWidth > 0 ? largeWidth - secLargeWidth : (widthSum - maxWidth) / _columnWidths.Length;
                             if (decrease * nonMaxedColumns > widthSum - maxWidth)
                                 decrease = (widthSum - maxWidth) / nonMaxedColumns;
-                            for (int i = 0; i < _columnWidths.Length; i++)
+                            for (var i = 0; i < _columnWidths.Length; i++)
                                 if (_columnWidths[i] > largeWidth - 0.1)
                                     _columnWidths[i] -= decrease;
 
@@ -530,18 +527,18 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     else
                     {
                         // spread extra width to columns that didn't reached max width where trying to spread it between all columns
-                        for (int a = 0; a < 15 && maxWidth > widthSum + 0.1; a++) // limit iteration so bug won't create infinite loop
+                        for (var a = 0; a < 15 && maxWidth > widthSum + 0.1; a++) // limit iteration so bug won't create infinite loop
                         {
-                            int nonMaxedColumns = 0;
-                            for (int i = 0; i < _columnWidths.Length; i++)
+                            var nonMaxedColumns = 0;
+                            for (var i = 0; i < _columnWidths.Length; i++)
                                 if (_columnWidths[i] + 1 < maxFullWidths[i])
                                     nonMaxedColumns++;
                             if (nonMaxedColumns == 0)
                                 nonMaxedColumns = _columnWidths.Length;
 
-                            bool hit = false;
-                            double minIncrement = (maxWidth - widthSum) / nonMaxedColumns;
-                            for (int i = 0; i < _columnWidths.Length; i++)
+                            var hit = false;
+                            var minIncrement = (maxWidth - widthSum) / nonMaxedColumns;
+                            for (var i = 0; i < _columnWidths.Length; i++)
                             {
                                 if (_columnWidths[i] + 0.1 < maxFullWidths[i])
                                 {
@@ -550,7 +547,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                                 }
                             }
 
-                            for (int i = 0; i < _columnWidths.Length; i++)
+                            for (var i = 0; i < _columnWidths.Length; i++)
                                 if (!hit || _columnWidths[i] + 1 < maxFullWidths[i])
                                     _columnWidths[i] += minIncrement;
 
@@ -566,17 +563,17 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// </summary>
         private void EnforceMinimumSize()
         {
-            foreach (CssBox row in _allRows)
+            foreach (var row in _allRows)
             {
-                foreach (CssBox cell in row.Boxes)
+                foreach (var cell in row.Boxes)
                 {
-                    int colspan = GetColSpan(cell);
-                    int col = GetCellRealColumnIndex(row, cell);
-                    int affectcol = col + colspan - 1;
+                    var colspan = GetColSpan(cell);
+                    var col = GetCellRealColumnIndex(row, cell);
+                    var affectcol = col + colspan - 1;
 
                     if (_columnWidths.Length > col && _columnWidths[col] < GetColumnMinWidths()[col])
                     {
-                        double diff = GetColumnMinWidths()[col] - _columnWidths[col];
+                        var diff = GetColumnMinWidths()[col] - _columnWidths[col];
                         _columnWidths[affectcol] = GetColumnMinWidths()[affectcol];
 
                         if (col < _columnWidths.Length - 1)
@@ -594,17 +591,17 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="g"></param>
         private void LayoutCells(RGraphics g)
         {
-            double startx = Math.Max(_tableBox.ClientLeft + GetHorizontalSpacing(), 0);
-            double starty = Math.Max(_tableBox.ClientTop + GetVerticalSpacing(), 0);
-            double cury = starty;
-            double maxRight = startx;
+            var startx = Math.Max(_tableBox.ClientLeft + GetHorizontalSpacing(), 0);
+            var starty = Math.Max(_tableBox.ClientTop + GetVerticalSpacing(), 0);
+            var cury = starty;
+            var maxRight = startx;
             double maxBottom = 0f;
-            int currentrow = 0;
+            var currentrow = 0;
 
             // change start X by if the table should align to center or right
             if (_tableBox.TextAlign == CssConstants.Center || _tableBox.TextAlign == CssConstants.Right)
             {
-                double maxRightCalc = GetWidthSum();
+                var maxRightCalc = GetWidthSum();
                 startx = _tableBox.TextAlign == CssConstants.Right
                     ? GetAvailableTableWidth() - maxRightCalc
                     : startx + (GetAvailableTableWidth() - maxRightCalc) / 2;
@@ -612,29 +609,28 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 _tableBox.Location = new RPoint(startx - _tableBox.ActualBorderLeftWidth - _tableBox.ActualPaddingLeft - GetHorizontalSpacing(), _tableBox.Location.Y);
             }
 
-            for (int i = 0; i < _allRows.Count; i++)
+            for (var i = 0; i < _allRows.Count; i++)
             {
                 var row = _allRows[i];
-                double curx = startx;
-                int curCol = 0;
-                bool breakPage = false;
+                var curx = startx;
+                var curCol = 0;
+                var breakPage = false;
 
-                for (int j = 0; j < row.Boxes.Count; j++)
+                for (var j = 0; j < row.Boxes.Count; j++)
                 {
-                    CssBox cell = row.Boxes[j];
+                    var cell = row.Boxes[j];
                     if (curCol >= _columnWidths.Length)
                         break;
 
-                    int rowspan = GetRowSpan(cell);
+                    var rowspan = GetRowSpan(cell);
                     var columnIndex = GetCellRealColumnIndex(row, cell);
-                    double width = GetCellWidth(columnIndex, cell);
+                    var width = GetCellWidth(columnIndex, cell);
                     cell.Location = new RPoint(curx, cury);
                     cell.Size = new RSize(width, 0f);
                     cell.PerformLayout(g); //That will automatically set the bottom of the cell
 
                     //Alter max bottom only if row is cell's row + cell's rowspan - 1
-                    CssSpacingBox sb = cell as CssSpacingBox;
-                    if (sb != null)
+                    if (cell is CssSpacingBox sb)
                     {
                         if (sb.EndRow == currentrow)
                         {
@@ -650,9 +646,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     curx = cell.ActualRight + GetHorizontalSpacing();
                 }
 
-                foreach (CssBox cell in row.Boxes)
+                foreach (var cell in row.Boxes)
                 {
-                    CssSpacingBox spacer = cell as CssSpacingBox;
+                    var spacer = cell as CssSpacingBox;
 
                     if (spacer == null && GetRowSpan(cell) == 1)
                     {
@@ -704,7 +700,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         private double GetSpannedMinWidth(CssBox row, CssBox cell, int realcolindex, int colspan)
         {
             double w = 0f;
-            for (int i = realcolindex; i < row.Boxes.Count || i < realcolindex + colspan - 1; i++)
+            for (var i = realcolindex; i < row.Boxes.Count || i < realcolindex + colspan - 1; i++)
             {
                 if (i < GetColumnMinWidths().Length)
                     w += GetColumnMinWidths()[i];
@@ -720,9 +716,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns></returns>
         private static int GetCellRealColumnIndex(CssBox row, CssBox cell)
         {
-            int i = 0;
+            var i = 0;
 
-            foreach (CssBox b in row.Boxes)
+            foreach (var b in row.Boxes)
             {
                 if (b.Equals(cell))
                     break;
@@ -743,7 +739,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             double colspan = Convert.ToSingle(GetColSpan(b));
             double sum = 0f;
 
-            for (int i = column; i < column + colspan; i++)
+            for (var i = column; i < column + colspan; i++)
             {
                 if (column >= _columnWidths.Length)
                     break;
@@ -763,10 +759,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="b"></param>
         private static int GetColSpan(CssBox b)
         {
-            string att = b.GetAttribute("colspan", "1");
-            int colspan;
+            var att = b.GetAttribute("colspan", "1");
 
-            if (!int.TryParse(att, out colspan))
+            if (!int.TryParse(att, out var colspan))
             {
                 return 1;
             }
@@ -780,10 +775,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="b"></param>
         private static int GetRowSpan(CssBox b)
         {
-            string att = b.GetAttribute("rowspan", "1");
-            int rowspan;
+            var att = b.GetAttribute("rowspan", "1");
 
-            if (!int.TryParse(att, out rowspan))
+            if (!int.TryParse(att, out var rowspan))
             {
                 return 1;
             }
@@ -815,7 +809,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns></returns>
         private bool CanReduceWidth()
         {
-            for (int i = 0; i < _columnWidths.Length; i++)
+            for (var i = 0; i < _columnWidths.Length; i++)
             {
                 if (CanReduceWidth(i))
                 {
@@ -850,7 +844,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// </remarks>
         private double GetAvailableTableWidth()
         {
-            CssLength tblen = new CssLength(_tableBox.Width);
+            var tblen = new CssLength(_tableBox.Width);
 
             if (tblen.Number > 0)
             {
@@ -899,22 +893,21 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             maxFullWidths = new double[_columnWidths.Length];
             minFullWidths = new double[_columnWidths.Length];
 
-            foreach (CssBox row in _allRows)
+            foreach (var row in _allRows)
             {
-                for (int i = 0; i < row.Boxes.Count; i++)
+                for (var i = 0; i < row.Boxes.Count; i++)
                 {
-                    int col = GetCellRealColumnIndex(row, row.Boxes[i]);
+                    var col = GetCellRealColumnIndex(row, row.Boxes[i]);
                     col = _columnWidths.Length > col ? col : _columnWidths.Length - 1;
 
                     if ((!onlyNans || double.IsNaN(_columnWidths[col])) && i < row.Boxes.Count)
                     {
-                        double minWidth, maxWidth;
-                        row.Boxes[i].GetMinMaxWidth(out minWidth, out maxWidth);
+                        row.Boxes[i].GetMinMaxWidth(out var minWidth, out var maxWidth);
 
                         var colSpan = GetColSpan(row.Boxes[i]);
-                        minWidth = minWidth / colSpan;
-                        maxWidth = maxWidth / colSpan;
-                        for (int j = 0; j < colSpan; j++)
+                        minWidth /= colSpan;
+                        maxWidth /= colSpan;
+                        for (var j = 0; j < colSpan; j++)
                         {
                             minFullWidths[col + j] = Math.Max(minFullWidths[col + j], minWidth);
                             maxFullWidths[col + j] = Math.Max(maxFullWidths[col + j], maxWidth);
@@ -944,7 +937,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         {
             double f = 0f;
 
-            foreach (double t in _columnWidths)
+            foreach (var t in _columnWidths)
             {
                 if (double.IsNaN(t))
                     throw new InvalidOperationException("CssTable Algorithm error: There's a NaN in column widths");
@@ -967,7 +960,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="b"></param>
         private static int GetSpan(CssBox b)
         {
-            double f = CssValueParser.ParseNumber(b.GetAttribute("span"), 1);
+            var f = CssValueParser.ParseNumber(b.GetAttribute("span"), 1);
 
             return Math.Max(1, Convert.ToInt32(f));
         }
@@ -981,14 +974,14 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             {
                 _columnMinWidths = new double[_columnWidths.Length];
 
-                foreach (CssBox row in _allRows)
+                foreach (var row in _allRows)
                 {
-                    foreach (CssBox cell in row.Boxes)
+                    foreach (var cell in row.Boxes)
                     {
-                        int colspan = GetColSpan(cell);
-                        int col = GetCellRealColumnIndex(row, cell);
-                        int affectcol = Math.Min(col + colspan, _columnMinWidths.Length) - 1;
-                        double spannedwidth = GetSpannedMinWidth(row, cell, col, colspan) + (colspan - 1) * GetHorizontalSpacing();
+                        var colspan = GetColSpan(cell);
+                        var col = GetCellRealColumnIndex(row, cell);
+                        var affectcol = Math.Min(col + colspan, _columnMinWidths.Length) - 1;
+                        var spannedwidth = GetSpannedMinWidth(row, cell, col, colspan) + (colspan - 1) * GetHorizontalSpacing();
 
                         _columnMinWidths[affectcol] = Math.Max(_columnMinWidths[affectcol], cell.GetMinimumWidth() - spannedwidth);
                     }

@@ -75,7 +75,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <summary>
         /// the regexes cache that is used by the parser so not to create regex each time
         /// </summary>
-        private static readonly Dictionary<string, Regex> _regexes = new Dictionary<string, Regex>();
+        private static readonly Dictionary<string, Regex> _regexes = new();
 
         #endregion
 
@@ -91,8 +91,8 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             startIdx = stylesheet.IndexOf('@', startIdx);
             if (startIdx > -1)
             {
-                int count = 1;
-                int endIdx = stylesheet.IndexOf('{', startIdx);
+                var count = 1;
+                var endIdx = stylesheet.IndexOf('{', startIdx);
                 if (endIdx > -1)
                 {
                     while (count > 0 && endIdx < stylesheet.Length)
@@ -138,8 +138,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns></returns>
         public static string Search(string regex, string source)
         {
-            int position;
-            return Search(regex, source, out position);
+            return Search(regex, source, out _);
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns></returns>
         public static string Search(string regex, string source, out int position)
         {
-            MatchCollection matches = Match(regex, source);
+            var matches = Match(regex, source);
 
             if (matches.Count > 0)
             {
@@ -173,8 +172,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>the regex instance</returns>
         private static Regex GetRegex(string regex)
         {
-            Regex r;
-            if (!_regexes.TryGetValue(regex, out r))
+            if (!_regexes.TryGetValue(regex, out var r))
             {
                 r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 _regexes[regex] = r;

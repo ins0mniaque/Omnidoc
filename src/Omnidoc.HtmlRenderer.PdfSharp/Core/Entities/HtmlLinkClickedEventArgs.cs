@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Omnidoc.HtmlRenderer.Core.Entities
 {
@@ -60,7 +61,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
 
         public override string ToString()
         {
-            return string.Format("Link: {0}, Handled: {1}", _link, _handled);
+            return string.Format(CultureInfo.InvariantCulture, "Link: {0}, Handled: {1}", _link, _handled);
         }
     }
 }

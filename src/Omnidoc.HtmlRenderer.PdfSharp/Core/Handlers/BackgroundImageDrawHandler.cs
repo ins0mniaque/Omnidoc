@@ -70,7 +70,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <returns>the top-left location</returns>
         private static RPoint GetLocation(string backgroundPosition, RRect rectangle, RSize imgSize)
         {
-            double left = rectangle.Left;
+            var left = rectangle.Left;
             if (backgroundPosition.IndexOf("left", StringComparison.OrdinalIgnoreCase) > -1)
             {
                 left = (rectangle.Left + .5f);
@@ -84,7 +84,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
                 left = (rectangle.Left + (rectangle.Width - imgSize.Width) / 2 + .5f);
             }
 
-            double top = rectangle.Top;
+            var top = rectangle.Top;
             if (backgroundPosition.IndexOf("top", StringComparison.OrdinalIgnoreCase) > -1)
             {
                 top = rectangle.Top;
@@ -110,10 +110,8 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             while (destRect.X > rectangle.X)
                 destRect.X -= imgSize.Width;
 
-            using (var brush = g.GetTextureBrush(imageLoadHandler.Image, srcRect, destRect.Location))
-            {
-                g.DrawRectangle(brush, rectangle.X, destRect.Y, rectangle.Width, srcRect.Height);
-            }
+            using var brush = g.GetTextureBrush(imageLoadHandler.Image, srcRect, destRect.Location);
+            g.DrawRectangle(brush, rectangle.X, destRect.Y, rectangle.Width, srcRect.Height);
         }
 
         /// <summary>
@@ -125,10 +123,8 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             while (destRect.Y > rectangle.Y)
                 destRect.Y -= imgSize.Height;
 
-            using (var brush = g.GetTextureBrush(imageLoadHandler.Image, srcRect, destRect.Location))
-            {
-                g.DrawRectangle(brush, destRect.X, rectangle.Y, srcRect.Width, rectangle.Height);
-            }
+            using var brush = g.GetTextureBrush(imageLoadHandler.Image, srcRect, destRect.Location);
+            g.DrawRectangle(brush, destRect.X, rectangle.Y, srcRect.Width, rectangle.Height);
         }
 
         /// <summary>
@@ -142,10 +138,8 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             while (destRect.Y > rectangle.Y)
                 destRect.Y -= imgSize.Height;
 
-            using (var brush = g.GetTextureBrush(imageLoadHandler.Image, srcRect, destRect.Location))
-            {
-                g.DrawRectangle(brush, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-            }
+            using var brush = g.GetTextureBrush(imageLoadHandler.Image, srcRect, destRect.Location);
+            g.DrawRectangle(brush, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
         #endregion

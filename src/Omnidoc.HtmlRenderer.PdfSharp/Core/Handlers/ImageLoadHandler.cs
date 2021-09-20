@@ -213,22 +213,22 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <returns>image from base64 data string or null if failed</returns>
         private RImage GetImageFromData(string src)
         {
-            var s = src.Substring(src.IndexOf(':') + 1).Split(new[] { ',' }, 2);
+            var s = src[(src.IndexOf(':') + 1)..].Split(new[] { ',' }, 2);
             if (s.Length == 2)
             {
                 int imagePartsCount = 0, base64PartsCount = 0;
                 foreach (var part in s[0].Split(new[] { ';' }))
                 {
                     var pPart = part.Trim();
-                    if (pPart.StartsWith("image/", StringComparison.InvariantCultureIgnoreCase))
+                    if (pPart.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
                         imagePartsCount++;
-                    if (pPart.Equals("base64", StringComparison.InvariantCultureIgnoreCase))
+                    if (pPart.Equals("base64", StringComparison.OrdinalIgnoreCase))
                         base64PartsCount++;
                 }
 
                 if (imagePartsCount > 0)
                 {
-                    byte[] imageData = base64PartsCount > 0 ? Convert.FromBase64String(s[1].Trim()) : new UTF8Encoding().GetBytes(Uri.UnescapeDataString(s[1].Trim()));
+                    var imageData = base64PartsCount > 0 ? Convert.FromBase64String(s[1].Trim()) : new UTF8Encoding().GetBytes(Uri.UnescapeDataString(s[1].Trim()));
                     return _htmlContainer.Adapter.ImageFromStream(new MemoryStream(imageData));
                 }
             }

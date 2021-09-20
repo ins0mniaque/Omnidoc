@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using Omnidoc.HtmlRenderer.Core.Utils;
 
 namespace Omnidoc.HtmlRenderer.Core.Dom
@@ -97,7 +98,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
 
         public override string ToString()
         {
-            return string.Format("<{0}>", _name);
+            return string.Format(CultureInfo.InvariantCulture, "<{0}>", _name);
         }
     }
 }

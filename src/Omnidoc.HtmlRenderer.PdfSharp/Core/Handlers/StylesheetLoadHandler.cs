@@ -92,10 +92,8 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             {
                 if (fileInfo.Exists)
                 {
-                    using (var sr = new StreamReader(fileInfo.FullName))
-                    {
-                        return sr.ReadToEnd();
-                    }
+                    using var sr = new StreamReader(fileInfo.FullName);
+                    return sr.ReadToEnd();
                 }
                 else
                 {
@@ -117,19 +115,17 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <returns>the loaded stylesheet string</returns>
         private static string LoadStylesheetFromUri(HtmlContainerInt htmlContainer, Uri uri)
         {
-            using (var client = new WebClient())
+            using var client = new WebClient();
+            var stylesheet = client.DownloadString(uri);
+            try
             {
-                var stylesheet = client.DownloadString(uri);
-                try
-                {
-                    stylesheet = CorrectRelativeUrls(stylesheet, uri);
-                }
-                catch (Exception ex)
-                {
-                    htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
-                }
-                return stylesheet;
+                stylesheet = CorrectRelativeUrls(stylesheet, uri);
             }
+            catch (Exception ex)
+            {
+                htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
+            }
+            return stylesheet;
         }
 
         /// <summary>
@@ -140,20 +136,19 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <returns>Corrected stylesheet</returns>
         private static string CorrectRelativeUrls(string stylesheet, Uri baseUri)
         {
-            int idx = 0;
+            var idx = 0;
             while (idx >= 0 && idx < stylesheet.Length)
             {
                 idx = stylesheet.IndexOf("url(", idx, StringComparison.OrdinalIgnoreCase);
                 if (idx >= 0)
                 {
-                    int endIdx = stylesheet.IndexOf(')', idx);
+                    var endIdx = stylesheet.IndexOf(')', idx);
                     if (endIdx > idx + 4)
                     {
                         var offset1 = 4 + (stylesheet[idx + 4] == '\'' ? 1 : 0);
                         var offset2 = (stylesheet[endIdx - 1] == '\'' ? 1 : 0);
                         var urlStr = stylesheet.Substring(idx + offset1, endIdx - idx - offset1 - offset2);
-                        Uri url;
-                        if (Uri.TryCreate(urlStr, UriKind.Relative, out url))
+                        if (Uri.TryCreate(urlStr, UriKind.Relative, out var url))
                         {
                             url = new Uri(baseUri, url);
                             stylesheet = stylesheet.Remove(idx + 4, endIdx - idx - 4);

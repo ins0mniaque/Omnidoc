@@ -198,7 +198,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             get { return _cornerRadius; }
             set
             {
-                MatchCollection r = RegexParserUtils.Match(RegexParserUtils.CssLength, value);
+                var r = RegexParserUtils.Match(RegexParserUtils.CssLength, value);
 
                 switch (r.Count)
                 {
@@ -394,12 +394,12 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             get { return _fontSize; }
             set
             {
-                string length = RegexParserUtils.Search(RegexParserUtils.CssLength, value);
+                var length = RegexParserUtils.Search(RegexParserUtils.CssLength, value);
 
                 if (length != null)
                 {
                     string computedValue;
-                    CssLength len = new CssLength(length);
+                    var len = new CssLength(length);
 
                     if (len.HasError)
                     {
@@ -644,7 +644,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     if (MarginTop == CssConstants.Auto)
                         MarginTop = "0";
                     var actualMarginTop = CssValueParser.ParseLength(MarginTop, Size.Width, this);
-                    if (MarginLeft.EndsWith("%"))
+                    if (MarginLeft.EndsWith("%", StringComparison.Ordinal))
                         return actualMarginTop;
                     _actualMarginTop = actualMarginTop;
                 }
@@ -673,7 +673,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     if (MarginLeft == CssConstants.Auto)
                         MarginLeft = "0";
                     var actualMarginLeft = CssValueParser.ParseLength(MarginLeft, Size.Width, this);
-                    if (MarginLeft.EndsWith("%"))
+                    if (MarginLeft.EndsWith("%", StringComparison.Ordinal))
                         return actualMarginLeft;
                     _actualMarginLeft = actualMarginLeft;
                 }
@@ -693,7 +693,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     if (MarginBottom == CssConstants.Auto)
                         MarginBottom = "0";
                     var actualMarginBottom = CssValueParser.ParseLength(MarginBottom, Size.Width, this);
-                    if (MarginLeft.EndsWith("%"))
+                    if (MarginLeft.EndsWith("%", StringComparison.Ordinal))
                         return actualMarginBottom;
                     _actualMarginBottom = actualMarginBottom;
                 }
@@ -713,7 +713,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     if (MarginRight == CssConstants.Auto)
                         MarginRight = "0";
                     var actualMarginRight = CssValueParser.ParseLength(MarginRight, Size.Width, this);
-                    if (MarginLeft.EndsWith("%"))
+                    if (MarginLeft.EndsWith("%", StringComparison.Ordinal))
                         return actualMarginRight;
                     _actualMarginRight = actualMarginRight;
                 }
@@ -1027,7 +1027,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         FontSize = CssConstants.FontSize.ToString(CultureInfo.InvariantCulture) + "pt";
                     }
 
-                    RFontStyle st = RFontStyle.Regular;
+                    var st = RFontStyle.Regular;
 
                     if (FontStyle == CssConstants.Italic || FontStyle == CssConstants.Oblique)
                     {
@@ -1039,46 +1039,23 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         st |= RFontStyle.Bold;
                     }
 
-                    double fsize;
-                    double parentSize = CssConstants.FontSize;
+                    var parentSize = CssConstants.FontSize;
 
                     if (GetParent() != null)
                         parentSize = GetParent().ActualFont.Size;
-
-                    switch (FontSize)
+                    var fsize = FontSize switch
                     {
-                        case CssConstants.Medium:
-                            fsize = CssConstants.FontSize;
-                            break;
-                        case CssConstants.XXSmall:
-                            fsize = CssConstants.FontSize - 4;
-                            break;
-                        case CssConstants.XSmall:
-                            fsize = CssConstants.FontSize - 3;
-                            break;
-                        case CssConstants.Small:
-                            fsize = CssConstants.FontSize - 2;
-                            break;
-                        case CssConstants.Large:
-                            fsize = CssConstants.FontSize + 2;
-                            break;
-                        case CssConstants.XLarge:
-                            fsize = CssConstants.FontSize + 3;
-                            break;
-                        case CssConstants.XXLarge:
-                            fsize = CssConstants.FontSize + 4;
-                            break;
-                        case CssConstants.Smaller:
-                            fsize = parentSize - 2;
-                            break;
-                        case CssConstants.Larger:
-                            fsize = parentSize + 2;
-                            break;
-                        default:
-                            fsize = CssValueParser.ParseLength(FontSize, parentSize, parentSize, null, true, true);
-                            break;
-                    }
-
+                        CssConstants.Medium => CssConstants.FontSize,
+                        CssConstants.XXSmall => CssConstants.FontSize - 4,
+                        CssConstants.XSmall => CssConstants.FontSize - 3,
+                        CssConstants.Small => CssConstants.FontSize - 2,
+                        CssConstants.Large => CssConstants.FontSize + 2,
+                        CssConstants.XLarge => CssConstants.FontSize + 3,
+                        CssConstants.XXLarge => CssConstants.FontSize + 4,
+                        CssConstants.Smaller => parentSize - 2,
+                        CssConstants.Larger => parentSize + 2,
+                        _ => CssValueParser.ParseLength(FontSize, parentSize, parentSize, null, true, true),
+                    };
                     if (fsize <= 1f)
                     {
                         fsize = CssConstants.FontSize;
@@ -1132,7 +1109,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             {
                 if (double.IsNaN(_actualBorderSpacingHorizontal))
                 {
-                    MatchCollection matches = RegexParserUtils.Match(RegexParserUtils.CssLength, BorderSpacing);
+                    var matches = RegexParserUtils.Match(RegexParserUtils.CssLength, BorderSpacing);
 
                     if (matches.Count == 0)
                     {
@@ -1158,7 +1135,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             {
                 if (double.IsNaN(_actualBorderSpacingVertical))
                 {
-                    MatchCollection matches = RegexParserUtils.Match(RegexParserUtils.CssLength, BorderSpacing);
+                    var matches = RegexParserUtils.Match(RegexParserUtils.CssLength, BorderSpacing);
 
                     if (matches.Count == 0)
                     {
@@ -1233,7 +1210,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 _actualWordSpacing = CssUtils.WhiteSpace(g, this);
                 if (WordSpacing != CssConstants.Normal)
                 {
-                    string len = RegexParserUtils.Search(RegexParserUtils.CssLength, WordSpacing);
+                    var len = RegexParserUtils.Search(RegexParserUtils.CssLength, WordSpacing);
                     _actualWordSpacing += CssValueParser.ParseLength(len, 1, this);
                 }
             }

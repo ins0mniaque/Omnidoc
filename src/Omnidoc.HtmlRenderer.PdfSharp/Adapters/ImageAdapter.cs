@@ -14,7 +14,7 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
         private readonly XImage _image;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// Initializes a new instance of the <see cref="object"/> class.
         /// </summary>
         public ImageAdapter(XImage image)
         {

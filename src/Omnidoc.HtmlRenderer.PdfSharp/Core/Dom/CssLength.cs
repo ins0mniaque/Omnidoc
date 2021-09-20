@@ -41,7 +41,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 return;
 
             //If percentage, use ParseNumber
-            if (length.EndsWith("%"))
+            if (length.EndsWith("%", StringComparison.Ordinal))
             {
                 _number = CssValueParser.ParseNumber(length, 1);
                 _isPercentage = true;
@@ -57,10 +57,10 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
 
             //Get units of the length
-            string u = length.Substring(length.Length - 2, 2);
+            var u = length.Substring(length.Length - 2, 2);
 
             //Number of the length
-            string number = length.Substring(0, length.Length - 2);
+            var number = length[0..^2];
 
             //TODO: Units behave different in paper and in screen!
             switch (u)
@@ -174,7 +174,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             if (Unit != CssUnit.Ems)
                 throw new InvalidOperationException("Length is not in ems");
 
-            return new CssLength(string.Format("{0}pt", Convert.ToSingle(Number * emSize).ToString("0.0", NumberFormatInfo.InvariantInfo)));
+            return new CssLength(string.Format(CultureInfo.InvariantCulture, "{0}pt", Convert.ToSingle(Number * emSize).ToString("0.0", NumberFormatInfo.InvariantInfo)));
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             if (Unit != CssUnit.Ems)
                 throw new InvalidOperationException("Length is not in ems");
 
-            return new CssLength(string.Format("{0}px", Convert.ToSingle(Number * pixelFactor).ToString("0.0", NumberFormatInfo.InvariantInfo)));
+            return new CssLength(string.Format(CultureInfo.InvariantCulture, "{0}px", Convert.ToSingle(Number * pixelFactor).ToString("0.0", NumberFormatInfo.InvariantInfo)));
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
             else
             {
-                string u = string.Empty;
+                var u = string.Empty;
 
                 switch (Unit)
                 {

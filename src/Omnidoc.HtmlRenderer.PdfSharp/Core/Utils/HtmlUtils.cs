@@ -10,7 +10,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <summary>
         /// List of html tags that don't have content
         /// </summary>
-        private static readonly List<string> _list = new List<string>(
+        private static readonly List<string> _list = new(
             new[]
             {
                 "area", "base", "basefont", "br", "col",
@@ -33,7 +33,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <summary>
         /// the html decode only pairs
         /// </summary>
-        private static readonly Dictionary<string, char> _decodeOnly = new Dictionary<string, char>(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly Dictionary<string, char> _decodeOnly = new(StringComparer.InvariantCultureIgnoreCase);
 
         #endregion
 
@@ -313,7 +313,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
 
                 foreach (var encPair in _encodeDecode)
                 {
-                    str = str.Replace(encPair.Key, encPair.Value);
+                    str = str.Replace(encPair.Key, encPair.Value, StringComparison.Ordinal);
                 }
             }
             return str;
@@ -329,9 +329,9 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             if (!string.IsNullOrEmpty(str))
             {
-                for (int i = _encodeDecode.Length - 1; i >= 0; i--)
+                for (var i = _encodeDecode.Length - 1; i >= 0; i--)
                 {
-                    str = str.Replace(_encodeDecode[i].Value, _encodeDecode[i].Key);
+                    str = str.Replace(_encodeDecode[i].Value, _encodeDecode[i].Key, StringComparison.Ordinal);
                 }
             }
             return str;
@@ -350,7 +350,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             var idx = str.IndexOf("&#", StringComparison.OrdinalIgnoreCase);
             while (idx > -1)
             {
-                bool hex = str.Length > idx + 3 && char.ToLower(str[idx + 2]) == 'x';
+                var hex = str.Length > idx + 3 && char.ToLowerInvariant(str[idx + 2]) == 'x';
                 var endIdx = idx + 2 + (hex ? 1 : 0);
 
                 long num = 0;
@@ -358,14 +358,14 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                     num = num * (hex ? 16 : 10) + CommonUtils.ToDigit(str[endIdx++], hex);
                 endIdx += (endIdx < str.Length && str[endIdx] == ';') ? 1 : 0;
 
-                string repl = string.Empty;
+                var repl = string.Empty;
                 if (num >= 0 && num <= 0x10ffff && !(num >= 0xd800 && num <= 0xdfff))
-                    repl = Char.ConvertFromUtf32((int)num);
+                    repl = char.ConvertFromUtf32((int)num);
                 
                 str = str.Remove(idx, endIdx - idx);
                 str = str.Insert(idx, repl);
 
-                idx = str.IndexOf("&#", idx + 1);
+                idx = str.IndexOf("&#", idx + 1, StringComparison.Ordinal);
             }
             return str;
         }
@@ -377,15 +377,14 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>decoded string</returns>
         private static string DecodeHtmlCharByName(string str)
         {
-            var idx = str.IndexOf('&');
+            var idx = str.IndexOf('&', StringComparison.Ordinal);
             while (idx > -1)
             {
                 var endIdx = str.IndexOf(';', idx);
                 if (endIdx > -1 && endIdx - idx < 8)
                 {
                     var key = str.Substring(idx + 1, endIdx - idx - 1);
-                    char c;
-                    if (_decodeOnly.TryGetValue(key, out c))
+                    if (_decodeOnly.TryGetValue(key, out var c))
                     {
                         str = str.Remove(idx, endIdx - idx + 1);
                         str = str.Insert(idx, c.ToString());

@@ -18,7 +18,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     Represents a color that is null.
         /// </summary>
         /// <filterpriority>1</filterpriority>
-        public static readonly RColor Empty = new RColor();
+        public static readonly RColor Empty;
 
         private readonly long _value;
 
@@ -160,7 +160,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <param name="red">The red component. Valid values are 0 through 255. </param>
         /// <param name="green">The green component. Valid values are 0 through 255. </param>
         /// <param name="blue">The blue component. Valid values are 0 through 255. </param>
-        /// <exception cref="T:System.ArgumentException">
+        /// <exception cref="System.ArgumentException">
         ///     <paramref name="alpha" />, <paramref name="red" />, <paramref name="green" />, or <paramref name="blue" /> is less than 0 or greater than 255.
         /// </exception>
         /// <filterpriority>1</filterpriority>
@@ -188,7 +188,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <param name="blue">
         ///     The blue component value for the new <see cref="RColor" />. Valid values are 0 through 255.
         /// </param>
-        /// <exception cref="T:System.ArgumentException">
+        /// <exception cref="System.ArgumentException">
         ///     <paramref name="red" />, <paramref name="green" />, or <paramref name="blue" /> is less than 0 or greater than 255.
         /// </exception>
         /// <filterpriority>1</filterpriority>
@@ -199,23 +199,20 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
 
         /// <summary>
         ///     Tests whether the specified object is a <see cref="RColor" /> structure and is equivalent to this
-        ///     <see
-        ///         cref="RColor" />
+        ///     <see cref="RColor" />
         ///     structure.
         /// </summary>
         /// <returns>
         ///     true if <paramref name="obj" /> is a <see cref="RColor" /> structure equivalent to this
-        ///     <see
-        ///         cref="RColor" />
+        ///     <see cref="RColor" />
         ///     structure; otherwise, false.
         /// </returns>
         /// <param name="obj">The object to test. </param>
         /// <filterpriority>1</filterpriority>
         public override bool Equals(object obj)
         {
-            if (obj is RColor)
+            if (obj is RColor color)
             {
-                var color = (RColor)obj;
                 return _value == color._value;
             }
             return false;

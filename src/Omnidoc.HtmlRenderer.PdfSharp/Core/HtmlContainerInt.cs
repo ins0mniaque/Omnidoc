@@ -453,7 +453,7 @@ namespace Omnidoc.HtmlRenderer.Core
                 _loadComplete = false;
                 _cssData = baseCssData ?? _adapter.DefaultCssData;
 
-                DomParser parser = new DomParser(_cssParser);
+                var parser = new DomParser(_cssParser);
                 _root = parser.GenerateCssTree(htmlSource, this, ref _cssData);
                 if (_root != null)
                 {
@@ -547,7 +547,7 @@ namespace Omnidoc.HtmlRenderer.Core
         public string GetLinkAt(RPoint location)
         {
             var link = DomUtils.GetLinkBox(_root, OffsetByScroll(location));
-            return link != null ? link.HrefLink : null;
+            return link?.HrefLink;
         }
 
         /// <summary>
@@ -561,7 +561,7 @@ namespace Omnidoc.HtmlRenderer.Core
         {
             ArgChecker.AssertArgNotNullOrEmpty(elementId, "elementId");
 
-            var box = DomUtils.GetBoxById(_root, elementId.ToLower());
+            var box = DomUtils.GetBoxById(_root, elementId.ToLowerInvariant());
             return box != null ? CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds) : (RRect?)null;
         }
 
@@ -592,9 +592,7 @@ namespace Omnidoc.HtmlRenderer.Core
                 if (!_loadComplete)
                 {
                     _loadComplete = true;
-                    EventHandler handler = LoadComplete;
-                    if (handler != null)
-                        handler(this, EventArgs.Empty);
+                    LoadComplete?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -802,9 +800,7 @@ namespace Omnidoc.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlStylesheetLoadEventArgs> handler = StylesheetLoad;
-                if (handler != null)
-                    handler(this, args);
+                StylesheetLoad?.Invoke(this, args);
             }
             catch (Exception ex)
             {
@@ -820,9 +816,7 @@ namespace Omnidoc.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlImageLoadEventArgs> handler = ImageLoad;
-                if (handler != null)
-                    handler(this, args);
+                ImageLoad?.Invoke(this, args);
             }
             catch (Exception ex)
             {
@@ -838,9 +832,7 @@ namespace Omnidoc.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlRefreshEventArgs> handler = Refresh;
-                if (handler != null)
-                    handler(this, new HtmlRefreshEventArgs(layout));
+                Refresh?.Invoke(this, new HtmlRefreshEventArgs(layout));
             }
             catch (Exception ex)
             {
@@ -858,9 +850,7 @@ namespace Omnidoc.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlRenderErrorEventArgs> handler = RenderError;
-                if (handler != null)
-                    handler(this, new HtmlRenderErrorEventArgs(type, message, exception));
+                RenderError?.Invoke(this, new HtmlRenderErrorEventArgs(type, message, exception));
             }
             catch
             { }
@@ -874,7 +864,7 @@ namespace Omnidoc.HtmlRenderer.Core
         /// <param name="link">the link that was clicked</param>
         internal void HandleLinkClicked(RControl parent, RPoint location, CssBox link)
         {
-            EventHandler<HtmlLinkClickedEventArgs> clickHandler = LinkClicked;
+            var clickHandler = LinkClicked;
             if (clickHandler != null)
             {
                 var args = new HtmlLinkClickedEventArgs(link.HrefLink, link.HtmlTag.Attributes);
@@ -892,12 +882,12 @@ namespace Omnidoc.HtmlRenderer.Core
 
             if (!string.IsNullOrEmpty(link.HrefLink))
             {
-                if (link.HrefLink.StartsWith("#") && link.HrefLink.Length > 1)
+                if (link.HrefLink.StartsWith('#') && link.HrefLink.Length > 1)
                 {
-                    EventHandler<HtmlScrollEventArgs> scrollHandler = ScrollChange;
+                    var scrollHandler = ScrollChange;
                     if (scrollHandler != null)
                     {
-                        var rect = GetElementRectangle(link.HrefLink.Substring(1));
+                        var rect = GetElementRectangle(link.HrefLink[1..]);
                         if (rect.HasValue)
                         {
                             scrollHandler(this, new HtmlScrollEventArgs(rect.Value.Location));
@@ -907,8 +897,10 @@ namespace Omnidoc.HtmlRenderer.Core
                 }
                 else
                 {
-                    var nfo = new ProcessStartInfo(link.HrefLink);
-                    nfo.UseShellExecute = true;
+                    var nfo = new ProcessStartInfo(link.HrefLink)
+                    {
+                        UseShellExecute = true
+                    };
                     Process.Start(nfo);
                 }
             }

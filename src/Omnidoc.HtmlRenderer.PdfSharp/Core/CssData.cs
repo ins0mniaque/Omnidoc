@@ -21,12 +21,12 @@ namespace Omnidoc.HtmlRenderer.Core
         /// <summary>
         /// used to return empty array
         /// </summary>
-        private static readonly List<CssBlock> _emptyArray = new List<CssBlock>();
+        private static readonly List<CssBlock> _emptyArray = new();
 
         /// <summary>
         /// dictionary of media type to dictionary of css class name to the cssBlocks collection with all the data.
         /// </summary>
-        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _mediaBlocks = new Dictionary<string, Dictionary<string, List<CssBlock>>>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _mediaBlocks = new(StringComparer.InvariantCultureIgnoreCase);
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace Omnidoc.HtmlRenderer.Core
         /// <returns>the parsed css data</returns>
         public static CssData Parse(RAdapter adapter, string stylesheet, bool combineWithDefault = true)
         {
-            CssParser parser = new CssParser(adapter);
+            var parser = new CssParser(adapter);
             return parser.ParseStyleSheet(stylesheet, combineWithDefault);
         }
 
@@ -71,8 +71,7 @@ namespace Omnidoc.HtmlRenderer.Core
         /// <returns>true - has css blocks for the class, false - otherwise</returns>
         public bool ContainsCssBlock(string className, string media = "all")
         {
-            Dictionary<string, List<CssBlock>> mid;
-            return _mediaBlocks.TryGetValue(media, out mid) && mid.ContainsKey(className);
+            return _mediaBlocks.TryGetValue(media, out var mid) && mid.ContainsKey(className);
         }
 
         /// <summary>
@@ -88,8 +87,7 @@ namespace Omnidoc.HtmlRenderer.Core
         public IEnumerable<CssBlock> GetCssBlock(string className, string media = "all")
         {
             List<CssBlock> block = null;
-            Dictionary<string, List<CssBlock>> mid;
-            if (_mediaBlocks.TryGetValue(media, out mid))
+            if (_mediaBlocks.TryGetValue(media, out var mid))
             {
                 mid.TryGetValue(className, out block);
             }
@@ -112,8 +110,7 @@ namespace Omnidoc.HtmlRenderer.Core
         /// <param name="cssBlock">the css block to add</param>
         public void AddCssBlock(string media, CssBlock cssBlock)
         {
-            Dictionary<string, List<CssBlock>> mid;
-            if (!_mediaBlocks.TryGetValue(media, out mid))
+            if (!_mediaBlocks.TryGetValue(media, out var mid))
             {
                 mid = new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase);
                 _mediaBlocks.Add(media, mid);
@@ -127,7 +124,7 @@ namespace Omnidoc.HtmlRenderer.Core
             }
             else
             {
-                bool merged = false;
+                var merged = false;
                 var list = mid[cssBlock.Class];
                 foreach (var block in list)
                 {

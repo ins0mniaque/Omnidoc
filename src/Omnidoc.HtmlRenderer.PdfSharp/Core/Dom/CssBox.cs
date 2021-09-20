@@ -39,11 +39,11 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// </summary>
         private readonly HtmlTag _htmltag;
 
-        private readonly List<CssRect> _boxWords = new List<CssRect>();
-        private readonly List<CssBox> _boxes = new List<CssBox>();
-        private readonly List<CssLineBox> _lineBoxes = new List<CssLineBox>();
-        private readonly List<CssLineBox> _parentLineBoxes = new List<CssLineBox>();
-        private readonly Dictionary<CssLineBox, RRect> _rectangles = new Dictionary<CssLineBox, RRect>();
+        private readonly List<CssRect> _boxWords = new();
+        private readonly List<CssBox> _boxes = new();
+        private readonly List<CssLineBox> _lineBoxes = new();
+        private readonly List<CssLineBox> _parentLineBoxes = new();
+        private readonly Dictionary<CssLineBox, RRect> _rectangles = new();
 
         /// <summary>
         /// the inner text of the box
@@ -90,7 +90,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// </summary>
         public HtmlContainerInt HtmlContainer
         {
-            get { return _htmlContainer ?? (_htmlContainer = _parentBox != null ? _parentBox.HtmlContainer : null); }
+            get { return _htmlContainer ??= _parentBox?.HtmlContainer; }
             set { _htmlContainer = value; }
         }
 
@@ -128,7 +128,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         public bool IsBrElement
         {
             get {
-                return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.InvariantCultureIgnoreCase);
+                return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -172,7 +172,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 if (this.ParentBox == null)
                     return false;
 
-                CssBox parent = this;
+                var parent = this;
 
                 while (!(parent.ParentBox == null || parent == parent.ParentBox))
                 {
@@ -249,7 +249,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             {
                 if ((Words.Count != 0 || Boxes.Count != 0) && (Words.Count != 1 || !Words[0].IsSpaces))
                 {
-                    foreach (CssRect word in Words)
+                    foreach (var word in Words)
                     {
                         if (!word.IsSpaces)
                         {
@@ -385,9 +385,10 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns>the new block box</returns>
         public static CssBox CreateBlock()
         {
-            var box = new CssBox(null, null);
-            box.Display = CssConstants.Block;
-            return box;
+            return new CssBox(null, null)
+            {
+                Display = CssConstants.Block
+            };
         }
 
         /// <summary>
@@ -448,7 +449,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     }
 
                     // don't call paint if the rectangle of the box is not in visible rectangle
-                    bool visible = Rectangles.Count == 0;
+                    var visible = Rectangles.Count == 0;
                     if (!visible)
                     {
                         var clip = g.GetClip();
@@ -489,7 +490,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="before"></param>
         public void SetBeforeBox(CssBox before)
         {
-            int index = _parentBox.Boxes.IndexOf(before);
+            var index = _parentBox.Boxes.IndexOf(before);
             if (index < 0)
                 throw new Exception("before box doesn't exist on parent");
 
@@ -517,9 +518,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         {
             _boxWords.Clear();
 
-            int startIdx = 0;
-            bool preserveSpaces = WhiteSpace == CssConstants.Pre || WhiteSpace == CssConstants.PreWrap;
-            bool respoctNewline = preserveSpaces || WhiteSpace == CssConstants.PreLine;
+            var startIdx = 0;
+            var preserveSpaces = WhiteSpace == CssConstants.Pre || WhiteSpace == CssConstants.PreWrap;
+            var respoctNewline = preserveSpaces || WhiteSpace == CssConstants.PreLine;
             while (startIdx < _text.Length)
             {
                 while (startIdx < _text.Length && _text[startIdx] == '\r')
@@ -601,7 +602,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 // Because their width and height are set by CssTable
                 if (Display != CssConstants.TableCell && Display != CssConstants.Table)
                 {
-                    double width = ContainingBlock.Size.Width
+                    var width = ContainingBlock.Size.Width
                                    - ContainingBlock.ActualPaddingLeft - ContainingBlock.ActualPaddingRight
                                    - ContainingBlock.ActualBorderLeftWidth - ContainingBlock.ActualBorderRightWidth;
 
@@ -619,18 +620,11 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 if (Display != CssConstants.TableCell)
                 {
                     var prevSibling = DomUtils.GetPreviousSibling(this);
-                    double left;
-                    double top;
 
-                    if (Position == CssConstants.Fixed)
+                    if (Position != CssConstants.Fixed)
                     {
-                        left = 0;
-                        top = 0;
-                    }
-                    else
-                    {
-                        left = ContainingBlock.Location.X + ContainingBlock.ActualPaddingLeft + ActualMarginLeft + ContainingBlock.ActualBorderLeftWidth;
-                        top = (prevSibling == null && ParentBox != null ? ParentBox.ClientTop : ParentBox == null ? Location.Y : 0) + MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
+                        var left = ContainingBlock.Location.X + ContainingBlock.ActualPaddingLeft + ActualMarginLeft + ContainingBlock.ActualBorderLeftWidth;
+                        var top = (prevSibling == null && ParentBox != null ? ParentBox.ClientTop : ParentBox == null ? Location.Y : 0) + MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
                         Location = new RPoint(left, top);
                         ActualBottom = top;
                     }
@@ -692,7 +686,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 if (BackgroundImage != CssConstants.None && _imageLoadHandler == null)
                 {
                     _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnImageLoadComplete);
-                    _imageLoadHandler.LoadImage(BackgroundImage, HtmlTag != null ? HtmlTag.Attributes : null);
+                    _imageLoadHandler.LoadImage(BackgroundImage, HtmlTag?.Attributes);
                 }
 
                 MeasureWordSpacing(g);
@@ -725,14 +719,13 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns></returns>
         private int GetIndexForList()
         {
-            bool reversed = !string.IsNullOrEmpty(ParentBox.GetAttribute("reversed"));
-            int index;
-            if (!int.TryParse(ParentBox.GetAttribute("start"), out index))
+            var reversed = !string.IsNullOrEmpty(ParentBox.GetAttribute("reversed"));
+            if (!int.TryParse(ParentBox.GetAttribute("start"), out var index))
             {
                 if (reversed)
                 {
                     index = 0;
-                    foreach (CssBox b in ParentBox.Boxes)
+                    foreach (var b in ParentBox.Boxes)
                     {
                         if (b.Display == CssConstants.ListItem)
                             index++;
@@ -744,7 +737,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 }
             }
 
-            foreach (CssBox b in ParentBox.Boxes)
+            foreach (var b in ParentBox.Boxes)
             {
                 if (b.Equals(this))
                     return index;
@@ -771,23 +764,23 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     _listItemBox.Display = CssConstants.Inline;
                     _listItemBox.HtmlContainer = HtmlContainer;
 
-                    if (ListStyleType.Equals(CssConstants.Disc, StringComparison.InvariantCultureIgnoreCase))
+                    if (ListStyleType.Equals(CssConstants.Disc, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString("•");
                     }
-                    else if (ListStyleType.Equals(CssConstants.Circle, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.Circle, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString("o");
                     }
-                    else if (ListStyleType.Equals(CssConstants.Square, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.Square, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString("♠");
                     }
-                    else if (ListStyleType.Equals(CssConstants.Decimal, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.Decimal, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString(GetIndexForList().ToString(CultureInfo.InvariantCulture) + ".");
                     }
-                    else if (ListStyleType.Equals(CssConstants.DecimalLeadingZero, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ListStyleType.Equals(CssConstants.DecimalLeadingZero, StringComparison.OrdinalIgnoreCase))
                     {
                         _listItemBox.Text = new SubString(GetIndexForList().ToString("00", CultureInfo.InvariantCulture) + ".");
                     }
@@ -821,7 +814,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
 
             if (b.Words.Count > 0)
             {
-                foreach (CssRect word in b.Words)
+                foreach (var word in b.Words)
                 {
                     if (line.Words.Contains(word))
                     {
@@ -832,9 +825,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
             else
             {
-                foreach (CssBox bb in b.Boxes)
+                foreach (var bb in b.Boxes)
                 {
-                    CssRect w = FirstWordOccourence(bb, line);
+                    var w = FirstWordOccourence(bb, line);
 
                     if (w != null)
                     {
@@ -904,7 +897,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         {
             if (box.Words.Count > 0)
             {
-                foreach (CssRect cssRect in box.Words)
+                foreach (var cssRect in box.Words)
                 {
                     if (cssRect.Width > maxWidth)
                     {
@@ -915,7 +908,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
             else
             {
-                foreach (CssBox childBox in box.Boxes)
+                foreach (var childBox in box.Boxes)
                     GetMinimumWidth_LongestWord(childBox, ref maxWidth, ref maxWidthWord);
             }
         }
@@ -1008,22 +1001,22 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             if (box.Words.Count > 0)
             {
                 // calculate the min and max sum for all the words in the box
-                foreach (CssRect word in box.Words)
+                foreach (var word in box.Words)
                 {
                     maxSum += word.FullWidth + (word.HasSpaceBefore ? word.OwnerBox.ActualWordSpacing : 0);
                     min = Math.Max(min, word.Width);
                 }
 
                 // remove the last word padding
-                if (box.Words.Count > 0 && !box.Words[box.Words.Count - 1].HasSpaceAfter)
-                    maxSum -= box.Words[box.Words.Count - 1].ActualWordSpacing;
+                if (box.Words.Count > 0 && !box.Words[^1].HasSpaceAfter)
+                    maxSum -= box.Words[^1].ActualWordSpacing;
             }
             else
             {
                 // recursively on all the child boxes
-                for (int i = 0; i < box.Boxes.Count; i++)
+                for (var i = 0; i < box.Boxes.Count; i++)
                 {
-                    CssBox childBox = box.Boxes[i];
+                    var childBox = box.Boxes[i];
                     marginSum += childBox.ActualMarginLeft + childBox.ActualMarginRight;
 
                     //maxSum += childBox.ActualMarginLeft + childBox.ActualMarginRight;
@@ -1146,10 +1139,10 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             double margin = 0;
             if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && _parentBox.ActualMarginBottom < 0.1)
             {
-                var lastChildBottomMargin = _boxes[_boxes.Count - 1].ActualMarginBottom;
+                var lastChildBottomMargin = _boxes[^1].ActualMarginBottom;
                 margin = Height == "auto" ? Math.Max(ActualMarginBottom, lastChildBottomMargin) : lastChildBottomMargin;
             }
-            return Math.Max(ActualBottom, _boxes[_boxes.Count - 1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
+            return Math.Max(ActualBottom, _boxes[^1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
         }
 
         /// <summary>
@@ -1158,22 +1151,22 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="amount"></param>
         internal void OffsetTop(double amount)
         {
-            List<CssLineBox> lines = new List<CssLineBox>();
-            foreach (CssLineBox line in Rectangles.Keys)
+            var lines = new List<CssLineBox>();
+            foreach (var line in Rectangles.Keys)
                 lines.Add(line);
 
-            foreach (CssLineBox line in lines)
+            foreach (var line in lines)
             {
-                RRect r = Rectangles[line];
+                var r = Rectangles[line];
                 Rectangles[line] = new RRect(r.X, r.Y + amount, r.Width, r.Height);
             }
 
-            foreach (CssRect word in Words)
+            foreach (var word in Words)
             {
                 word.Top += amount;
             }
 
-            foreach (CssBox b in Boxes)
+            foreach (var b in Boxes)
             {
                 b.OffsetTop(amount);
             }
@@ -1196,14 +1189,14 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
 
                 var areas = Rectangles.Count == 0 ? new List<RRect>(new[] { Bounds }) : new List<RRect>(Rectangles.Values);
                 var clip = g.GetClip();
-                RRect[] rects = areas.ToArray();
-                RPoint offset = RPoint.Empty;
+                var rects = areas.ToArray();
+                var offset = RPoint.Empty;
                 if (!IsFixed)
                 {
                     offset = HtmlContainer.ScrollOffset;
                 }
 
-                for (int i = 0; i < rects.Length; i++)
+                for (var i = 0; i < rects.Length; i++)
                 {
                     var actualRect = rects[i];
                     actualRect.Offset(offset);
@@ -1217,7 +1210,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
 
                 PaintWords(g, offset);
 
-                for (int i = 0; i < rects.Length; i++)
+                for (var i = 0; i < rects.Length; i++)
                 {
                     var actualRect = rects[i];
                     actualRect.Offset(offset);
@@ -1229,17 +1222,17 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                 }
 
                 // split paint to handle z-order
-                foreach (CssBox b in Boxes)
+                foreach (var b in Boxes)
                 {
                     if (b.Position != CssConstants.Absolute && !b.IsFixed)
                         b.Paint(g);
                 }
-                foreach (CssBox b in Boxes)
+                foreach (var b in Boxes)
                 {
                     if (b.Position == CssConstants.Absolute)
                         b.Paint(g);
                 }
-                foreach (CssBox b in Boxes)
+                foreach (var b in Boxes)
                 {
                     if (b.IsFixed)
                         b.Paint(g);
@@ -1255,7 +1248,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
         }
 
-        private bool IsRectVisible(RRect rect, RRect clip)
+        private static bool IsRectVisible(RRect rect, RRect clip)
         {
             rect.X -= 2;
             rect.Width += 2;
@@ -1301,7 +1294,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                         roundrect = RenderUtils.GetRoundRect(g, rect, ActualCornerNw, ActualCornerNe, ActualCornerSe, ActualCornerSw);
                     }
 
-                    Object prevMode = null;
+                    object prevMode = null;
                     if (HtmlContainer != null && !HtmlContainer.AvoidGeometryAntialias && IsRounded)
                     {
                         prevMode = g.SetAntiAliasSmoothingMode();
@@ -1415,11 +1408,11 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
             y -= ActualPaddingBottom - ActualBorderBottomWidth;
 
-            double x1 = rectangle.X;
+            var x1 = rectangle.X;
             if (isFirst)
                 x1 += ActualPaddingLeft + ActualBorderLeftWidth;
 
-            double x2 = rectangle.Right;
+            var x2 = rectangle.Right;
             if (isLast)
                 x2 -= ActualPaddingRight + ActualBorderRightWidth;
 
@@ -1516,19 +1509,19 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            var tag = HtmlTag != null ? string.Format("<{0}>", HtmlTag.Name) : "anon";
+            var tag = HtmlTag != null ? string.Format(CultureInfo.InvariantCulture, "<{0}>", HtmlTag.Name) : "anon";
 
             if (IsBlock)
             {
-                return string.Format("{0}{1} Block {2}, Children:{3}", ParentBox == null ? "Root: " : string.Empty, tag, FontSize, Boxes.Count);
+                return string.Format(CultureInfo.InvariantCulture, "{0}{1} Block {2}, Children:{3}", ParentBox == null ? "Root: " : string.Empty, tag, FontSize, Boxes.Count);
             }
             else if (Display == CssConstants.None)
             {
-                return string.Format("{0}{1} None", ParentBox == null ? "Root: " : string.Empty, tag);
+                return string.Format(CultureInfo.InvariantCulture, "{0}{1} None", ParentBox == null ? "Root: " : string.Empty, tag);
             }
             else
             {
-                return string.Format("{0}{1} {2}: {3}", ParentBox == null ? "Root: " : string.Empty, tag, Display, Text);
+                return string.Format(CultureInfo.InvariantCulture, "{0}{1} {2}: {3}", ParentBox == null ? "Root: " : string.Empty, tag, Display, Text);
             }
         }
 

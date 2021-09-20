@@ -47,7 +47,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             {
                 root.HtmlContainer = htmlContainer;
 
-                bool cssDataChanged = false;
+                var cssDataChanged = false;
                 CascadeParseStyles(root, htmlContainer, ref cssData, ref cssDataChanged);
 
                 CascadeApplyStyles(root, cssData);
@@ -58,7 +58,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
 
                 CorrectImgBoxes(root);
 
-                bool followingBlock = true;
+                var followingBlock = true;
                 CorrectLineBreaksBlocks(root, ref followingBlock);
 
                 CorrectInlineBoxesParent(root);
@@ -87,13 +87,11 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             if (box.HtmlTag != null)
             {
                 // Check for the <link rel=stylesheet> tag
-                if (box.HtmlTag.Name.Equals("link", StringComparison.CurrentCultureIgnoreCase) &&
-                    box.GetAttribute("rel", string.Empty).Equals("stylesheet", StringComparison.CurrentCultureIgnoreCase))
+                if (box.HtmlTag.Name.Equals("link", StringComparison.OrdinalIgnoreCase) &&
+                    box.GetAttribute("rel", string.Empty).Equals("stylesheet", StringComparison.OrdinalIgnoreCase))
                 {
                     CloneCssData(ref cssData, ref cssDataChanged);
-                    string stylesheet;
-                    CssData stylesheetData;
-                    StylesheetLoadHandler.LoadStylesheet(htmlContainer, box.GetAttribute("href", string.Empty), box.HtmlTag.Attributes, out stylesheet, out stylesheetData);
+                    StylesheetLoadHandler.LoadStylesheet(htmlContainer, box.GetAttribute("href", string.Empty), box.HtmlTag.Attributes, out var stylesheet, out var stylesheetData);
                     if (stylesheet != null)
                         _cssParser.ParseStyleSheet(cssData, stylesheet);
                     else if (stylesheetData != null)
@@ -101,7 +99,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 }
 
                 // Check for the <style> tag
-                if (box.HtmlTag.Name.Equals("style", StringComparison.CurrentCultureIgnoreCase) && box.Boxes.Count > 0)
+                if (box.HtmlTag.Name.Equals("style", StringComparison.OrdinalIgnoreCase) && box.Boxes.Count > 0)
                 {
                     CloneCssData(ref cssData, ref cssDataChanged);
                     foreach (var child in box.Boxes)
@@ -161,7 +159,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             }
 
             // cascade text decoration only to boxes that actually have text so it will be handled correctly.
-            if (box.TextDecoration != String.Empty && box.Text == null)
+            if (!string.IsNullOrEmpty(box.TextDecoration) && box.Text == null)
             {
                 foreach (var childBox in box.Boxes)
                     childBox.TextDecoration = box.TextDecoration;
@@ -220,7 +218,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                     if (endIdx < 0)
                         endIdx = classes.Length;
 
-                    var cls = "." + classes.Substring(startIdx, endIdx - startIdx);
+                    var cls = "." + classes[startIdx..endIdx];
                     AssignCssBlocks(box, cssData, cls);
                     AssignCssBlocks(box, cssData, box.HtmlTag.Name + cls);
 
@@ -257,7 +255,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>true - the block is assignable to the box, false - otherwise</returns>
         private static bool IsBlockAssignableToBox(CssBox box, CssBlock block)
         {
-            bool assignable = true;
+            var assignable = true;
             if (block.Selectors != null)
             {
                 assignable = IsBlockAssignableToBoxWithSelector(box, block);
@@ -286,7 +284,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         {
             foreach (var selector in block.Selectors)
             {
-                bool matched = false;
+                var matched = false;
                 while (!matched)
                 {
                     box = box.ParentBox;
@@ -296,20 +294,20 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                     if (box == null)
                         return false;
 
-                    if (box.HtmlTag.Name.Equals(selector.Class, StringComparison.InvariantCultureIgnoreCase))
+                    if (box.HtmlTag.Name.Equals(selector.Class, StringComparison.OrdinalIgnoreCase))
                         matched = true;
 
                     if (!matched && box.HtmlTag.HasAttribute("class"))
                     {
                         var className = box.HtmlTag.TryGetAttribute("class");
-                        if (selector.Class.Equals("." + className, StringComparison.InvariantCultureIgnoreCase) || selector.Class.Equals(box.HtmlTag.Name + "." + className, StringComparison.InvariantCultureIgnoreCase))
+                        if (selector.Class.Equals("." + className, StringComparison.OrdinalIgnoreCase) || selector.Class.Equals(box.HtmlTag.Name + "." + className, StringComparison.OrdinalIgnoreCase))
                             matched = true;
                     }
 
                     if (!matched && box.HtmlTag.HasAttribute("id"))
                     {
                         var id = box.HtmlTag.TryGetAttribute("id");
-                        if (selector.Class.Equals("#" + id, StringComparison.InvariantCultureIgnoreCase))
+                        if (selector.Class.Equals("#" + id, StringComparison.OrdinalIgnoreCase))
                             matched = true;
                     }
 
@@ -401,23 +399,23 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         {
             if (tag.HasAttributes())
             {
-                foreach (string att in tag.Attributes.Keys)
+                foreach (var att in tag.Attributes.Keys)
                 {
-                    string value = tag.Attributes[att];
+                    var value = tag.Attributes[att];
 
                     switch (att)
                     {
                         case HtmlConstants.Align:
                             if (value == HtmlConstants.Left || value == HtmlConstants.Center || value == HtmlConstants.Right || value == HtmlConstants.Justify)
-                                box.TextAlign = value.ToLower();
+                                box.TextAlign = value.ToLowerInvariant();
                             else
-                                box.VerticalAlign = value.ToLower();
+                                box.VerticalAlign = value.ToLowerInvariant();
                             break;
                         case HtmlConstants.Background:
-                            box.BackgroundImage = value.ToLower();
+                            box.BackgroundImage = value.ToLowerInvariant();
                             break;
                         case HtmlConstants.Bgcolor:
-                            box.BackgroundColor = value.ToLower();
+                            box.BackgroundColor = value.ToLowerInvariant();
                             break;
                         case HtmlConstants.Border:
                             if (!string.IsNullOrEmpty(value) && value != "0")
@@ -435,7 +433,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                             }
                             break;
                         case HtmlConstants.Bordercolor:
-                            box.BorderLeftColor = box.BorderTopColor = box.BorderRightColor = box.BorderBottomColor = value.ToLower();
+                            box.BorderLeftColor = box.BorderTopColor = box.BorderRightColor = box.BorderBottomColor = value.ToLowerInvariant();
                             break;
                         case HtmlConstants.Cellspacing:
                             box.BorderSpacing = TranslateLength(value);
@@ -444,10 +442,10 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                             ApplyTablePadding(box, value);
                             break;
                         case HtmlConstants.Color:
-                            box.Color = value.ToLower();
+                            box.Color = value.ToLowerInvariant();
                             break;
                         case HtmlConstants.Dir:
-                            box.Direction = value.ToLower();
+                            box.Direction = value.ToLowerInvariant();
                             break;
                         case HtmlConstants.Face:
                             box.FontFamily = _cssParser.ParseFontFamily(value);
@@ -468,7 +466,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                                 box.FontSize = value;
                             break;
                         case HtmlConstants.Valign:
-                            box.VerticalAlign = value.ToLower();
+                            box.VerticalAlign = value.ToLowerInvariant();
                             break;
                         case HtmlConstants.Vspace:
                             box.MarginTop = box.MarginBottom = TranslateLength(value);
@@ -488,7 +486,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns></returns>
         private static string TranslateLength(string htmlLength)
         {
-            CssLength len = new CssLength(htmlLength);
+            var len = new CssLength(htmlLength);
 
             if (len.HasError)
             {
@@ -558,7 +556,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="box">the current box to correct its sub-tree</param>
         private static void CorrectTextBoxes(CssBox box)
         {
-            for (int i = box.Boxes.Count - 1; i >= 0; i--)
+            for (var i = box.Boxes.Count - 1; i >= 0; i--)
             {
                 var childBox = box.Boxes[i];
                 if (childBox.Text != null)
@@ -603,7 +601,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="box">the current box to correct its sub-tree</param>
         private static void CorrectImgBoxes(CssBox box)
         {
-            for (int i = box.Boxes.Count - 1; i >= 0; i--)
+            for (var i = box.Boxes.Count - 1; i >= 0; i--)
             {
                 var childBox = box.Boxes[i];
                 if (childBox is CssBoxImage && childBox.Display == CssConstants.Block)
@@ -637,12 +635,12 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 followingBlock = childBox.Words.Count == 0 && (followingBlock || childBox.IsBlock);
             }
 
-            int lastBr = -1;
+            var lastBr = -1;
             CssBox brBox;
             do
             {
                 brBox = null;
-                for (int i = 0; i < box.Boxes.Count && brBox == null; i++)
+                for (var i = 0; i < box.Boxes.Count && brBox == null; i++)
                 {
                     if (i > lastBr && box.Boxes[i].IsBrElement)
                     {
@@ -733,7 +731,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 if (leftBlock.Boxes.Count < 1)
                     leftBlock.ParentBox = null;
 
-                int minBoxes = leftBlock.ParentBox != null ? 2 : 1;
+                var minBoxes = leftBlock.ParentBox != null ? 2 : 1;
                 if (box.Boxes.Count > minBoxes)
                 {
                     // create temp box to handle the tail elements and then get them back so no deep hierarchy is created
@@ -824,7 +822,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         {
             if (ContainsVariantBoxes(box))
             {
-                for (int i = 0; i < box.Boxes.Count; i++)
+                for (var i = 0; i < box.Boxes.Count; i++)
                 {
                     if (box.Boxes[i].IsInline)
                     {
@@ -871,9 +869,9 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>true - has variant child boxes, false - otherwise</returns>
         private static bool ContainsVariantBoxes(CssBox box)
         {
-            bool hasBlock = false;
-            bool hasInline = false;
-            for (int i = 0; i < box.Boxes.Count && (!hasBlock || !hasInline); i++)
+            var hasBlock = false;
+            var hasInline = false;
+            for (var i = 0; i < box.Boxes.Count && (!hasBlock || !hasInline); i++)
             {
                 var isBlock = !box.Boxes[i].IsInline;
                 hasBlock = hasBlock || isBlock;

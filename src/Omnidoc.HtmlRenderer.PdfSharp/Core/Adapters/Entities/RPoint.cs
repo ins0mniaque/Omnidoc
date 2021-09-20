@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace Omnidoc.HtmlRenderer.Adapters.Entities
 {
@@ -11,7 +12,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     Represents a new instance of the <see cref="RPoint" /> class with member data left uninitialized.
         /// </summary>
         /// <filterpriority>1</filterpriority>
-        public static readonly RPoint Empty = new RPoint();
+        public static readonly RPoint Empty;
 
         static RPoint()
         { }
@@ -69,7 +70,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <summary>
         ///     Translates the <see cref="RPoint" /> by the specified
         ///     <see
-        ///         cref="T:System.Drawing.SizeF" />
+        ///         cref="System.Drawing.SizeF" />
         ///     .
         /// </summary>
         /// <returns>
@@ -79,7 +80,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     The <see cref="RPoint" /> to translate.
         /// </param>
         /// <param name="sz">
-        ///     The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to add to the x- and y-coordinates of the
+        ///     The <see cref="System.Drawing.SizeF" /> that specifies the numbers to add to the x- and y-coordinates of the
         ///     <see
         ///         cref="RPoint" />
         ///     .
@@ -92,7 +93,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <summary>
         ///     Translates a <see cref="RPoint" /> by the negative of a specified
         ///     <see
-        ///         cref="T:System.Drawing.SizeF" />
+        ///         cref="System.Drawing.SizeF" />
         ///     .
         /// </summary>
         /// <returns>
@@ -102,7 +103,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     The <see cref="RPoint" /> to translate.
         /// </param>
         /// <param name="sz">
-        ///     The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to subtract from the coordinates of
+        ///     The <see cref="System.Drawing.SizeF" /> that specifies the numbers to subtract from the coordinates of
         ///     <paramref
         ///         name="pt" />
         ///     .
@@ -172,7 +173,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <summary>
         ///     Translates a given <see cref="RPoint" /> by a specified
         ///     <see
-        ///         cref="T:System.Drawing.SizeF" />
+        ///         cref="System.Drawing.SizeF" />
         ///     .
         /// </summary>
         /// <returns>
@@ -182,7 +183,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     The <see cref="RPoint" /> to translate.
         /// </param>
         /// <param name="sz">
-        ///     The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to add to the coordinates of
+        ///     The <see cref="System.Drawing.SizeF" /> that specifies the numbers to add to the coordinates of
         ///     <paramref
         ///         name="pt" />
         ///     .
@@ -202,7 +203,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     The <see cref="RPoint" /> to translate.
         /// </param>
         /// <param name="sz">
-        ///     The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to subtract from the coordinates of
+        ///     The <see cref="System.Drawing.SizeF" /> that specifies the numbers to subtract from the coordinates of
         ///     <paramref
         ///         name="pt" />
         ///     .
@@ -215,17 +216,17 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <summary>
         ///     Specifies whether this <see cref="RPoint" /> contains the same coordinates as the specified
         ///     <see
-        ///         cref="T:System.Object" />
+        ///         cref="object" />
         ///     .
         /// </summary>
         /// <returns>
         ///     This method returns true if <paramref name="obj" /> is a <see cref="RPoint" /> and has the same coordinates as this
         ///     <see
-        ///         cref="T:System.Drawing.Point" />
+        ///         cref="System.Drawing.Point" />
         ///     .
         /// </returns>
         /// <param name="obj">
-        ///     The <see cref="T:System.Object" /> to test.
+        ///     The <see cref="object" /> to test.
         /// </param>
         /// <filterpriority>1</filterpriority>
         public override bool Equals(object obj)
@@ -248,7 +249,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return HashCode.Combine(X, Y);
         }
 
         /// <summary>
@@ -260,7 +261,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override string ToString()
         {
-            return string.Format("{{X={0}, Y={1}}}", new object[]
+            return string.Format(CultureInfo.InvariantCulture, "{{X={0}, Y={1}}}", new object[]
             {
                 X,
                 Y

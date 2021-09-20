@@ -24,36 +24,33 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <summary>
         /// Table to convert numbers into roman digits
         /// </summary>
-        private static readonly string[,] _romanDigitsTable =
+        private static readonly string[][] _romanDigitsTable =
         {
-            { "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" },
-            { "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" },
-            { "", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" },
-            {
-                "", "M", "MM", "MMM", "M(V)", "(V)", "(V)M",
-                "(V)MM", "(V)MMM", "M(X)"
-            }
+            new [] { "", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix" },
+            new [] { "", "x", "xx", "xxx", "xl", "l", "lx", "lxx", "lxxx", "xc" },
+            new [] { "", "c", "cc", "ccc", "cd", "d", "dc", "dcc", "dccc", "cm" },
+            new [] { "", "m", "mm", "mmm", "m(v)", "(v)", "(v)m", "(v)mm", "(v)mmm", "m(x)" }
         };
 
-        private static readonly string[,] _hebrewDigitsTable =
+        private static readonly string[][] _hebrewDigitsTable =
         {
-            { "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט" },
-            { "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ" },
-            { "ק", "ר", "ש", "ת", "תק", "תר", "תש", "תת", "תתק", }
+            new [] { "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט" },
+            new [] { "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ" },
+            new [] { "ק", "ר", "ש", "ת", "תק", "תר", "תש", "תת", "תתק", }
         };
 
-        private static readonly string[,] _georgianDigitsTable =
+        private static readonly string[][] _georgianDigitsTable =
         {
-            { "ა", "ბ", "გ", "დ", "ე", "ვ", "ზ", "ჱ", "თ" },
-            { "ი", "პ", "ლ", "მ", "ნ", "ჲ", "ო", "პ", "ჟ" },
-            { "რ", "ს", "ტ", "ჳ", "ფ", "ქ", "ღ", "ყ", "შ" }
+            new [] { "ა", "ბ", "გ", "დ", "ე", "ვ", "ზ", "ჱ", "თ" },
+            new [] { "ი", "პ", "ლ", "მ", "ნ", "ჲ", "ო", "პ", "ჟ" },
+            new [] { "რ", "ს", "ტ", "ჳ", "ფ", "ქ", "ღ", "ყ", "შ" }
         };
 
-        private static readonly string[,] _armenianDigitsTable =
+        private static readonly string[][] _armenianDigitsTable =
         {
-            { "Ա", "Բ", "Գ", "Դ", "Ե", "Զ", "Է", "Ը", "Թ" },
-            { "Ժ", "Ի", "Լ", "Խ", "Ծ", "Կ", "Հ", "Ձ", "Ղ" },
-            { "Ճ", "Մ", "Յ", "Ն", "Շ", "Ո", "Չ", "Պ", "Ջ" }
+            new [] { "Ա", "Բ", "Գ", "Դ", "Ե", "Զ", "Է", "Ը", "Թ" },
+            new [] { "Ժ", "Ի", "Լ", "Խ", "Ծ", "Կ", "Հ", "Ձ", "Ղ" },
+            new [] { "Ճ", "Մ", "Յ", "Ն", "Շ", "Ո", "Չ", "Պ", "Ջ" }
         };
 
         private static readonly string[] _hiraganaDigitsTable = new[]
@@ -152,7 +149,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <param name="dic">the dictionary</param>
         /// <param name="defaultValue">optional: the default value to return of no elements found in dictionary </param>
         /// <returns>first element or default value</returns>
-        public static TValue GetFirstValueOrDefault<TKey, TValue>(IDictionary<TKey, TValue> dic, TValue defaultValue = default(TValue))
+        public static TValue GetFirstValueOrDefault<TKey, TValue>(IDictionary<TKey, TValue> dic, TValue defaultValue = default)
         {
             if (dic != null)
             {
@@ -188,7 +185,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             foreach (string header in client.ResponseHeaders)
             {
-                if (header.Equals("Content-Type", StringComparison.InvariantCultureIgnoreCase))
+                if (header.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
                     return client.ResponseHeaders[header];
             }
             return null;
@@ -201,27 +198,27 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>The path of the file on the disk.</returns>
         public static FileInfo GetLocalfileName(Uri imageUri)
         {
-            StringBuilder fileNameBuilder = new StringBuilder();
-            string absoluteUri = imageUri.AbsoluteUri;
-            int lastSlash = absoluteUri.LastIndexOf('/');
+            var fileNameBuilder = new StringBuilder();
+            var absoluteUri = imageUri.AbsoluteUri;
+            var lastSlash = absoluteUri.LastIndexOf('/');
             if (lastSlash == -1)
             {
                 return null;
             }
 
-            string uriUntilSlash = absoluteUri.Substring(0, lastSlash);
-            fileNameBuilder.Append(uriUntilSlash.GetHashCode().ToString());
+            var uriUntilSlash = absoluteUri.Substring(0, lastSlash);
+            fileNameBuilder.Append(uriUntilSlash.GetHashCode(StringComparison.Ordinal).ToString(CultureInfo.InvariantCulture));
             fileNameBuilder.Append('_');
 
-            string restOfUri = absoluteUri.Substring(lastSlash + 1);
-            int indexOfParams = restOfUri.IndexOf('?');
+            var restOfUri = absoluteUri[(lastSlash + 1)..];
+            var indexOfParams = restOfUri.IndexOf('?', StringComparison.Ordinal);
             if (indexOfParams == -1)
             {
-                string ext = ".png";
-                int indexOfDot = restOfUri.IndexOf('.');
+                var ext = ".png";
+                var indexOfDot = restOfUri.IndexOf('.', StringComparison.Ordinal);
                 if (indexOfDot > -1)
                 {
-                    ext = restOfUri.Substring(indexOfDot);
+                    ext = restOfUri[indexOfDot..];
                     restOfUri = restOfUri.Substring(0, indexOfDot);
                 }
 
@@ -230,7 +227,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             }
             else
             {
-                int indexOfDot = restOfUri.IndexOf('.');
+                var indexOfDot = restOfUri.IndexOf('.', StringComparison.Ordinal);
                 if (indexOfDot == -1 || indexOfDot > indexOfParams)
                 {
                     //The uri is not for a filename
@@ -251,7 +248,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             var validFileName = GetValidFileName(fileNameBuilder.ToString());
             if (validFileName.Length > 25)
             {
-                validFileName = validFileName.Substring(0, 24) + validFileName.Substring(24).GetHashCode() + Path.GetExtension(validFileName);
+                validFileName = validFileName.Substring(0, 24) + validFileName[24..].GetHashCode(StringComparison.Ordinal) + Path.GetExtension(validFileName);
             }
 
             if (_tempPath == null)
@@ -273,12 +270,12 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>the index of the substring, -1 if no valid sub-string found</returns>
         public static int GetNextSubString(string str, int idx, out int length)
         {
-            while (idx < str.Length && Char.IsWhiteSpace(str[idx]))
+            while (idx < str.Length && char.IsWhiteSpace(str[idx]))
                 idx++;
             if (idx < str.Length)
             {
                 var endIdx = idx + 1;
-                while (endIdx < str.Length && !Char.IsWhiteSpace(str[endIdx]))
+                while (endIdx < str.Length && !char.IsWhiteSpace(str[endIdx]))
                     endIdx++;
                 length = endIdx - idx;
                 return idx;
@@ -296,9 +293,9 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             if (length == str2.Length && idx + length <= str.Length)
             {
-                for (int i = 0; i < length; i++)
+                for (var i = 0; i < length; i++)
                 {
-                    if (Char.ToLowerInvariant(str[idx + i]) != Char.ToLowerInvariant(str2[i]))
+                    if (char.ToLowerInvariant(str[idx + i]) != char.ToLowerInvariant(str2[i]))
                         return false;
                 }
                 return true;
@@ -313,8 +310,8 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>A valid filename.</returns>
         private static string GetValidFileName(string source)
         {
-            string retVal = source;
-            char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
+            var retVal = source;
+            var invalidFileNameChars = Path.GetInvalidFileNameChars();
             foreach (var invalidFileNameChar in invalidFileNameChars)
             {
                 retVal = retVal.Replace(invalidFileNameChar, '_');
@@ -333,41 +330,41 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             if (number == 0)
                 return string.Empty;
 
-            if (style.Equals(CssConstants.LowerGreek, StringComparison.InvariantCultureIgnoreCase))
+            if (style.Equals(CssConstants.LowerGreek, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToGreekNumber(number);
             }
-            else if (style.Equals(CssConstants.LowerRoman, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.LowerRoman, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToRomanNumbers(number, true);
             }
-            else if (style.Equals(CssConstants.UpperRoman, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.UpperRoman, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToRomanNumbers(number, false);
             }
-            else if (style.Equals(CssConstants.Armenian, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Armenian, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers(number, _armenianDigitsTable);
             }
-            else if (style.Equals(CssConstants.Georgian, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Georgian, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers(number, _georgianDigitsTable);
             }
-            else if (style.Equals(CssConstants.Hebrew, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Hebrew, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers(number, _hebrewDigitsTable);
             }
-            else if (style.Equals(CssConstants.Hiragana, StringComparison.InvariantCultureIgnoreCase) || style.Equals(CssConstants.HiraganaIroha, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Hiragana, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.HiraganaIroha, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers2(number, _hiraganaDigitsTable);
             }
-            else if (style.Equals(CssConstants.Katakana, StringComparison.InvariantCultureIgnoreCase) || style.Equals(CssConstants.KatakanaIroha, StringComparison.InvariantCultureIgnoreCase))
+            else if (style.Equals(CssConstants.Katakana, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.KatakanaIroha, StringComparison.OrdinalIgnoreCase))
             {
                 return ConvertToSpecificNumbers2(number, _satakanaDigitsTable);
             }
             else
             {
-                var lowercase = style.Equals(CssConstants.LowerAlpha, StringComparison.InvariantCultureIgnoreCase) || style.Equals(CssConstants.LowerLatin, StringComparison.InvariantCultureIgnoreCase);
+                var lowercase = style.Equals(CssConstants.LowerAlpha, StringComparison.OrdinalIgnoreCase) || style.Equals(CssConstants.LowerLatin, StringComparison.OrdinalIgnoreCase);
                 return ConvertToEnglishNumber(number, lowercase);
             }
         }
@@ -381,18 +378,18 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         private static string ConvertToEnglishNumber(int number, bool lowercase)
         {
             var sb = string.Empty;
-            int alphStart = lowercase ? 97 : 65;
+            var alphStart = lowercase ? 97 : 65;
             while (number > 0)
             {
                 var n = number % 26 - 1;
                 if (n >= 0)
                 {
-                    sb = (Char)(alphStart + n) + sb;
-                    number = number / 26;
+                    sb = (char)(alphStart + n) + sb;
+                    number /= 26;
                 }
                 else
                 {
-                    sb = (Char)(alphStart + 25) + sb;
+                    sb = (char)(alphStart + 25) + sb;
                     number = (number - 1) / 26;
                 }
             }
@@ -415,12 +412,12 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                     n++;
                 if (n >= 0)
                 {
-                    sb = (Char)(945 + n) + sb;
-                    number = number / 24;
+                    sb = (char)(945 + n) + sb;
+                    number /= 24;
                 }
                 else
                 {
-                    sb = (Char)(945 + 24) + sb;
+                    sb = (char)(945 + 24) + sb;
                     number = (number - 1) / 25;
                 }
             }
@@ -439,11 +436,11 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             var sb = string.Empty;
             for (int i = 1000, j = 3; i > 0; i /= 10, j--)
             {
-                int digit = number / i;
-                sb += string.Format(_romanDigitsTable[j, digit]);
+                var digit = number / i;
+                sb += string.Format(CultureInfo.InvariantCulture, _romanDigitsTable[j][digit]);
                 number -= digit * i;
             }
-            return lowercase ? sb.ToLower() : sb;
+            return lowercase ? sb : sb.ToUpperInvariant();
         }
 
         /// <summary>
@@ -452,15 +449,15 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <param name="number">the number to convert</param>
         /// <param name="alphabet">the alphabet system to use</param>
         /// <returns>the number string</returns>
-        private static string ConvertToSpecificNumbers(int number, string[,] alphabet)
+        private static string ConvertToSpecificNumbers(int number, string[][] alphabet)
         {
-            int level = 0;
+            var level = 0;
             var sb = string.Empty;
-            while (number > 0 && level < alphabet.GetLength(0))
+            while (number > 0 && level < alphabet.Length)
             {
                 var n = number % 10;
                 if (n > 0)
-                    sb = alphabet[level, number % 10 - 1].ToString(CultureInfo.InvariantCulture) + sb;
+                    sb = alphabet[level][number % 10 - 1].ToString(CultureInfo.InvariantCulture) + sb;
                 number /= 10;
                 level++;
             }
@@ -475,7 +472,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>the number string</returns>
         private static string ConvertToSpecificNumbers2(int number, string[] alphabet)
         {
-            for (int i = 20; i > 0; i--)
+            for (var i = 20; i > 0; i--)
             {
                 if (number > 49 * i - i + 1)
                     number++;

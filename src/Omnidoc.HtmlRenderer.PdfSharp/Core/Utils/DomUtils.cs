@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Omnidoc.HtmlRenderer.Adapters.Entities;
 using Omnidoc.HtmlRenderer.Core.Dom;
@@ -11,7 +12,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
     /// <summary>
     /// Utility class for traversing DOM structure and execution stuff on it.
     /// </summary>
-    internal sealed class DomUtils
+    internal static class DomUtils
     {
         /// <summary>
         /// Check if the given location is inside the given box deep.<br/>
@@ -42,7 +43,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>true - only inline child boxes, false - otherwise</returns>
         public static bool ContainsInlinesOnly(CssBox box)
         {
-            foreach (CssBox b in box.Boxes)
+            foreach (var b in box.Boxes)
             {
                 if (!b.IsInline)
                 {
@@ -65,7 +66,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             {
                 return root;
             }
-            else if (box.HtmlTag != null && box.HtmlTag.Name.Equals(tagName, StringComparison.CurrentCultureIgnoreCase))
+            else if (box.HtmlTag != null && box.HtmlTag.Name.Equals(tagName, StringComparison.OrdinalIgnoreCase))
             {
                 return box.ParentBox ?? root;
             }
@@ -83,11 +84,11 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             if (b.ParentBox != null)
             {
-                int index = b.ParentBox.Boxes.IndexOf(b);
+                var index = b.ParentBox.Boxes.IndexOf(b);
                 if (index > 0)
                 {
-                    int diff = 1;
-                    CssBox sib = b.ParentBox.Boxes[index - diff];
+                    var diff = 1;
+                    var sib = b.ParentBox.Boxes[index - diff];
 
                     while ((sib.Display == CssConstants.None || sib.Position == CssConstants.Absolute || sib.Position == CssConstants.Fixed) && index - diff - 1 >= 0)
                     {
@@ -107,7 +108,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         public static CssBox GetPreviousContainingBlockSibling(CssBox b)
         {
             var conBlock = b;
-            int index = conBlock.ParentBox.Boxes.IndexOf(conBlock);
+            var index = conBlock.ParentBox.Boxes.IndexOf(conBlock);
             while (conBlock.ParentBox != null && index < 1 && conBlock.Display != CssConstants.Block && conBlock.Display != CssConstants.Table && conBlock.Display != CssConstants.TableCell && conBlock.Display != CssConstants.ListItem)
             {
                 conBlock = conBlock.ParentBox;
@@ -116,8 +117,8 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             conBlock = conBlock.ParentBox;
             if (conBlock != null && index > 0)
             {
-                int diff = 1;
-                CssBox sib = conBlock.Boxes[index - diff];
+                var diff = 1;
+                var sib = conBlock.Boxes[index - diff];
 
                 while ((sib.Display == CssConstants.None || sib.Position == CssConstants.Absolute || sib.Position == CssConstants.Fixed) && index - diff - 1 >= 0)
                 {
@@ -478,7 +479,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>the index of the last word appended</returns>
         private static int GetSelectedPlainText(StringBuilder sb, CssBox box)
         {
-            int lastWordIndex = 0;
+            var lastWordIndex = 0;
             foreach (var boxWord in box.Words)
             {
                 // append the text of selected word (handle partial selected words)
@@ -510,7 +511,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                 // convert hr to line of dashes
                 if (box.HtmlTag != null && box.HtmlTag.Name == "hr")
                 {
-                    if (sb.Length > 1 && sb[sb.Length - 1] != '\n')
+                    if (sb.Length > 1 && sb[^1] != '\n')
                         sb.AppendLine();
                     sb.AppendLine(new string('-', 80));
                 }
@@ -518,7 +519,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                 // new line for css block
                 if (box.Display == CssConstants.Block || box.Display == CssConstants.ListItem || box.Display == CssConstants.TableRow)
                 {
-                    if (!(box.IsBrElement && sb.Length > 1 && sb[sb.Length - 1] == '\n'))
+                    if (!(box.IsBrElement && sb.Length > 1 && sb[^1] == '\n'))
                         sb.AppendLine();
                 }
 
@@ -531,8 +532,8 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                 // paragraphs has additional newline for nice formatting
                 if (box.HtmlTag != null && box.HtmlTag.Name == "p")
                 {
-                    int newlines = 0;
-                    for (int i = sb.Length - 1; i >= 0 && char.IsWhiteSpace(sb[i]); i--)
+                    var newlines = 0;
+                    for (var i = sb.Length - 1; i >= 0 && char.IsWhiteSpace(sb[i]); i--)
                         newlines += sb[i] == '\n' ? 1 : 0;
                     if (newlines < 2)
                         sb.AppendLine();
@@ -565,7 +566,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <returns>is the current box is in selected sub-tree</returns>
         private static bool CollectSelectedBoxes(CssBox box, Dictionary<CssBox, bool> selectedBoxes, Dictionary<CssBox, bool> maybeBoxes)
         {
-            bool isInSelection = false;
+            var isInSelection = false;
             foreach (var word in box.Words)
             {
                 if (word.Selected)
@@ -608,7 +609,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             var selectionRootRun = root;
             while (true)
             {
-                bool foundRoot = false;
+                var foundRoot = false;
                 CssBox selectedChild = null;
                 foreach (var childBox in selectionRootRun.Boxes)
                 {
@@ -679,7 +680,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                 if (box.HtmlTag != null)
                 {
                     if (box.HtmlTag.Name != "link" || !box.HtmlTag.Attributes.ContainsKey("href") ||
-                        (!box.HtmlTag.Attributes["href"].StartsWith("property") && !box.HtmlTag.Attributes["href"].StartsWith("method")))
+                        (!box.HtmlTag.Attributes["href"].StartsWith("property", StringComparison.Ordinal) && !box.HtmlTag.Attributes["href"].StartsWith("method", StringComparison.Ordinal)))
                     {
                         WriteHtmlTag(cssParser, sb, box, styleGen);
                         if (box == selectionRoot)
@@ -715,7 +716,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                 {
                     if (box == selectionRoot)
                         sb.Append("<!--EndFragment-->");
-                    sb.AppendFormat("</{0}>", box.HtmlTag.Name);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "</{0}>", box.HtmlTag.Name);
                 }
             }
         }
@@ -729,7 +730,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <param name="styleGen">Controls the way styles are generated when html is generated</param>
         private static void WriteHtmlTag(CssParser cssParser, StringBuilder sb, CssBox box, HtmlGenerationStyle styleGen)
         {
-            sb.AppendFormat("<{0}", box.HtmlTag.Name);
+            sb.AppendFormat(CultureInfo.InvariantCulture, "<{0}", box.HtmlTag.Name);
 
             // collect all element style properties including from stylesheet
             var tagStyles = new Dictionary<string, string>();
@@ -744,7 +745,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
 
             if (box.HtmlTag.HasAttributes())
             {
-                sb.Append(" ");
+                sb.Append(' ');
                 foreach (var att in box.HtmlTag.Attributes)
                 {
                     // handle image tags by inserting the image using base64 data
@@ -769,7 +770,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                     }
                     else
                     {
-                        sb.AppendFormat("{0}=\"{1}\" ", att.Key, att.Value);
+                        sb.AppendFormat(CultureInfo.InvariantCulture, "{0}=\"{1}\" ", att.Key, att.Value);
                     }
                 }
 
@@ -784,13 +785,13 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                 {
                     sb.Append(" style=\"");
                     foreach (var style in cleanTagStyles)
-                        sb.AppendFormat("{0}: {1}; ", style.Key, style.Value);
+                        sb.AppendFormat(CultureInfo.InvariantCulture, "{0}: {1}; ", style.Key, style.Value);
                     sb.Remove(sb.Length - 1, 1);
-                    sb.Append("\"");
+                    sb.Append('"');
                 }
             }
 
-            sb.AppendFormat("{0}>", box.HtmlTag.IsSingle ? "/" : "");
+            sb.AppendFormat(CultureInfo.InvariantCulture, "{0}>", box.HtmlTag.IsSingle ? "/" : "");
         }
 
         /// <summary>
@@ -807,11 +808,10 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
             var defaultBlocks = box.HtmlContainer.Adapter.DefaultCssData.GetCssBlock(box.HtmlTag.Name);
             foreach (var style in tagStyles)
             {
-                bool isDefault = false;
+                var isDefault = false;
                 foreach (var defaultBlock in defaultBlocks)
                 {
-                    string value;
-                    if (defaultBlock.Properties.TryGetValue(style.Key, out value) && value.Equals(style.Value, StringComparison.OrdinalIgnoreCase))
+                    if (defaultBlock.Properties.TryGetValue(style.Key, out var value) && value.Equals(style.Value, StringComparison.OrdinalIgnoreCase))
                     {
                         isDefault = true;
                         break;
@@ -842,7 +842,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
                     foreach (var property in cssBlock.Properties)
                     {
                         // TODO:a handle selectors
-                        sb.AppendFormat("{0}: {1};", property.Key, property.Value);
+                        sb.AppendFormat(CultureInfo.InvariantCulture, "{0}: {1};", property.Key, property.Value);
                     }
                 }
                 sb.Append(" }");
@@ -860,11 +860,11 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             if (selectedText && rect.SelectedStartIndex > -1 && rect.SelectedEndIndexOffset > -1)
             {
-                return rect.Text.Substring(rect.SelectedStartIndex, rect.SelectedEndIndexOffset - rect.SelectedStartIndex);
+                return rect.Text[rect.SelectedStartIndex..rect.SelectedEndIndexOffset];
             }
             else if (selectedText && rect.SelectedStartIndex > -1)
             {
-                return rect.Text.Substring(rect.SelectedStartIndex) + (rect.HasSpaceAfter ? " " : "");
+                return rect.Text[rect.SelectedStartIndex..] + (rect.HasSpaceAfter ? " " : "");
             }
             else if (selectedText && rect.SelectedEndIndexOffset > -1)
             {
@@ -886,19 +886,19 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         /// <param name="indent">the current indent level to set indent of generated text</param>
         private static void GenerateBoxTree(CssBox box, StringBuilder builder, int indent)
         {
-            builder.AppendFormat("{0}<{1}", new string(' ', 2 * indent), box.Display);
+            builder.AppendFormat(CultureInfo.InvariantCulture, "{0}<{1}", new string(' ', 2 * indent), box.Display);
             if (box.HtmlTag != null)
-                builder.AppendFormat(" element=\"{0}\"", box.HtmlTag != null ? box.HtmlTag.Name : string.Empty);
+                builder.AppendFormat(CultureInfo.InvariantCulture, " element=\"{0}\"", box.HtmlTag != null ? box.HtmlTag.Name : string.Empty);
             if (box.Words.Count > 0)
-                builder.AppendFormat(" words=\"{0}\"", box.Words.Count);
-            builder.AppendFormat("{0}>\r\n", box.Boxes.Count > 0 ? "" : "/");
+                builder.AppendFormat(CultureInfo.InvariantCulture, " words=\"{0}\"", box.Words.Count);
+            builder.AppendFormat(CultureInfo.InvariantCulture, "{0}>\r\n", box.Boxes.Count > 0 ? "" : "/");
             if (box.Boxes.Count > 0)
             {
                 foreach (var childBox in box.Boxes)
                 {
                     GenerateBoxTree(childBox, builder, indent + 1);
                 }
-                builder.AppendFormat("{0}</{1}>\r\n", new string(' ', 2 * indent), box.Display);
+                builder.AppendFormat(CultureInfo.InvariantCulture, "{0}</{1}>\r\n", new string(' ', 2 * indent), box.Display);
             }
         }
 

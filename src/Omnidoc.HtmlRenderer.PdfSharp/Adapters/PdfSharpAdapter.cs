@@ -19,7 +19,7 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        private static readonly PdfSharpAdapter _instance = new PdfSharpAdapter();
+        private static readonly PdfSharpAdapter _instance = new();
 
         #endregion
 

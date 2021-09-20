@@ -31,9 +31,11 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
         /// </summary>
         public HtmlContainer()
         {
-            _htmlContainerInt = new HtmlContainerInt(PdfSharpAdapter.Instance);
-            _htmlContainerInt.AvoidAsyncImagesLoading = true;
-            _htmlContainerInt.AvoidImagesLateLoading = true;
+            _htmlContainerInt = new HtmlContainerInt(PdfSharpAdapter.Instance)
+            {
+                AvoidAsyncImagesLoading = true,
+                AvoidImagesLateLoading = true
+            };
         }
 
         /// <summary>
@@ -316,10 +318,8 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            using (var ig = new GraphicsAdapter(g))
-            {
-                _htmlContainerInt.PerformLayout(ig);
-            }
+            using var ig = new GraphicsAdapter(g);
+            _htmlContainerInt.PerformLayout(ig);
         }
 
         /// <summary>
@@ -330,10 +330,8 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            using (var ig = new GraphicsAdapter(g))
-            {
-                _htmlContainerInt.PerformPaint(ig);
-            }
+            using var ig = new GraphicsAdapter(g);
+            _htmlContainerInt.PerformPaint(ig);
         }
 
         public void Dispose()

@@ -81,7 +81,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="stylesheet">raw css stylesheet to parse</param>
         public void ParseStyleSheet(CssData cssData, string stylesheet)
         {
-            if (!String.IsNullOrEmpty(stylesheet))
+            if (!string.IsNullOrEmpty(stylesheet))
             {
                 stylesheet = RemoveStylesheetComments(stylesheet);
 
@@ -138,14 +138,14 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             int prevIdx = 0, startIdx = 0;
             while (startIdx > -1 && startIdx < stylesheet.Length)
             {
-                startIdx = stylesheet.IndexOf("/*", startIdx);
+                startIdx = stylesheet.IndexOf("/*", startIdx, StringComparison.Ordinal);
                 if (startIdx > -1)
                 {
                     if (sb == null)
                         sb = new StringBuilder(stylesheet.Length);
-                    sb.Append(stylesheet.Substring(prevIdx, startIdx - prevIdx));
+                    sb.Append(stylesheet[prevIdx..startIdx]);
 
-                    var endIdx = stylesheet.IndexOf("*/", startIdx + 2);
+                    var endIdx = stylesheet.IndexOf("*/", startIdx + 2, StringComparison.Ordinal);
                     if (endIdx < 0)
                         endIdx = stylesheet.Length;
 
@@ -153,7 +153,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 }
                 else if (sb != null)
                 {
-                    sb.Append(stylesheet.Substring(prevIdx));
+                    sb.Append(stylesheet[prevIdx..]);
                 }
             }
 
@@ -169,7 +169,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         private void ParseStyleBlocks(CssData cssData, string stylesheet)
         {
             var startIdx = 0;
-            int endIdx = 0;
+            var endIdx = 0;
             while (startIdx < stylesheet.Length && endIdx > -1)
             {
                 endIdx = startIdx;
@@ -182,7 +182,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                         break;
                 }
 
-                int midIdx = endIdx + 1;
+                var midIdx = endIdx + 1;
                 if (endIdx > -1)
                 {
                     endIdx++;
@@ -197,7 +197,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
 
                     if (endIdx < stylesheet.Length)
                     {
-                        while (Char.IsWhiteSpace(stylesheet[startIdx]))
+                        while (char.IsWhiteSpace(stylesheet[startIdx]))
                             startIdx++;
                         var substring = stylesheet.Substring(startIdx, endIdx - startIdx + 1);
                         FeedStyleBlock(cssData, substring);
@@ -215,7 +215,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="stylesheet">the stylesheet to parse</param>
         private void ParseMediaStyleBlocks(CssData cssData, string stylesheet)
         {
-            int startIdx = 0;
+            var startIdx = 0;
             string atrule;
             while ((atrule = RegexParserUtils.GetCssAtRules(stylesheet, ref startIdx)) != null)
             {
@@ -224,21 +224,21 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                     continue;
 
                 //Extract specified media types
-                MatchCollection types = RegexParserUtils.Match(RegexParserUtils.CssMediaTypes, atrule);
+                var types = RegexParserUtils.Match(RegexParserUtils.CssMediaTypes, atrule);
 
                 if (types.Count == 1)
                 {
-                    string line = types[0].Value;
+                    var line = types[0].Value;
 
-                    if (line.StartsWith("@media", StringComparison.InvariantCultureIgnoreCase) && line.EndsWith("{"))
+                    if (line.StartsWith("@media", StringComparison.InvariantCultureIgnoreCase) && line.EndsWith('{'))
                     {
                         //Get specified media types in the at-rule
-                        string[] media = line.Substring(6, line.Length - 7).Split(' ');
+                        var media = line[6..^1].Split(' ');
 
                         //Scan media types
-                        foreach (string t in media)
+                        foreach (var t in media)
                         {
-                            if (!String.IsNullOrEmpty(t.Trim()))
+                            if (!string.IsNullOrEmpty(t.Trim()))
                             {
                                 //Get blocks inside the at-rule
                                 var insideBlocks = RegexParserUtils.Match(RegexParserUtils.CssBlocks, atrule);
@@ -264,17 +264,17 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="media">optional: the media (default - all)</param>
         private void FeedStyleBlock(CssData cssData, string block, string media = "all")
         {
-            int startIdx = block.IndexOf("{", StringComparison.Ordinal);
-            int endIdx = startIdx > -1 ? block.IndexOf("}", startIdx) : -1;
+            var startIdx = block.IndexOf("{", StringComparison.Ordinal);
+            var endIdx = startIdx > -1 ? block.IndexOf('}', startIdx) : -1;
             if (startIdx > -1 && endIdx > -1)
             {
-                string blockSource = block.Substring(startIdx + 1, endIdx - startIdx - 1);
+                var blockSource = block.Substring(startIdx + 1, endIdx - startIdx - 1);
                 var classes = block.Substring(0, startIdx).Split(',');
 
-                foreach (string cls in classes)
+                foreach (var cls in classes)
                 {
-                    string className = cls.Trim(_cssClassTrimChars);
-                    if (!String.IsNullOrEmpty(className))
+                    var className = cls.Trim(_cssClassTrimChars);
+                    if (!string.IsNullOrEmpty(className))
                     {
                         var newblock = ParseCssBlockImp(className, blockSource);
                         if (newblock != null)
@@ -294,19 +294,18 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>the created CSS block instance</returns>
         private CssBlock ParseCssBlockImp(string className, string blockSource)
         {
-            className = className.ToLower();
+            className = className.ToLowerInvariant();
             string psedoClass = null;
             var colonIdx = className.IndexOf(":", StringComparison.Ordinal);
-            if (colonIdx > -1 && !className.StartsWith("::"))
+            if (colonIdx > -1 && !className.StartsWith("::", StringComparison.Ordinal))
             {
-                psedoClass = colonIdx < className.Length - 1 ? className.Substring(colonIdx + 1).Trim() : null;
+                psedoClass = colonIdx < className.Length - 1 ? className[(colonIdx + 1)..].Trim() : null;
                 className = className.Substring(0, colonIdx).Trim();
             }
 
             if (!string.IsNullOrEmpty(className) && (psedoClass == null || psedoClass == "link" || psedoClass == "hover"))
             {
-                string firstClass;
-                var selectors = ParseCssBlockSelector(className, out firstClass);
+                var selectors = ParseCssBlockSelector(className, out var firstClass);
 
                 var properties = ParseCssBlockProperties(blockSource);
 
@@ -327,10 +326,10 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             List<CssBlockSelectorItem> selectors = null;
 
             firstClass = null;
-            int endIdx = className.Length - 1;
+            var endIdx = className.Length - 1;
             while (endIdx > -1)
             {
-                bool directParent = false;
+                var directParent = false;
                 while (char.IsWhiteSpace(className[endIdx]) || className[endIdx] == '>')
                 {
                     directParent = directParent || className[endIdx] == '>';
@@ -367,7 +366,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 endIdx = startIdx;
             }
 
-            firstClass = firstClass ?? className;
+            firstClass ??= className;
             return selectors;
         }
 
@@ -379,14 +378,14 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         private Dictionary<string, string> ParseCssBlockProperties(string blockSource)
         {
             var properties = new Dictionary<string, string>();
-            int startIdx = 0;
+            var startIdx = 0;
             while (startIdx < blockSource.Length)
             {
-                int endIdx = blockSource.IndexOfAny(_cssBlockSplitters, startIdx);
+                var endIdx = blockSource.IndexOfAny(_cssBlockSplitters, startIdx);
 
                 // If blockSource contains "data:image" then skip first semicolon since it is a part of image definition
                 // example: "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA......"
-                if (startIdx >= 0 && endIdx - startIdx >= 10 && blockSource.Length - startIdx >= 10 && blockSource.IndexOf("data:image", startIdx, endIdx - startIdx) >= 0)
+                if (startIdx >= 0 && endIdx - startIdx >= 10 && blockSource.Length - startIdx >= 10 && blockSource.IndexOf("data:image", startIdx, endIdx - startIdx, StringComparison.Ordinal) >= 0)
                     endIdx = blockSource.IndexOfAny(_cssBlockSplitters, endIdx + 1);
 
                 if (endIdx < 0)
@@ -396,15 +395,15 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 if (splitIdx > -1)
                 {
                     //Extract property name and value
-                    startIdx = startIdx + (blockSource[startIdx] == ' ' ? 1 : 0);
+                    startIdx += (blockSource[startIdx] == ' ' ? 1 : 0);
                     var adjEndIdx = endIdx - (blockSource[endIdx] == ' ' || blockSource[endIdx] == ';' ? 1 : 0);
-                    string propName = blockSource.Substring(startIdx, splitIdx - startIdx).Trim().ToLower();
-                    splitIdx = splitIdx + (blockSource[splitIdx + 1] == ' ' ? 2 : 1);
+                    var propName = blockSource[startIdx..splitIdx].Trim().ToLowerInvariant();
+                    splitIdx += (blockSource[splitIdx + 1] == ' ' ? 2 : 1);
                     if (adjEndIdx >= splitIdx)
                     {
-                        string propValue = blockSource.Substring(splitIdx, adjEndIdx - splitIdx + 1).Trim();
+                        var propValue = blockSource.Substring(splitIdx, adjEndIdx - splitIdx + 1).Trim();
                         if (!propValue.StartsWith("url", StringComparison.InvariantCultureIgnoreCase))
-                            propValue = propValue.ToLower();
+                            propValue = propValue.ToLowerInvariant();
                         AddProperty(propName, propValue, properties);
                     }
                 }
@@ -423,7 +422,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         private void AddProperty(string propName, string propValue, Dictionary<string, string> properties)
         {
             // remove !important css crap
-            propValue = propValue.Replace("!important", string.Empty).Trim();
+            propValue = propValue.Replace("!important", string.Empty, StringComparison.Ordinal).Trim();
 
             if (propName == "width" || propName == "height" || propName == "lineheight")
             {
@@ -530,31 +529,30 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add the specific properties to</param>
         private void ParseFontProperty(string propValue, Dictionary<string, string> properties)
         {
-            int mustBePos;
-            string mustBe = RegexParserUtils.Search(RegexParserUtils.CssFontSizeAndLineHeight, propValue, out mustBePos);
+            var mustBe = RegexParserUtils.Search(RegexParserUtils.CssFontSizeAndLineHeight, propValue, out var mustBePos);
 
             if (!string.IsNullOrEmpty(mustBe))
             {
                 mustBe = mustBe.Trim();
                 //Check for style||variant||weight on the left
-                string leftSide = propValue.Substring(0, mustBePos);
-                string fontStyle = RegexParserUtils.Search(RegexParserUtils.CssFontStyle, leftSide);
-                string fontVariant = RegexParserUtils.Search(RegexParserUtils.CssFontVariant, leftSide);
-                string fontWeight = RegexParserUtils.Search(RegexParserUtils.CssFontWeight, leftSide);
+                var leftSide = propValue.Substring(0, mustBePos);
+                var fontStyle = RegexParserUtils.Search(RegexParserUtils.CssFontStyle, leftSide);
+                var fontVariant = RegexParserUtils.Search(RegexParserUtils.CssFontVariant, leftSide);
+                var fontWeight = RegexParserUtils.Search(RegexParserUtils.CssFontWeight, leftSide);
 
                 //Check for family on the right
-                string rightSide = propValue.Substring(mustBePos + mustBe.Length);
-                string fontFamily = rightSide.Trim(); //Parser.Search(Parser.CssFontFamily, rightSide); //TODO: Would this be right?
+                var rightSide = propValue[(mustBePos + mustBe.Length)..];
+                var fontFamily = rightSide.Trim(); //Parser.Search(Parser.CssFontFamily, rightSide); //TODO: Would this be right?
 
                 //Check for font-size and line-height
-                string fontSize = mustBe;
-                string lineHeight = string.Empty;
+                var fontSize = mustBe;
+                var lineHeight = string.Empty;
 
-                if (mustBe.Contains("/") && mustBe.Length > mustBe.IndexOf("/", StringComparison.Ordinal) + 1)
+                if (mustBe.Contains('/', StringComparison.Ordinal) && mustBe.Length > mustBe.IndexOf('/', StringComparison.Ordinal) + 1)
                 {
-                    int slashPos = mustBe.IndexOf("/", StringComparison.Ordinal);
+                    var slashPos = mustBe.IndexOf('/', StringComparison.Ordinal);
                     fontSize = mustBe.Substring(0, slashPos);
-                    lineHeight = mustBe.Substring(slashPos + 1);
+                    lineHeight = mustBe[(slashPos + 1)..];
                 }
 
                 if (!string.IsNullOrEmpty(fontFamily))
@@ -584,7 +582,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>parsed value</returns>
         private static string ParseImageProperty(string propValue)
         {
-            int startIdx = propValue.IndexOf("url(", StringComparison.InvariantCultureIgnoreCase);
+            var startIdx = propValue.IndexOf("url(", StringComparison.InvariantCultureIgnoreCase);
             if (startIdx > -1)
             {
                 startIdx += 4;
@@ -612,7 +610,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>parsed font-family value</returns>
         private string ParseFontFamilyProperty(string propValue)
         {
-            int start = 0;
+            var start = 0;
             while (start > -1 && start < propValue.Length)
             {
                 while (char.IsWhiteSpace(propValue[start]) || propValue[start] == ',' || propValue[start] == '\'' || propValue[start] == '"')
@@ -645,10 +643,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add the specific properties to</param>
         private void ParseBorderProperty(string propValue, string direction, Dictionary<string, string> properties)
         {
-            string borderWidth;
-            string borderStyle;
-            string borderColor;
-            ParseBorder(propValue, out borderWidth, out borderStyle, out borderColor);
+            ParseBorder(propValue, out var borderWidth, out var borderStyle, out var borderColor);
 
             if (direction != null)
             {
@@ -677,8 +672,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add the specific properties to</param>
         private static void ParseMarginProperty(string propValue, Dictionary<string, string> properties)
         {
-            string bottom, top, left, right;
-            SplitMultiDirectionValues(propValue, out left, out top, out right, out bottom);
+            SplitMultiDirectionValues(propValue, out var left, out var top, out var right, out var bottom);
 
             if (left != null)
                 properties["margin-left"] = left;
@@ -697,8 +691,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add the specific properties to</param>
         private static void ParseBorderStyleProperty(string propValue, Dictionary<string, string> properties)
         {
-            string bottom, top, left, right;
-            SplitMultiDirectionValues(propValue, out left, out top, out right, out bottom);
+            SplitMultiDirectionValues(propValue, out var left, out var top, out var right, out var bottom);
 
             if (left != null)
                 properties["border-left-style"] = left;
@@ -717,8 +710,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add the specific properties to</param>
         private static void ParseBorderWidthProperty(string propValue, Dictionary<string, string> properties)
         {
-            string bottom, top, left, right;
-            SplitMultiDirectionValues(propValue, out left, out top, out right, out bottom);
+            SplitMultiDirectionValues(propValue, out var left, out var top, out var right, out var bottom);
 
             if (left != null)
                 properties["border-left-width"] = left;
@@ -737,8 +729,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add the specific properties to</param>
         private static void ParseBorderColorProperty(string propValue, Dictionary<string, string> properties)
         {
-            string bottom, top, left, right;
-            SplitMultiDirectionValues(propValue, out left, out top, out right, out bottom);
+            SplitMultiDirectionValues(propValue, out var left, out var top, out var right, out var bottom);
 
             if (left != null)
                 properties["border-left-color"] = left;
@@ -757,8 +748,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add the specific properties to</param>
         private static void ParsePaddingProperty(string propValue, Dictionary<string, string> properties)
         {
-            string bottom, top, left, right;
-            SplitMultiDirectionValues(propValue, out left, out top, out right, out bottom);
+            SplitMultiDirectionValues(propValue, out var left, out var top, out var right, out var bottom);
 
             if (left != null)
                 properties["padding-left"] = left;
@@ -779,7 +769,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             left = null;
             right = null;
             bottom = null;
-            string[] values = SplitValues(propValue);
+            var values = SplitValues(propValue);
             switch (values.Length)
             {
                 case 1:
@@ -815,12 +805,12 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
 
             if (!string.IsNullOrEmpty(value))
             {
-                string[] values = value.Split(separator);
-                List<string> result = new List<string>();
+                var values = value.Split(separator);
+                var result = new List<string>();
 
-                foreach (string t in values)
+                foreach (var t in values)
                 {
-                    string val = t.Trim();
+                    var val = t.Trim();
 
                     if (!string.IsNullOrEmpty(val))
                     {
@@ -831,7 +821,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 return result.ToArray();
             }
 
-            return new string[0];
+            return Array.Empty<string>();
         }
 
         /// <summary>
@@ -846,9 +836,8 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             width = style = color = null;
             if (!string.IsNullOrEmpty(value))
             {
-                int idx = 0;
-                int length;
-                while ((idx = CommonUtils.GetNextSubString(value, idx, out length)) > -1)
+                var idx = 0;
+                while ((idx = CommonUtils.GetNextSubString(value, idx, out var length)) > -1)
                 {
                     if (width == null)
                         width = ParseBorderWidth(value, idx, length);
@@ -943,8 +932,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>found border width value or null</returns>
         private string ParseBorderColor(string str, int idx, int length)
         {
-            RColor color;
-            return _valueParser.TryGetColor(str, idx, length, out color) ? str.Substring(idx, length) : null;
+            return _valueParser.TryGetColor(str, idx, length, out _) ? str.Substring(idx, length) : null;
         }
 
         #endregion

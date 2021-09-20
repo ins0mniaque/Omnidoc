@@ -27,7 +27,7 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// Used to measure and draw strings
         /// </summary>
-        private static readonly XStringFormat _stringFormat = new XStringFormat()
+        private static readonly XStringFormat _stringFormat = new()
         {
             Alignment = XStringAlignment.Near,
             LineAlignment = XLineAlignment.Near
@@ -65,14 +65,14 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
         public override void PushClipExclude(RRect rect)
         { }
 
-        public override Object SetAntiAliasSmoothingMode()
+        public override object SetAntiAliasSmoothingMode()
         {
             var prevMode = _g.SmoothingMode;
             _g.SmoothingMode = XSmoothingMode.AntiAlias;
             return prevMode;
         }
 
-        public override void ReturnPreviousSmoothingMode(Object prevMode)
+        public override void ReturnPreviousSmoothingMode(object prevMode)
         {
             if (prevMode != null)
             {
@@ -140,8 +140,7 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
         public override void DrawRectangle(RBrush brush, double x, double y, double width, double height)
         {
             var xBrush = ((BrushAdapter)brush).Brush;
-            var xTextureBrush = xBrush as XTextureBrush;
-            if (xTextureBrush != null)
+            if (xBrush is XTextureBrush xTextureBrush)
             {
                 xTextureBrush.DrawRectangle(_g, x, y, width, height);
             }

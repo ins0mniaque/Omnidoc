@@ -33,7 +33,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             Display = CssConstants.None;
 
             _startRow = startRow;
-            _endRow = startRow + Int32.Parse(extendedBox.GetAttribute("rowspan", "1")) - 1;
+            _endRow = startRow + int.Parse(extendedBox.GetAttribute("rowspan", "1")) - 1;
         }
 
         public CssBox ExtendedBox

@@ -45,11 +45,11 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
             var prevState = g.Save();
             g.IntersectClip(new XRect(x, y, width, height));
 
-            double rx = _translateTransformLocation.X;
+            var rx = _translateTransformLocation.X;
             double w = _image.PixelWidth, h = _image.PixelHeight;
             while (rx < x + width)
             {
-                double ry = _translateTransformLocation.Y;
+                var ry = _translateTransformLocation.Y;
                 while (ry < y + height)
                 {
                     g.DrawImage(_image, rx, ry, w, h);

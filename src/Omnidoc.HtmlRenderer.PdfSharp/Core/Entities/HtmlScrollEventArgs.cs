@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Omnidoc.HtmlRenderer.Adapters.Entities;
 
 namespace Omnidoc.HtmlRenderer.Core.Entities
@@ -41,7 +42,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
 
         public override string ToString()
         {
-            return string.Format("Location: {0}", _location);
+            return string.Format(CultureInfo.InvariantCulture, "Location: {0}", _location);
         }
     }
 }

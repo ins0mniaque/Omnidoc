@@ -125,9 +125,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns></returns>
         internal List<CssRect> WordsOf(CssBox box)
         {
-            List<CssRect> r = new List<CssRect>();
+            var r = new List<CssRect>();
 
-            foreach (CssRect word in Words)
+            foreach (var word in Words)
                 if (word.OwnerBox.Equals(box))
                     r.Add(word);
 
@@ -144,10 +144,10 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <param name="b"></param>
         internal void UpdateRectangle(CssBox box, double x, double y, double r, double b)
         {
-            double leftspacing = box.ActualBorderLeftWidth + box.ActualPaddingLeft;
-            double rightspacing = box.ActualBorderRightWidth + box.ActualPaddingRight;
-            double topspacing = box.ActualBorderTopWidth + box.ActualPaddingTop;
-            double bottomspacing = box.ActualBorderBottomWidth + box.ActualPaddingTop;
+            var leftspacing = box.ActualBorderLeftWidth + box.ActualPaddingLeft;
+            var rightspacing = box.ActualBorderRightWidth + box.ActualPaddingRight;
+            var topspacing = box.ActualBorderTopWidth + box.ActualPaddingTop;
+            var bottomspacing = box.ActualBorderBottomWidth + box.ActualPaddingTop;
 
             if ((box.FirstHostingLineBox != null && box.FirstHostingLineBox.Equals(this)) || box.IsImage)
                 x -= leftspacing;
@@ -167,7 +167,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
             else
             {
-                RRect f = Rectangles[box];
+                var f = Rectangles[box];
                 Rectangles[box] = RRect.FromLTRB(
                     Math.Min(f.X, x), Math.Min(f.Y, y),
                     Math.Max(f.Right, r), Math.Max(f.Bottom, b));
@@ -184,7 +184,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// </summary>
         internal void AssignRectanglesToBoxes()
         {
-            foreach (CssBox b in Rectangles.Keys)
+            foreach (var b in Rectangles.Keys)
             {
                 b.Rectangles.Add(this, Rectangles[b]);
             }
@@ -199,12 +199,12 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         internal void SetBaseLine(RGraphics g, CssBox b, double baseline)
         {
             //TODO: Aqui me quede, checar poniendo "by the" con un font-size de 3em
-            List<CssRect> ws = WordsOf(b);
+            var ws = WordsOf(b);
 
             if (!Rectangles.ContainsKey(b))
                 return;
 
-            RRect r = Rectangles[b];
+            var r = Rectangles[b];
 
             //Save top of words related to the top of rectangle
             double gap = 0f;
@@ -215,7 +215,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             }
             else
             {
-                CssRect firstw = b.FirstWordOccourence(b, this);
+                var firstw = b.FirstWordOccourence(b, this);
 
                 if (firstw != null)
                 {
@@ -225,15 +225,15 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
 
             //New top that words will have
             //float newtop = baseline - (Height - OwnerBox.FontDescent - 3); //OLD
-            double newtop = baseline; // -GetBaseLineHeight(b, g); //OLD
+            var newtop = baseline; // -GetBaseLineHeight(b, g); //OLD
 
             if (b.ParentBox != null &&
                 b.ParentBox.Rectangles.ContainsKey(this) &&
                 r.Height < b.ParentBox.Rectangles[this].Height)
             {
                 //Do this only if rectangle is shorter than parent's
-                double recttop = newtop - gap;
-                RRect newr = new RRect(r.X, recttop, r.Width, r.Height);
+                var recttop = newtop - gap;
+                var newr = new RRect(r.X, recttop, r.Width, r.Height);
                 Rectangles[b] = newr;
                 b.OffsetRectangle(this, gap);
             }
@@ -253,7 +253,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public bool IsLastSelectedWord(CssRect word)
         {
-            for (int i = 0; i < _words.Count - 1; i++)
+            for (var i = 0; i < _words.Count - 1; i++)
             {
                 if (_words[i] == word)
                 {
@@ -270,8 +270,8 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            string[] ws = new string[Words.Count];
-            for (int i = 0; i < ws.Length; i++)
+            var ws = new string[Words.Count];
+            for (var i = 0; i < ws.Length; i++)
             {
                 ws[i] = Words[i].Text;
             }

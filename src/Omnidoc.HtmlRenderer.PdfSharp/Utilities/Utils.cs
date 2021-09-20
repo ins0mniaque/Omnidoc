@@ -22,8 +22,8 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Utilities
         /// </summary>
         public static XPoint[] Convert(RPoint[] points)
         {
-            XPoint[] myPoints = new XPoint[points.Length];
-            for (int i = 0; i < points.Length; i++)
+            var myPoints = new XPoint[points.Length];
+            for (var i = 0; i < points.Length; i++)
                 myPoints[i] = Convert(points[i]);
             return myPoints;
         }

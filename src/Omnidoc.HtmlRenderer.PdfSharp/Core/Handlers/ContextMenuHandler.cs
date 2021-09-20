@@ -277,10 +277,10 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
 
                 if (rect != null)
                 {
-                    bool isVideo = false;
+                    var isVideo = false;
                     if (link != null)
                     {
-                        isVideo = link is CssBoxFrame && ((CssBoxFrame)link).IsVideo;
+                        isVideo = link is CssBoxFrame frame && frame.IsVideo;
                         var linkExist = !string.IsNullOrEmpty(link.HrefLink);
                         _contextMenu.AddItem(isVideo ? _openVideo : _openLink, linkExist, OnOpenLinkClick);
                         if (_htmlContainer.IsSelectionEnabled)

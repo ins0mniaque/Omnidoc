@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace Omnidoc.HtmlRenderer.Core.Entities
 {
@@ -33,7 +34,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
 
         public override string ToString()
         {
-            return string.Format("Layout: {0}", _layout);
+            return string.Format(CultureInfo.InvariantCulture, "Layout: {0}", _layout);
         }
     }
 }

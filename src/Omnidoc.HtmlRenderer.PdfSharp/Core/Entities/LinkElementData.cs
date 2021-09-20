@@ -1,4 +1,6 @@
-﻿namespace Omnidoc.HtmlRenderer.Core.Entities
+﻿using System.Globalization;
+
+namespace Omnidoc.HtmlRenderer.Core.Entities
 {
     /// <summary>
     /// Holds data on link element in HTML.<br/>
@@ -68,12 +70,12 @@
         /// </summary>
         public string AnchorId
         {
-            get { return IsAnchor && _href.Length > 1 ? _href.Substring(1) : string.Empty; }
+            get { return IsAnchor && _href.Length > 1 ? _href[1..] : string.Empty; }
         }
 
         public override string ToString()
         {
-            return string.Format("Id: {0}, Href: {1}, Rectangle: {2}", _id, _href, _rectangle);
+            return string.Format(CultureInfo.InvariantCulture, "Id: {0}, Href: {1}, Rectangle: {2}", _id, _href, _rectangle);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace Omnidoc.HtmlRenderer.Core.Utils
@@ -78,11 +79,11 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
         {
             AssertArgNotNull(arg, argName);
 
-            if (arg is T)
+            if (arg is T t)
             {
-                return (T)arg;
+                return t;
             }
-            throw new ArgumentException(string.Format("Given argument isn't of type '{0}'.", typeof(T).Name), argName);
+            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Given argument isn't of type '{0}'.", typeof(T).Name), argName);
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace Omnidoc.HtmlRenderer.Core.Utils
 
             if (false == File.Exists(arg))
             {
-                throw new FileNotFoundException(string.Format("Given file in argument '{0}' not exist.", argName), arg);
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Given file in argument '{0}' not exist.", argName), arg);
             }
         }
     }

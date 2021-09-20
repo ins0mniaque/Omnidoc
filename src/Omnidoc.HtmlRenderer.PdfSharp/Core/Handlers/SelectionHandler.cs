@@ -158,7 +158,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <param name="isMouseInContainer"> </param>
         public void HandleMouseDown(RControl parent, RPoint loc, bool isMouseInContainer)
         {
-            bool clear = !isMouseInContainer;
+            var clear = !isMouseInContainer;
             if (isMouseInContainer)
             {
                 _mouseDownInControl = true;
@@ -205,7 +205,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <returns>is the mouse up should be ignored</returns>
         public bool HandleMouseUp(RControl parent, bool leftMouseButton)
         {
-            bool ignore = false;
+            var ignore = false;
             _mouseDownInControl = false;
             if (_root.HtmlContainer.IsSelectionEnabled)
             {
@@ -420,17 +420,17 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
                     if (loc.Y > lineBox.LineBottom)
                     {
                         // under the line
-                        word = lineBox.Words[lineBox.Words.Count - 1];
+                        word = lineBox.Words[^1];
                     }
                     else if (loc.X < lineBox.Words[0].Left)
                     {
                         // before the line
                         word = lineBox.Words[0];
                     }
-                    else if (loc.X > lineBox.Words[lineBox.Words.Count - 1].Right)
+                    else if (loc.X > lineBox.Words[^1].Right)
                     {
                         // at the end of the line
-                        word = lineBox.Words[lineBox.Words.Count - 1];
+                        word = lineBox.Words[^1];
                     }
                 }
 
@@ -545,7 +545,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <param name="selectionEnd">selection end word limit</param>
         private void SelectWordsInRange(CssBox root, CssRect selectionStart, CssRect selectionEnd)
         {
-            bool inSelection = false;
+            var inSelection = false;
             SelectWordsInRange(root, selectionStart, selectionEnd, ref inSelection);
         }
 
@@ -597,9 +597,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <param name="selectionStart">to set the starting or ending char and offset data</param>
         private void CalculateWordCharIndexAndOffset(RControl control, CssRect word, RPoint loc, bool selectionStart)
         {
-            int selectionIndex;
-            double selectionOffset;
-            CalculateWordCharIndexAndOffset(control, word, loc, selectionStart, out selectionIndex, out selectionOffset);
+            CalculateWordCharIndexAndOffset(control, word, loc, selectionStart, out var selectionIndex, out var selectionOffset);
 
             if (selectionStart)
             {
@@ -646,10 +644,8 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             else if (offset > 0)
             {
                 // calculate partial word selection
-                int charFit;
-                double charFitWidth;
                 var maxWidth = offset + (inclusive ? 0 : 1.5f * word.LeftGlyphPadding);
-                control.MeasureString(word.Text, word.OwnerBox.ActualFont, maxWidth, out charFit, out charFitWidth);
+                control.MeasureString(word.Text, word.OwnerBox.ActualFont, maxWidth, out var charFit, out var charFitWidth);
 
                 selectionIndex = charFit;
                 selectionOffset = charFitWidth;

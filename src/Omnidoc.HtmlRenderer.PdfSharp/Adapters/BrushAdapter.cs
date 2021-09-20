@@ -13,12 +13,12 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
         /// The actual PdfSharp brush instance.<br/>
         /// Should be <see cref="XBrush"/> but there is some fucking issue inheriting from it =/
         /// </summary>
-        private readonly Object _brush;
+        private readonly object _brush;
 
         /// <summary>
         /// Init.
         /// </summary>
-        public BrushAdapter(Object brush)
+        public BrushAdapter(object brush)
         {
             _brush = brush;
         }
@@ -26,7 +26,7 @@ namespace Omnidoc.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// The actual WinForms brush instance.
         /// </summary>
-        public Object Brush
+        public object Brush
         {
             get { return _brush; }
         }

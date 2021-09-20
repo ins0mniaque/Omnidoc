@@ -29,17 +29,12 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// <summary>
         /// the web client used to download image from URL (to cancel on dispose)
         /// </summary>
-        private readonly List<WebClient> _clients = new List<WebClient>();
+        private readonly List<WebClient> _clients = new();
 
         /// <summary>
         /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image 
         /// </summary>
-        private readonly Dictionary<string, List<DownloadFileAsyncCallback>> _imageDownloadCallbacks = new Dictionary<string, List<DownloadFileAsyncCallback>>();
-
-        public ImageDownloader()
-        {
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-        }
+        private readonly Dictionary<string, List<DownloadFileAsyncCallback>> _imageDownloadCallbacks = new();
 
         /// <summary>
         /// Makes a request to download the image from the server and raises the <see cref="cachedFileCallback"/> when it's down.<br/>
@@ -54,7 +49,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             ArgChecker.AssertArgNotNull(cachedFileCallback, "cachedFileCallback");
 
             // to handle if the file is already been downloaded
-            bool download = true;
+            var download = true;
             lock (_imageDownloadCallbacks)
             {
                 if (_imageDownloadCallbacks.ContainsKey(filePath))
@@ -97,12 +92,10 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         {
             try
             {
-                using (var client = new WebClient())
-                {
-                    _clients.Add(client);
-                    client.DownloadFile(source, tempPath);
-                    OnDownloadImageCompleted(client, source, tempPath, filePath, null, false);
-                }
+                using var client = new WebClient();
+                _clients.Add(client);
+                client.DownloadFile(source, tempPath);
+                OnDownloadImageCompleted(client, source, tempPath, filePath, null, false);
             }
             catch (Exception ex)
             {
@@ -140,11 +133,9 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             var downloadData = (DownloadData)e.UserState;
             try
             {
-                using (var client = (WebClient)sender)
-                {
-                    client.DownloadFileCompleted -= OnDownloadImageAsyncCompleted;
-                    OnDownloadImageCompleted(client, downloadData._uri, downloadData._tempPath, downloadData._filePath, e.Error, e.Cancelled);
-                }
+                using var client = (WebClient)sender;
+                client.DownloadFileCompleted -= OnDownloadImageAsyncCompleted;
+                OnDownloadImageCompleted(client, downloadData._uri, downloadData._tempPath, downloadData._filePath, e.Error, e.Cancelled);
             }
             catch (Exception ex)
             {

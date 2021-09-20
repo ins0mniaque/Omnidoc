@@ -22,12 +22,12 @@ namespace Omnidoc.HtmlRenderer.Adapters
         /// <summary>
         /// The clipping bound stack as clips are pushed/poped to/from the graphics
         /// </summary>
-        protected readonly Stack<RRect> _clipStack = new Stack<RRect>();
+        protected readonly Stack<RRect> _clipStack = new();
 
         /// <summary>
         /// The suspended clips
         /// </summary>
-        private readonly Stack<RRect> _suspendedClips = new Stack<RRect>();
+        private readonly Stack<RRect> _suspendedClips = new();
 
         #endregion
 
@@ -133,13 +133,13 @@ namespace Omnidoc.HtmlRenderer.Adapters
         /// Use <see cref="ReturnPreviousSmoothingMode"/> to return back the mode used.
         /// </summary>
         /// <returns>the previous smooth mode before the change</returns>
-        public abstract Object SetAntiAliasSmoothingMode();
+        public abstract object SetAntiAliasSmoothingMode();
 
         /// <summary>
         /// Return to previous smooth mode before anti-alias was set as returned from <see cref="SetAntiAliasSmoothingMode"/>.
         /// </summary>
         /// <param name="prevMode">the previous mode to set</param>
-        public abstract void ReturnPreviousSmoothingMode(Object prevMode);
+        public abstract void ReturnPreviousSmoothingMode(object prevMode);
 
         /// <summary>
         /// Get TextureBrush object that uses the specified image and bounding rectangle.
@@ -184,7 +184,7 @@ namespace Omnidoc.HtmlRenderer.Adapters
         /// <param name="point">the location to start string draw (top-left)</param>
         /// <param name="size">used to know the size of the rendered text for transparent text support</param>
         /// <param name="rtl">is to render the string right-to-left (true - RTL, false - LTR)</param>
-        public abstract void DrawString(String str, RFont font, RColor color, RPoint point, RSize size, bool rtl);
+        public abstract void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl);
 
         /// <summary>
         /// Draws a line connecting the two points specified by the coordinate pairs.

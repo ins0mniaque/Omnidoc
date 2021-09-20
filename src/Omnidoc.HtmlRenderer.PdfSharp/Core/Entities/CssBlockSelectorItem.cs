@@ -5,7 +5,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
     /// <summary>
     /// Holds single class selector in css block hierarchical selection (p class1 > div.class2)
     /// </summary>
-    public struct CssBlockSelectorItem
+    public class CssBlockSelectorItem
     {
         #region Fields and Consts
 
@@ -52,7 +52,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
         }
 
         /// <summary>
-        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// Returns a <see cref="string"/> that represents the current <see cref="object"/>.
         /// </summary>
         public override string ToString()
         {

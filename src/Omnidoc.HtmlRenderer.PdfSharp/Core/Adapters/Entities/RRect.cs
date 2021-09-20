@@ -12,7 +12,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <summary>
         ///     Represents an instance of the <see cref="RRect" /> class with its members uninitialized.
         /// </summary>
-        public static readonly RRect Empty = new RRect();
+        public static readonly RRect Empty;
 
         #endregion
 
@@ -248,7 +248,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         ///     <see cref="RRect" />; otherwise, false.
         /// </returns>
         /// <param name="obj">
-        ///     The <see cref="T:System.Object" /> to test.
+        ///     The <see cref="object" /> to test.
         /// </param>
         public override bool Equals(object obj)
         {
@@ -353,7 +353,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <param name="y">The amount to inflate the copy of the rectangle vertically. </param>
         public static RRect Inflate(RRect rect, double x, double y)
         {
-            RRect rectangleF = rect;
+            var rectangleF = rect;
             rectangleF.Inflate(x, y);
             return rectangleF;
         }
@@ -367,7 +367,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <param name="rect">The rectangle to intersect. </param>
         public void Intersect(RRect rect)
         {
-            RRect rectangleF = Intersect(rect, this);
+            var rectangleF = Intersect(rect, this);
             X = rectangleF.X;
             Y = rectangleF.Y;
             Width = rectangleF.Width;
@@ -387,10 +387,10 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <param name="b">A rectangle to intersect. </param>
         public static RRect Intersect(RRect a, RRect b)
         {
-            double x = Math.Max(a.X, b.X);
-            double num1 = Math.Min(a.X + a.Width, b.X + b.Width);
-            double y = Math.Max(a.Y, b.Y);
-            double num2 = Math.Min(a.Y + a.Height, b.Y + b.Height);
+            var x = Math.Max(a.X, b.X);
+            var num1 = Math.Min(a.X + a.Width, b.X + b.Width);
+            var y = Math.Max(a.Y, b.Y);
+            var num2 = Math.Min(a.Y + a.Height, b.Y + b.Height);
             if (num1 >= x && num2 >= y)
                 return new RRect(x, y, num1 - x, num2 - y);
             else
@@ -422,10 +422,10 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <param name="b">A rectangle to union. </param>
         public static RRect Union(RRect a, RRect b)
         {
-            double x = Math.Min(a.X, b.X);
-            double num1 = Math.Max(a.X + a.Width, b.X + b.Width);
-            double y = Math.Min(a.Y, b.Y);
-            double num2 = Math.Max(a.Y + a.Height, b.Y + b.Height);
+            var x = Math.Min(a.X, b.X);
+            var num1 = Math.Max(a.X + a.Width, b.X + b.Width);
+            var y = Math.Min(a.Y, b.Y);
+            var num2 = Math.Max(a.Y + a.Height, b.Y + b.Height);
             return new RRect(x, y, num1 - x, num2 - y);
         }
 
@@ -455,7 +455,7 @@ namespace Omnidoc.HtmlRenderer.Adapters.Entities
         /// <returns>The hash code for this <see cref="RRect" /></returns>
         public override int GetHashCode()
         {
-            return (int)(uint)X ^ ((int)(uint)Y << 13 | (int)((uint)Y >> 19)) ^ ((int)(uint)Width << 26 | (int)((uint)Width >> 6)) ^ ((int)(uint)Height << 7 | (int)((uint)Height >> 25));
+            return HashCode.Combine(X, Y, Width, Height);
         }
 
         /// <summary>

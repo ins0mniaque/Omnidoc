@@ -19,8 +19,8 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             var root = CssBox.CreateBlock();
             var curBox = root;
 
-            int endIdx = 0;
-            int startIdx = 0;
+            var endIdx = 0;
+            var startIdx = 0;
             while (startIdx >= 0)
             {
                 var tagIdx = source.IndexOf('<', startIdx);
@@ -34,13 +34,13 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                         if (source[tagIdx + 2] == '-')
                         {
                             // skip the html comment elements (<!-- bla -->)
-                            startIdx = source.IndexOf("-->", tagIdx + 2);
+                            startIdx = source.IndexOf("-->", tagIdx + 2, StringComparison.Ordinal);
                             endIdx = startIdx > 0 ? startIdx + 3 : tagIdx + 2;
                         }
                         else
                         {
                             // skip the html crap elements (<!crap bla>)
-                            startIdx = source.IndexOf(">", tagIdx + 2);
+                            startIdx = source.IndexOf('>', tagIdx + 2);
                             endIdx = startIdx > 0 ? startIdx + 1 : tagIdx + 2;
                         }
                     }
@@ -110,10 +110,8 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             var endIdx = source.IndexOf('>', tagIdx + 1);
             if (endIdx > 0)
             {
-                string tagName;
-                Dictionary<string, string> tagAttributes;
                 var length = endIdx - tagIdx + 1 - (source[endIdx - 1] == '/' ? 1 : 0);
-                if (ParseHtmlTag(source, tagIdx, length, out tagName, out tagAttributes))
+                if (ParseHtmlTag(source, tagIdx, length, out var tagName, out var tagAttributes))
                 {
                     if (!HtmlUtils.IsSingleTag(tagName) && curBox.ParentBox != null)
                     {
@@ -159,7 +157,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         private static bool ParseHtmlTag(string source, int idx, int length, out string name, out Dictionary<string, string> attributes)
         {
             idx++;
-            length = length - (source[idx + length - 3] == '/' ? 3 : 2);
+            length -= (source[idx + length - 3] == '/' ? 3 : 2);
 
             // Check if is end tag
             var isClosing = false;
@@ -170,12 +168,12 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 isClosing = true;
             }
 
-            int spaceIdx = idx;
+            var spaceIdx = idx;
             while (spaceIdx < idx + length && !char.IsWhiteSpace(source, spaceIdx))
                 spaceIdx++;
 
             // Get the name of the tag
-            name = source.Substring(idx, spaceIdx - idx).ToLower();
+            name = source[idx..spaceIdx].ToLowerInvariant();
 
             attributes = null;
             if (!isClosing && idx + length > spaceIdx)
@@ -197,7 +195,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         {
             attributes = null;
 
-            int startIdx = idx;
+            var startIdx = idx;
             while (startIdx < idx + length)
             {
                 while (startIdx < idx + length && char.IsWhiteSpace(source, startIdx))
@@ -209,17 +207,17 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
 
                 if (startIdx < idx + length)
                 {
-                    var key = source.Substring(startIdx, endIdx - startIdx);
+                    var key = source[startIdx..endIdx];
                     var value = "";
 
                     startIdx = endIdx + 1;
                     while (startIdx < idx + length && (char.IsWhiteSpace(source, startIdx) || source[startIdx] == '='))
                         startIdx++;
 
-                    bool hasPChar = false;
+                    var hasPChar = false;
                     if (startIdx < idx + length)
                     {
-                        char pChar = source[startIdx];
+                        var pChar = source[startIdx];
                         if (pChar == '"' || pChar == '\'')
                         {
                             hasPChar = true;
@@ -230,7 +228,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                         while (endIdx < idx + length && (hasPChar ? source[endIdx] != pChar : !char.IsWhiteSpace(source, endIdx)))
                             endIdx++;
 
-                        value = source.Substring(startIdx, endIdx - startIdx);
+                        value = source[startIdx..endIdx];
                         value = HtmlUtils.DecodeHtml(value);
                     }
 
@@ -238,7 +236,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                     {
                         if (attributes == null)
                             attributes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                        attributes[key.ToLower()] = value;
+                        attributes[key.ToLowerInvariant()] = value;
                     }
 
                     startIdx = endIdx + (hasPChar ? 2 : 1);

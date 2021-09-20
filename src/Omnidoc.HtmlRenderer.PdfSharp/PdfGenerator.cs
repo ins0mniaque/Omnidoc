@@ -55,8 +55,10 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
         /// <returns>the generated image of the html</returns>
         public static PdfDocument GeneratePdf(string html, PageSize pageSize, int margin = 20, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
-            var config = new PdfGenerateConfig();
-            config.PageSize = pageSize;
+            var config = new PdfGenerateConfig
+            {
+                PageSize = pageSize
+            };
             config.SetMargins(margin);
             return GeneratePdf(html, config, cssData, stylesheetLoad, imageLoad);
         }
@@ -94,8 +96,10 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
         /// <returns>the generated image of the html</returns>
         public static void AddPdfPages(PdfDocument document, string html, PageSize pageSize, int margin = 20, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
-            var config = new PdfGenerateConfig();
-            config.PageSize = pageSize;
+            var config = new PdfGenerateConfig
+            {
+                PageSize = pageSize
+            };
             config.SetMargins(margin);
             AddPdfPages(document, html, config, cssData, stylesheetLoad, imageLoad);
         }
@@ -129,50 +133,48 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
 
             if (!string.IsNullOrEmpty(html))
             {
-                using (var container = new HtmlContainer())
+                using var container = new HtmlContainer();
+                if (stylesheetLoad != null)
+                    container.StylesheetLoad += stylesheetLoad;
+                if (imageLoad != null)
+                    container.ImageLoad += imageLoad;
+
+                container.Location = new XPoint(config.MarginLeft, config.MarginTop);
+                container.MaxSize = new XSize(pageSize.Width, 0);
+                container.SetHtml(html, cssData);
+                container.PageSize = pageSize;
+                container.MarginBottom = config.MarginBottom;
+                container.MarginLeft = config.MarginLeft;
+                container.MarginRight = config.MarginRight;
+                container.MarginTop = config.MarginTop;
+
+                // layout the HTML with the page width restriction to know how many pages are required
+                using (var measure = XGraphics.CreateMeasureContext(pageSize, XGraphicsUnit.Point, XPageDirection.Downwards))
                 {
-                    if (stylesheetLoad != null)
-                        container.StylesheetLoad += stylesheetLoad;
-                    if (imageLoad != null)
-                        container.ImageLoad += imageLoad;
-
-                    container.Location = new XPoint(config.MarginLeft, config.MarginTop);
-                    container.MaxSize = new XSize(pageSize.Width, 0);
-                    container.SetHtml(html, cssData);
-                    container.PageSize = pageSize;
-                    container.MarginBottom = config.MarginBottom;
-                    container.MarginLeft = config.MarginLeft;
-                    container.MarginRight = config.MarginRight;
-                    container.MarginTop = config.MarginTop;
-
-                    // layout the HTML with the page width restriction to know how many pages are required
-                    using (var measure = XGraphics.CreateMeasureContext(pageSize, XGraphicsUnit.Point, XPageDirection.Downwards))
-                    {
-                        container.PerformLayout(measure);
-                    }
-
-                    // while there is un-rendered HTML, create another PDF page and render with proper offset for the next page
-                    double scrollOffset = 0;
-                    while (scrollOffset > -container.ActualSize.Height)
-                    {
-                        var page = document.AddPage();
-                        page.Height = orgPageSize.Height;
-                        page.Width = orgPageSize.Width;
-
-                        using (var g = XGraphics.FromPdfPage(page))
-                        {
-                            //g.IntersectClip(new XRect(config.MarginLeft, config.MarginTop, pageSize.Width, pageSize.Height));
-                            g.IntersectClip(new XRect(0, 0, page.Width, page.Height));
-
-                            container.ScrollOffset = new XPoint(0, scrollOffset);
-                            container.PerformPaint(g);
-                        }
-                        scrollOffset -= pageSize.Height;
-                    }
-
-                    // add web links and anchors
-                    HandleLinks(document, container, orgPageSize, pageSize);
+                    container.PerformLayout(measure);
                 }
+
+                // while there is un-rendered HTML, create another PDF page and render with proper offset for the next page
+                double scrollOffset = 0;
+                while (scrollOffset > -container.ActualSize.Height)
+                {
+                    var page = document.AddPage();
+                    page.Height = orgPageSize.Height;
+                    page.Width = orgPageSize.Width;
+
+                    using (var g = XGraphics.FromPdfPage(page))
+                    {
+                        //g.IntersectClip(new XRect(config.MarginLeft, config.MarginTop, pageSize.Width, pageSize.Height));
+                        g.IntersectClip(new XRect(0, 0, page.Width, page.Height));
+
+                        container.ScrollOffset = new XPoint(0, scrollOffset);
+                        container.PerformPaint(g);
+                    }
+                    scrollOffset -= pageSize.Height;
+                }
+
+                // add web links and anchors
+                HandleLinks(document, container, orgPageSize, pageSize);
             }
         }
 
@@ -187,7 +189,7 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
         {
             foreach (var link in container.GetLinks())
             {
-                int i = (int)(link.Rectangle.Top / pageSize.Height);
+                var i = (int)(link.Rectangle.Top / pageSize.Height);
                 for (; i < document.Pages.Count && pageSize.Height * i < link.Rectangle.Bottom; i++)
                 {
                     var offset = pageSize.Height * i;
@@ -202,7 +204,7 @@ namespace Omnidoc.HtmlRenderer.PdfSharp
                         if (anchorRect.HasValue)
                         {
                             // document links to the same page as the link is not allowed
-                            int anchorPageIdx = (int)(anchorRect.Value.Top / pageSize.Height);
+                            var anchorPageIdx = (int)(anchorRect.Value.Top / pageSize.Height);
                             if (i != anchorPageIdx)
                                 document.Pages[i].AddDocumentLink(new PdfRectangle(xRect), anchorPageIdx);
                         }

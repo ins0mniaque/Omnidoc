@@ -42,8 +42,8 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             if (length < 1)
                 return false;
 
-            bool sawDot = false;
-            for (int i = 0; i < length; i++)
+            var sawDot = false;
+            for (var i = 0; i < length; i++)
             {
                 if (str[idx + i] == '.')
                 {
@@ -69,7 +69,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             if (length < 1)
                 return false;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 if (!char.IsDigit(str[idx + i]))
                     return false;
@@ -86,17 +86,16 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         {
             if (value.Length > 1)
             {
-                string number = string.Empty;
-                if (value.EndsWith("%"))
+                var number = string.Empty;
+                if (value.EndsWith("%", StringComparison.Ordinal))
                 {
-                    number = value.Substring(0, value.Length - 1);
+                    number = value[0..^1];
                 }
                 else if (value.Length > 2)
                 {
-                    number = value.Substring(0, value.Length - 2);
+                    number = value[0..^2];
                 }
-                double stub;
-                return double.TryParse(number, out stub);
+                return double.TryParse(number, out var stub);
             }
             return false;
         }
@@ -114,14 +113,13 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 return 0f;
             }
 
-            string toParse = number;
-            bool isPercent = number.EndsWith("%");
-            double result;
+            var toParse = number;
+            var isPercent = number.EndsWith("%", StringComparison.Ordinal);
 
             if (isPercent)
-                toParse = number.Substring(0, number.Length - 1);
+                toParse = number[0..^1];
 
-            if (!double.TryParse(toParse, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out result))
+            if (!double.TryParse(toParse, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var result))
             {
                 return 0f;
             }
@@ -177,18 +175,17 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 return 0f;
 
             //If percentage, use ParseNumber
-            if (length.EndsWith("%"))
+            if (length.EndsWith("%", StringComparison.Ordinal))
                 return ParseNumber(length, hundredPercent);
 
             //Get units of the length
-            bool hasUnit;
-            string unit = GetUnit(length, defaultUnit, out hasUnit);
+            var unit = GetUnit(length, defaultUnit, out var hasUnit);
 
             //Factor will depend on the unit
             double factor;
 
             //Number of the length
-            string number = hasUnit ? length.Substring(0, length.Length - 2) : length;
+            var number = hasUnit ? length[0..^2] : length;
 
             //TODO: Units behave different in paper and in screen!
             switch (unit)
@@ -251,7 +248,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                     break;
                 default:
                     hasUnit = false;
-                    unit = defaultUnit ?? String.Empty;
+                    unit = defaultUnit ?? string.Empty;
                     break;
             }
             return unit;
@@ -264,8 +261,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>true - valid, false - invalid</returns>
         public bool IsColorValid(string colorValue)
         {
-            RColor color;
-            return TryGetColor(colorValue, 0, colorValue.Length, out color);
+            return TryGetColor(colorValue, 0, colorValue.Length, out _);
         }
 
         /// <summary>
@@ -275,8 +271,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>Color value</returns>
         public RColor GetActualColor(string colorValue)
         {
-            RColor color;
-            TryGetColor(colorValue, 0, colorValue.Length, out color);
+            TryGetColor(colorValue, 0, colorValue.Length, out var color);
             return color;
         }
 
@@ -331,17 +326,13 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
                 return GetActualBorderWidth(CssConstants.Medium, b);
             }
 
-            switch (borderValue)
+            return borderValue switch
             {
-                case CssConstants.Thin:
-                    return 1f;
-                case CssConstants.Medium:
-                    return 2f;
-                case CssConstants.Thick:
-                    return 4f;
-                default:
-                    return Math.Abs(ParseLength(borderValue, 1, b));
-            }
+                CssConstants.Thin => 1f,
+                CssConstants.Medium => 2f,
+                CssConstants.Thick => 4f,
+                _ => Math.Abs(ParseLength(borderValue, 1, b)),
+            };
         }
 
 
@@ -353,9 +344,9 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>true - valid color, false - otherwise</returns>
         private static bool GetColorByHex(string str, int idx, int length, out RColor color)
         {
-            int r = -1;
-            int g = -1;
-            int b = -1;
+            var r = -1;
+            var g = -1;
+            var b = -1;
             if (length == 7)
             {
                 r = ParseHexInt(str, idx + 1, 2);
@@ -386,13 +377,13 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>true - valid color, false - otherwise</returns>
         private static bool GetColorByRgb(string str, int idx, int length, out RColor color)
         {
-            int r = -1;
-            int g = -1;
-            int b = -1;
+            var r = -1;
+            var g = -1;
+            var b = -1;
 
             if (length > 10)
             {
-                int s = idx + 4;
+                var s = idx + 4;
                 r = ParseIntAtIndex(str, ref s);
                 if (s < idx + length)
                 {
@@ -419,14 +410,14 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>true - valid color, false - otherwise</returns>
         private static bool GetColorByRgba(string str, int idx, int length, out RColor color)
         {
-            int r = -1;
-            int g = -1;
-            int b = -1;
-            int a = -1;
+            var r = -1;
+            var g = -1;
+            var b = -1;
+            var a = -1;
 
             if (length > 13)
             {
-                int s = idx + 5;
+                var s = idx + 5;
                 r = ParseIntAtIndex(str, ref s);
 
                 if (s < idx + length)
@@ -472,7 +463,7 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
         /// <returns>parsed int or 0</returns>
         private static int ParseIntAtIndex(string str, ref int startIdx)
         {
-            int len = 0;
+            var len = 0;
             while (char.IsWhiteSpace(str, startIdx))
                 startIdx++;
             while (char.IsDigit(str, startIdx + len))
@@ -492,8 +483,8 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             if (length < 1)
                 return -1;
 
-            int num = 0;
-            for (int i = 0; i < length; i++)
+            var num = 0;
+            for (var i = 0; i < length; i++)
             {
                 int c = str[idx + i];
                 if (!(c >= 48 && c <= 57))
@@ -514,8 +505,8 @@ namespace Omnidoc.HtmlRenderer.Core.Parse
             if (length < 1)
                 return -1;
 
-            int num = 0;
-            for (int i = 0; i < length; i++)
+            var num = 0;
+            for (var i = 0; i < length; i++)
             {
                 int c = str[idx + i];
                 if (!(c >= 48 && c <= 57) && !(c >= 65 && c <= 70) && !(c >= 97 && c <= 102))

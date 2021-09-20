@@ -71,7 +71,7 @@ namespace Omnidoc.HtmlRenderer.Core
 
             htmlContainer.PerformLayout(g);
 
-            RSize newSize = size;
+            var newSize = size;
             if (autoSize || autoSizeHeightOnly)
             {
                 if (autoSize)

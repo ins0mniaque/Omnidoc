@@ -88,7 +88,7 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
             if (borderPath != null)
             {
                 // rounded border need special path
-                Object prevMode = null;
+                object prevMode = null;
                 if (box.HtmlContainer != null && !box.HtmlContainer.AvoidGeometryAntialias && box.IsRounded)
                     prevMode = g.SetAntiAliasSmoothingMode();
 
@@ -228,8 +228,8 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
                     {
                         path = g.GetGraphicsPath();
 
-                        bool noTop = b.BorderTopStyle == CssConstants.None || b.BorderTopStyle == CssConstants.Hidden;
-                        bool noBottom = b.BorderBottomStyle == CssConstants.None || b.BorderBottomStyle == CssConstants.Hidden;
+                        var noTop = b.BorderTopStyle == CssConstants.None || b.BorderTopStyle == CssConstants.Hidden;
+                        var noBottom = b.BorderBottomStyle == CssConstants.None || b.BorderBottomStyle == CssConstants.Hidden;
                         path.Start(r.Right - b.ActualBorderRightWidth / 2 - (noTop ? b.ActualCornerNe : 0), r.Top + b.ActualBorderTopWidth / 2 + (noTop ? 0 : b.ActualCornerNe));
 
                         if (b.ActualCornerNe > 0 && noTop)
@@ -246,8 +246,8 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
                     {
                         path = g.GetGraphicsPath();
 
-                        bool noTop = b.BorderTopStyle == CssConstants.None || b.BorderTopStyle == CssConstants.Hidden;
-                        bool noBottom = b.BorderBottomStyle == CssConstants.None || b.BorderBottomStyle == CssConstants.Hidden;
+                        var noTop = b.BorderTopStyle == CssConstants.None || b.BorderTopStyle == CssConstants.Hidden;
+                        var noBottom = b.BorderBottomStyle == CssConstants.None || b.BorderBottomStyle == CssConstants.Hidden;
                         path.Start(r.Left + b.ActualBorderLeftWidth / 2 + (noBottom ? b.ActualCornerSw : 0), r.Bottom - b.ActualBorderBottomWidth / 2 - (noBottom ? 0 : b.ActualCornerSw));
 
                         if (b.ActualCornerSw > 0 && noBottom)
@@ -291,19 +291,14 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// </summary>
         private static RColor GetColor(Border border, CssBoxProperties box, string style)
         {
-            switch (border)
+            return border switch
             {
-                case Border.Top:
-                    return style == CssConstants.Inset ? Darken(box.ActualBorderTopColor) : box.ActualBorderTopColor;
-                case Border.Right:
-                    return style == CssConstants.Outset ? Darken(box.ActualBorderRightColor) : box.ActualBorderRightColor;
-                case Border.Bottom:
-                    return style == CssConstants.Outset ? Darken(box.ActualBorderBottomColor) : box.ActualBorderBottomColor;
-                case Border.Left:
-                    return style == CssConstants.Inset ? Darken(box.ActualBorderLeftColor) : box.ActualBorderLeftColor;
-                default:
-                    throw new ArgumentOutOfRangeException("border");
-            }
+                Border.Top => style == CssConstants.Inset ? Darken(box.ActualBorderTopColor) : box.ActualBorderTopColor,
+                Border.Right => style == CssConstants.Outset ? Darken(box.ActualBorderRightColor) : box.ActualBorderRightColor,
+                Border.Bottom => style == CssConstants.Outset ? Darken(box.ActualBorderBottomColor) : box.ActualBorderBottomColor,
+                Border.Left => style == CssConstants.Inset ? Darken(box.ActualBorderLeftColor) : box.ActualBorderLeftColor,
+                _ => throw new ArgumentOutOfRangeException(nameof(border)),
+            };
         }
 
         /// <summary>
@@ -311,19 +306,14 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// </summary>
         private static double GetWidth(Border border, CssBoxProperties box)
         {
-            switch (border)
+            return border switch
             {
-                case Border.Top:
-                    return box.ActualBorderTopWidth;
-                case Border.Right:
-                    return box.ActualBorderRightWidth;
-                case Border.Bottom:
-                    return box.ActualBorderBottomWidth;
-                case Border.Left:
-                    return box.ActualBorderLeftWidth;
-                default:
-                    throw new ArgumentOutOfRangeException("border");
-            }
+                Border.Top => box.ActualBorderTopWidth,
+                Border.Right => box.ActualBorderRightWidth,
+                Border.Bottom => box.ActualBorderBottomWidth,
+                Border.Left => box.ActualBorderLeftWidth,
+                _ => throw new ArgumentOutOfRangeException(nameof(border)),
+            };
         }
 
         /// <summary>
@@ -331,19 +321,14 @@ namespace Omnidoc.HtmlRenderer.Core.Handlers
         /// </summary>
         private static string GetStyle(Border border, CssBoxProperties box)
         {
-            switch (border)
+            return border switch
             {
-                case Border.Top:
-                    return box.BorderTopStyle;
-                case Border.Right:
-                    return box.BorderRightStyle;
-                case Border.Bottom:
-                    return box.BorderBottomStyle;
-                case Border.Left:
-                    return box.BorderLeftStyle;
-                default:
-                    throw new ArgumentOutOfRangeException("border");
-            }
+                Border.Top => box.BorderTopStyle,
+                Border.Right => box.BorderRightStyle,
+                Border.Bottom => box.BorderBottomStyle,
+                Border.Left => box.BorderLeftStyle,
+                _ => throw new ArgumentOutOfRangeException(nameof(border)),
+            };
         }
 
         /// <summary>

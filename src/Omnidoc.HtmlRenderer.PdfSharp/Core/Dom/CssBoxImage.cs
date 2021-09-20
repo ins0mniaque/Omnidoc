@@ -61,11 +61,11 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             if (_imageLoadHandler == null)
             {
                 _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
-                _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
+                _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag?.Attributes);
             }
 
             var rect = CommonUtils.GetFirstValueOrDefault(Rectangles);
-            RPoint offset = RPoint.Empty;
+            var offset = RPoint.Empty;
 
             if (!IsFixed)
                 offset = HtmlContainer.ScrollOffset;
@@ -77,7 +77,7 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
             PaintBackground(g, rect, true, true);
             BordersDrawHandler.DrawBoxBorders(g, this, rect, true, true);
 
-            RRect r = _imageWord.Rectangle;
+            var r = _imageWord.Rectangle;
             r.Offset(offset);
             r.Height -= ActualBorderTopWidth + ActualBorderBottomWidth + ActualPaddingTop + ActualPaddingBottom;
             r.Y += ActualBorderTopWidth + ActualPaddingTop;
@@ -132,9 +132,9 @@ namespace Omnidoc.HtmlRenderer.Core.Dom
                     _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
 
                     if (this.Content != null && this.Content != CssConstants.Normal)
-                        _imageLoadHandler.LoadImage(this.Content, HtmlTag != null ? HtmlTag.Attributes : null);
+                        _imageLoadHandler.LoadImage(this.Content, HtmlTag?.Attributes);
                     else
-                        _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
+                        _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag?.Attributes);
                 }
 
                 MeasureWordSpacing(g);

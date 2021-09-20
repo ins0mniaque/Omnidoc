@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using Omnidoc.HtmlRenderer.Core.Utils;
 
 namespace Omnidoc.HtmlRenderer.Core.Entities
@@ -119,7 +120,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
         /// <returns>true - the two blocks are the same, false - otherwise</returns>
         public bool Equals(CssBlock other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
@@ -150,7 +151,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
         /// <returns>true - the selectors on blocks are the same, false - otherwise</returns>
         public bool EqualsSelector(CssBlock other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
@@ -167,7 +168,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
                 if (!Equals(other._selectors.Count, _selectors.Count))
                     return false;
 
-                for (int i = 0; i < _selectors.Count; i++)
+                for (var i = 0; i < _selectors.Count; i++)
                 {
                     if (!Equals(other._selectors[i].Class, _selectors[i].Class))
                         return false;
@@ -186,7 +187,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
         /// <returns>true - the two blocks are the same, false - otherwise</returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
                 return false;
             if (ReferenceEquals(this, obj))
                 return true;
@@ -198,7 +199,7 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
         /// <summary>
         /// Serves as a hash function for a particular type. 
         /// </summary>
-        /// <returns>A hash code for the current <see cref="T:System.Object"/>.</returns>
+        /// <returns>A hash code for the current <see cref="object"/>.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -208,14 +209,14 @@ namespace Omnidoc.HtmlRenderer.Core.Entities
         }
 
         /// <summary>
-        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// Returns a <see cref="string"/> that represents the current <see cref="object"/>.
         /// </summary>
         public override string ToString()
         {
             var str = _class + " { ";
             foreach (var property in _properties)
             {
-                str += string.Format("{0}={1}; ", property.Key, property.Value);
+                str += string.Format(CultureInfo.InvariantCulture, "{0}={1}; ", property.Key, property.Value);
             }
             return str + " }";
         }
