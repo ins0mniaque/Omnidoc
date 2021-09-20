@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <CLSCompliant>false</CLSCompliant>
-    <NeutralLanguage>en</NeutralLanguage>
 
     <Description>Omnidoc.Image.Ocr adds OCR (image to text) support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
     <PackageTags>Omnidoc;Omnidoc.Image.Orc;ocr;image;document;extract;convert;preview;render</PackageTags>
@@ -19,11 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Omnidoc.Image.Core\Omnidoc.Image.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Strings.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Strings.Designer.cs" />
-    <Compile Update="Strings.Designer.cs" DependentUpon="Strings.resx" />
   </ItemGroup>
 
 </Project>

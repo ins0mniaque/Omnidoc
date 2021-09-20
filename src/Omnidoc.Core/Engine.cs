@@ -38,7 +38,7 @@ namespace Omnidoc
             if ( provider.GetService ( typeof ( IEnumerable < IService > ) ) is IEnumerable < IService > services )
                 return services;
 
-            throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_NoServicesRegistered, typeof ( IService ).FullName ), nameof ( provider ) );
+            throw new ArgumentException ( $"No services of type { typeof ( IService ).FullName } have been registered", nameof ( provider ) );
         }
 
         public IEnumerable < IService > Services

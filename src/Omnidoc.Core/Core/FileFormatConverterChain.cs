@@ -42,7 +42,7 @@ namespace Omnidoc.Core
                     var isLast           = index == Chain.Count - 1;
                     var converter        = Chain [ index ];
                     var converterOptions = isLast ? options : new OutputOptions ( SelectOutputFormat ( converter, Chain [ index + 1 ] ) );
-                    var converterOutput  = isLast ? output  : buffer = CreateBufferStream ( ) ?? throw new InvalidOperationException ( Strings.Error_FailedToCreateBufferStream );
+                    var converterOutput  = isLast ? output  : buffer = CreateBufferStream ( ) ?? throw new InvalidOperationException ( "Failed to create buffer stream" );
 
                     await converter.ConvertAsync   ( input, converterOutput, converterOptions, cancellationToken )
                                    .ConfigureAwait ( false );
@@ -72,10 +72,7 @@ namespace Omnidoc.Core
             if ( nextConverter is null ) throw new ArgumentNullException ( nameof ( nextConverter ) );
 
             return converter.Descriptor.OutputFormats.Intersect ( nextConverter.Descriptor.Formats ).FirstOrDefault ( ) ??
-                   throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture,
-                                                                     Strings.Error_UnsupportedConverterChain,
-                                                                     converter    .GetType ( ).Name,
-                                                                     nextConverter.GetType ( ).Name ) );
+                   throw new NotSupportedException ( $"{ converter.GetType ( ).Name } cannot chain to { nextConverter.GetType ( ).Name }" );
         }
 
         protected override IEnumerable < IService >? BeginDispose ( ) => Chain;

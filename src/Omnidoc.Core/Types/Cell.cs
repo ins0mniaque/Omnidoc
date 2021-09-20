@@ -44,7 +44,7 @@ namespace Omnidoc
                 return new Cell ( column, row );
             }
 
-            throw new FormatException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_InvalidFormat, nameof ( Cell ), source ) );
+            throw new FormatException ( $"Invalid { nameof ( Cell ) } format: { source }" );
         }
 
         public override string ToString ( )                                                 => ToString ( null, null );

@@ -11,22 +11,22 @@ namespace Omnidoc
     {
         public Size ( double width, double height )
         {
-            this.width  = width  >= 0 ? width  : throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_MustBeNonNegative, nameof ( Width  ) ), nameof ( width  ) );
-            this.height = height >= 0 ? height : throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_MustBeNonNegative, nameof ( Height ) ), nameof ( height ) );
+            this.width  = width  >= 0 ? width  : throw new ArgumentException ( "Width must be non-negative",  nameof ( width  ) );
+            this.height = height >= 0 ? height : throw new ArgumentException ( "Height must be non-negative", nameof ( height ) );
         }
 
         private double width;
         public  double Width
         {
             get => width;
-            set => width = value >= 0 ? value : throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_MustBeNonNegative, nameof ( Width ) ), nameof ( value ) );
+            set => width = value >= 0 ? value : throw new ArgumentException ( "Width must be non-negative", nameof ( value ) );
         }
 
         private double height;
         public  double Height
         {
             get => height;
-            set => height = value >= 0 ? value : throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_MustBeNonNegative, nameof ( Height ) ), nameof ( value ) );
+            set => height = value >= 0 ? value : throw new ArgumentException ( "Height must be non-negative", nameof ( value ) );
         }
 
         public static   bool Equals ( Size left, Size right ) => left.Equals ( right );
@@ -49,7 +49,7 @@ namespace Omnidoc
             if ( NumberListParser.TryParse < double > ( double.TryParse, source, ref index, NumberStyles.Float, CultureInfo.InvariantCulture, out var width, out var height ) )
                 return new Size ( width, height );
 
-            throw new FormatException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_InvalidFormat, nameof ( Size ), source ) );
+            throw new FormatException ( $"Invalid { nameof ( Size ) } format: { source }" );
         }
 
         public override string ToString ( )                                                 => ToString ( null, null );

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 using Omnidoc.IO;
@@ -16,7 +15,7 @@ namespace Omnidoc.Services
         public ServiceDescriptor ( IEnumerable < FileFormat > formats, IEnumerable < FileFormat > outputFormats, IEnumerable < Type > elementTypes )
         {
             if ( elementTypes.FirstOrDefault ( type => ! typeof ( Element ).IsAssignableFrom ( type ) ) is Type nonElementType )
-                throw new ArgumentException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_TypeMismatch, nonElementType.Name, nameof ( Element ) ), nameof ( elementTypes ) );
+                throw new ArgumentException ( $"{ nonElementType.Name } does not derive from { nameof ( Element ) }", nameof ( elementTypes ) );
 
             Formats       = formats      .ToHashSet ( );
             OutputFormats = outputFormats.ToHashSet ( );

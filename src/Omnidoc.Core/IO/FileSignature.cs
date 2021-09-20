@@ -15,7 +15,7 @@ namespace Omnidoc.IO
         public FileSignature ( Index offset, params byte [ ] signature )
         {
             if ( signature is null     ) throw new ArgumentNullException ( nameof ( signature ) );
-            if ( signature.Length == 0 ) throw new ArgumentException     ( Strings.Error_EmptyFileSignature, nameof ( signature ) );
+            if ( signature.Length == 0 ) throw new ArgumentException     ( "Empty file signature", nameof ( signature ) );
 
             Signature = signature;
             Offset    = offset;

@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <NeutralLanguage>en</NeutralLanguage>
-    <RootNamespace>Omnidoc</RootNamespace>
 
     <Description>Omnidoc is a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
     <PackageTags>Omnidoc;document;extract;convert;preview;render</PackageTags>
@@ -11,11 +9,6 @@
 
   <ItemGroup>
     <None Include="..\..\LICENSE" Visible="false" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Strings.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Strings.Designer.cs" />
-    <Compile Update="Strings.Designer.cs" DependentUpon="Strings.resx" />
   </ItemGroup>
 
 </Project>

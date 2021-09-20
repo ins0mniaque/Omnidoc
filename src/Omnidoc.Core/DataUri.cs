@@ -43,7 +43,7 @@ namespace Omnidoc
         private static void Parse ( Uri uri, bool decodeData, [ NotNull ] out byte [ ]? content, [ NotNull ] out string? contentType )
         {
             if ( ! TryParse ( uri, decodeData, out content, out contentType ) )
-                throw new FormatException ( Strings.Error_InvalidDataUri );
+                throw new FormatException ( "Invalid data uri" );
         }
 
         public static bool TryParse ( Uri uri, [ NotNullWhen ( true ) ] out string? contentType )

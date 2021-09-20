@@ -47,7 +47,7 @@ namespace Omnidoc.Collections
 
                         switch ( colors [ v ] )
                         {
-                            case GraphColor.Gray  : edges.Dispose ( ); throw new InvalidOperationException ( Strings.Error_NonAcyclicGraph );
+                            case GraphColor.Gray  : edges.Dispose ( ); throw new InvalidOperationException ( "Non-acyclic graph" );
                             case GraphColor.Black : continue;
                             case GraphColor.White :
                             {

@@ -31,7 +31,7 @@ namespace Omnidoc.Model.Elements
         public virtual async Task < Stream > GetContentAsync ( CancellationToken cancellationToken = default )
         {
             if ( Content != null ) return Content;
-            if ( Uri     == null ) throw new InvalidOperationException ( Strings.Error_InvalidAttachment );
+            if ( Uri     == null ) throw new InvalidOperationException ( "Invalid attachment" );
 
             using var web = new WebClient ( );
 
@@ -41,7 +41,7 @@ namespace Omnidoc.Model.Elements
         public virtual async Task < Uri > GetUriAsync ( CancellationToken cancellationToken = default )
         {
             if ( Uri     != null ) return Uri;
-            if ( Content == null ) throw new InvalidOperationException ( Strings.Error_InvalidAttachment );
+            if ( Content == null ) throw new InvalidOperationException ( "Invalid attachment" );
 
             using var buffer = new MemoryStream ( );
 

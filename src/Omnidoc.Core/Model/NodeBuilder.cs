@@ -46,7 +46,7 @@ namespace Omnidoc.Model
                 if ( element.Levels.Is ( Levels.End ) )
                 {
                     if ( Options.Strict && node == null )
-                        throw new InvalidOperationException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_MalformedDocument, level, Levels.End, Levels.Start ) );
+                        throw new InvalidOperationException ( $"Document is malformed: { level } end without start" );
 
                     if ( stack.TryPop ( out var parent ) )
                     {
@@ -69,7 +69,7 @@ namespace Omnidoc.Model
             if ( node != null )
             {
                 if ( Options.Strict )
-                    throw new InvalidOperationException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_MalformedDocument, node.Level, Levels.Start, Levels.End ) );
+                    throw new InvalidOperationException ( $"Document is malformed: { node.Level } start without end" );
 
                 nodes.Enqueue ( node );
                 node = null;

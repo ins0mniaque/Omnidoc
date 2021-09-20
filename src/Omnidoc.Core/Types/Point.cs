@@ -48,7 +48,7 @@ namespace Omnidoc
             if ( NumberListParser.TryParse < double > ( double.TryParse, source, ref index, NumberStyles.Float, CultureInfo.InvariantCulture, out var x, out var y ) )
                 return new Point ( x, y );
 
-            throw new FormatException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_InvalidFormat, nameof ( Point ), source ) );
+            throw new FormatException ( $"Invalid { nameof ( Point ) } format: { source }" );
         }
 
         public override string ToString ( )                                                 => ToString ( null, null );

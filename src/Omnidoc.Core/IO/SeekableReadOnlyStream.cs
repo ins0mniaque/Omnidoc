@@ -29,7 +29,7 @@ namespace Omnidoc.IO
 
             // Sanity check - make sure that buffering stream is seekable
             if ( ! bufferingStream.CanSeek )
-                throw new NotSupportedException ( Strings.Error_BufferingStreamMustBeSeekable );
+                throw new NotSupportedException ( "Buffering stream must be seekable" );
 
             this.baseStream = baseStream;
             this.bufferingStream = bufferingStream;

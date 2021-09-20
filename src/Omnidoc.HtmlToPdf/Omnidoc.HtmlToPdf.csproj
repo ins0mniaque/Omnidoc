@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <NeutralLanguage>en</NeutralLanguage>
 
     <Description>Omnidoc.HtmlToPdf adds HTML to PDF support to Omnidoc, a multi-format document engine for .NET. It supports extracting metadata and content, converting, previewing and rendering documents.</Description>
     <PackageTags>Omnidoc;Omnidoc.HtmlToPdf;html;pdf;document;extract;convert;preview;render</PackageTags>
@@ -15,11 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Omnidoc.Core\Omnidoc.Core.csproj" />
     <ProjectReference Include="..\Omnidoc.HtmlRenderer.PdfSharp\Omnidoc.HtmlRenderer.PdfSharp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Strings.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Strings.Designer.cs" />
-    <Compile Update="Strings.Designer.cs" DependentUpon="Strings.resx" />
   </ItemGroup>
 
 </Project>

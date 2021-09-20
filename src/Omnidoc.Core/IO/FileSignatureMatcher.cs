@@ -27,7 +27,7 @@ namespace Omnidoc.IO
                 return -1;
 
             if ( ! stream.CanSeek )
-                throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_StreamMustBeSeekable, $"{ nameof ( Seekable ) }.{ nameof ( Seekable.AsSeekable ) }" ) );
+                throw new NotSupportedException ( $"Stream must be seekable. Try calling { nameof ( Seekable ) }.{ nameof ( Seekable.AsSeekable ) } beforehand." );
 
             Split ( signatures, out var prefixes, out var suffixes );
 
@@ -73,7 +73,7 @@ namespace Omnidoc.IO
                 return -1;
 
             if ( ! stream.CanSeek )
-                throw new NotSupportedException ( string.Format ( CultureInfo.InvariantCulture, Strings.Error_StreamMustBeSeekable, $"{ nameof ( Seekable ) }.{ nameof ( Seekable.AsSeekable ) }" ) );
+                throw new NotSupportedException ( $"Stream must be seekable. Try calling { nameof ( Seekable ) }.{ nameof ( Seekable.AsSeekable ) } beforehand." );
 
             Split ( signatures, out var prefixes, out var suffixes );
 
