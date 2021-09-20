@@ -21,7 +21,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the size required for the html</returns>
-        public static SizeF Measure(string html, float maxWidth = 0, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static SizeF Measure(string html, float maxWidth = 0, CssData? cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
             SizeF actualSize = SizeF.Empty;
             if (!string.IsNullOrEmpty(html))

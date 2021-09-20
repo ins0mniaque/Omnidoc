@@ -1,8 +1,9 @@
-﻿using PdfSharpCore.Drawing;
+﻿using System;
+using System.IO;
+using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
-using System.IO;
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
 using Omnidoc.Html.Pdf.Renderer.Utilities;
@@ -90,7 +91,10 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
 
         protected override RImage ConvertImageInt(object image)
         {
-            return image != null ? new ImageAdapter((XImage)image) : null;
+            if(image is null)
+                throw new ArgumentNullException(nameof(image));
+
+            return new ImageAdapter((XImage)image);
         }
 
         protected override RImage ImageFromStreamInt(Stream memoryStream)

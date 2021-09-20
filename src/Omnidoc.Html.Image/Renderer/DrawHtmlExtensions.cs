@@ -56,8 +56,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the actual size of the rendered html</returns>
-        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, float left = 0, float top = 0, float maxWidth = 0, CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, float left = 0, float top = 0, float maxWidth = 0, CssData? cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
             ArgChecker.AssertArgNotNull(g, "g");
             return g.DrawHtml(html, new PointF(left, top), new SizeF(maxWidth, 0), out _, cssData, stylesheetLoad, imageLoad);
@@ -79,8 +79,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the actual size of the rendered html</returns>
-        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, out SizeF actualSize, float left = 0, float top = 0, float maxWidth = 0, CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, out SizeF actualSize, float left = 0, float top = 0, float maxWidth = 0, CssData? cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
             ArgChecker.AssertArgNotNull(g, "g");
             return g.DrawHtml(html, new PointF(left, top), new SizeF(maxWidth, 0), out actualSize, cssData, stylesheetLoad, imageLoad);
@@ -102,7 +102,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the actual size of the rendered html</returns>
-        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, PointF location, SizeF maxSize, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, PointF location, SizeF maxSize, CssData? cssData = null, EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
             ArgChecker.AssertArgNotNull(g, "g");
             return g.DrawHtml(html, location, maxSize, out _, cssData, stylesheetLoad, imageLoad);
@@ -124,7 +124,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the actual size of the rendered html</returns>
-        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, PointF location, SizeF maxSize, out SizeF actualSize, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static IImageProcessingContext DrawHtml(this IImageProcessingContext g, string html, PointF location, SizeF maxSize, out SizeF actualSize, CssData? cssData = null, EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
             actualSize = SizeF.Empty;
 

@@ -1,6 +1,7 @@
-﻿using PdfSharpCore.Drawing;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using PdfSharpCore.Drawing;
 using Omnidoc.Html.Renderer.Adapters.Entities;
 using Omnidoc.Html.Renderer.Core;
 using Omnidoc.Html.Renderer.Core.Entities;
@@ -277,14 +278,9 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// Get all the links in the HTML with the element rectangle and href data.
         /// </summary>
         /// <returns>collection of all the links in the HTML</returns>
-        public List<LinkElementData<XRect>> GetLinks()
+        public IEnumerable<LinkElementData<XRect>> GetLinks()
         {
-            var linkElements = new List<LinkElementData<XRect>>();
-            foreach (var link in HtmlContainerInt.GetLinks())
-            {
-                linkElements.Add(new LinkElementData<XRect>(link.Id, link.Href, Utils.Convert(link.Rectangle)));
-            }
-            return linkElements;
+            return HtmlContainerInt.GetLinks().Select(link => link.Convert(Utils.Convert));
         }
 
         /// <summary>

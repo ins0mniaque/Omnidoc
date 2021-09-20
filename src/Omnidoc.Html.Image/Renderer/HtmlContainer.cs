@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Omnidoc.Html.Renderer.Adapters.Entities;
@@ -264,7 +265,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         /// <param name="htmlSource">the html to init with, init empty if not given</param>
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
-        public void SetHtml(string htmlSource, CssData baseCssData = null)
+        public void SetHtml(string htmlSource, CssData? baseCssData = null)
         {
             _htmlContainerInt.SetHtml(htmlSource, baseCssData);
         }
@@ -295,14 +296,9 @@ namespace Omnidoc.Html.Image.Renderer
         /// Get all the links in the HTML with the element rectangle and href data.
         /// </summary>
         /// <returns>collection of all the links in the HTML</returns>
-        public List<LinkElementData<RectangleF>> GetLinks()
+        public IEnumerable<LinkElementData<RectangleF>> GetLinks()
         {
-            var linkElements = new List<LinkElementData<RectangleF>>();
-            foreach (var link in HtmlContainerInt.GetLinks())
-            {
-                linkElements.Add(new LinkElementData<RectangleF>(link.Id, link.Href, Utils.Convert(link.Rectangle)));
-            }
-            return linkElements;
+            return HtmlContainerInt.GetLinks().Select(link => link.Convert(Utils.Convert));
         }
 
         /// <summary>

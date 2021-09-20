@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace Omnidoc.Html.Renderer.Core.Entities
 {
@@ -71,6 +72,11 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         public string AnchorId
         {
             get { return IsAnchor && _href.Length > 1 ? _href[1..] : string.Empty; }
+        }
+
+        public LinkElementData<T2> Convert<T2>(Func<T, T2> convert)
+        {
+            return new LinkElementData<T2>(_id, _href, convert(_rectangle));
         }
 
         public override string ToString()

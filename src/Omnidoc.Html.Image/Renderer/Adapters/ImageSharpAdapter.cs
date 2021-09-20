@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
@@ -77,7 +78,10 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
 
         protected override RImage ConvertImageInt(object image)
         {
-            return image != null ? new ImageAdapter((Image)image) : null;
+            if(image is null)
+                throw new ArgumentNullException(nameof(image));
+
+            return new ImageAdapter((Image)image);
         }
 
         protected override RImage ImageFromStreamInt(Stream memoryStream)
@@ -87,7 +91,7 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
 
         protected override RFont CreateFontInt(string family, double size, RFontStyle style)
         {
-            return new FontAdapter(new Font(SystemFonts.Find(family), (float)size, (FontStyle) (int) style));
+            return new FontAdapter(new Font(SystemFonts.Find(family, CultureInfo.InvariantCulture), (float)size, (FontStyle) (int) style));
         }
 
         protected override RFont CreateFontInt(RFontFamily family, double size, RFontStyle style)
@@ -100,6 +104,6 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         protected override void SetToClipboardInt(string html, string plainText) => throw new NotSupportedException();
         protected override void SetToClipboardInt(RImage image) => throw new NotSupportedException();
         protected override RContextMenu CreateContextMenuInt() => throw new NotSupportedException();
-        protected override void SaveToFileInt(RImage image, string name, string extension, RControl control = null) => throw new NotSupportedException();
+        protected override void SaveToFileInt(RImage image, string name, string extension, RControl? control = null) => throw new NotSupportedException();
     }
 }

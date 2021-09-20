@@ -445,7 +445,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         /// <param name="htmlSource">the html to init with, init empty if not given</param>
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
-        public void SetHtml(string htmlSource, CssData baseCssData = null)
+        public void SetHtml(string htmlSource, CssData? baseCssData = null)
         {
             Clear();
             if (!string.IsNullOrEmpty(htmlSource))
@@ -526,17 +526,14 @@ namespace Omnidoc.Html.Renderer.Core
         /// Get all the links in the HTML with the element rectangle and href data.
         /// </summary>
         /// <returns>collection of all the links in the HTML</returns>
-        public List<LinkElementData<RRect>> GetLinks()
+        public IEnumerable<LinkElementData<RRect>> GetLinks()
         {
             var linkBoxes = new List<CssBox>();
+
             DomUtils.GetAllLinkBoxes(_root, linkBoxes);
 
-            var linkElements = new List<LinkElementData<RRect>>();
             foreach (var box in linkBoxes)
-            {
-                linkElements.Add(new LinkElementData<RRect>(box.GetAttribute("id"), box.GetAttribute("href"), CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds)));
-            }
-            return linkElements;
+                yield return new LinkElementData<RRect>(box.GetAttribute("id"), box.GetAttribute("href"), CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds));
         }
 
         /// <summary>
