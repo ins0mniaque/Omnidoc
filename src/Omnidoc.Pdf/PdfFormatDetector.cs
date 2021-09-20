@@ -10,7 +10,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
-    public sealed class PdfFormatDetector : AsyncDisposable, IFileFormatDetector
+    public class PdfFormatDetector : AsyncDisposable, IFileFormatDetector
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -24,12 +24,12 @@ namespace Omnidoc.Pdf
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task < FileFormat? > DetectAsync ( Stream file, CancellationToken cancellationToken = default )
+        public async Task < FileFormat? > DetectAsync ( Stream input, CancellationToken cancellationToken = default )
         {
-            if ( file is null )
-                throw new ArgumentNullException ( nameof ( file ) );
+            if ( input is null )
+                throw new ArgumentNullException ( nameof ( input ) );
 
-            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
+            return await input.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
                 0 => FileFormats.Pdf,
                 _ => null

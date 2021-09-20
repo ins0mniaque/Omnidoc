@@ -10,7 +10,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Zip.Opc
 {
-    public sealed class OpcMetadataReader : AsyncDisposable, IFileMetadataReader
+    public class OpcMetadataReader : AsyncDisposable, IFileMetadataReader
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -19,9 +19,9 @@ namespace Omnidoc.Zip.Opc
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task < FileMetadata? > TryReadAsync ( Stream file, CancellationToken cancellationToken = default )
+        public async Task < FileMetadata? > TryReadAsync ( Stream input, CancellationToken cancellationToken = default )
         {
-            using var archive = new ZipArchive ( file );
+            using var archive = new ZipArchive ( input );
 
             return await archive.TryReadMetadataAsync ( cancellationToken ).ConfigureAwait ( false );
         }

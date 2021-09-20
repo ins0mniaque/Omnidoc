@@ -20,14 +20,14 @@ namespace Omnidoc.Zip
 
         public abstract IServiceDescriptor Descriptor { get; }
 
-        public async Task < FileFormat? > DetectAsync ( Stream file, CancellationToken cancellationToken = default )
+        public async Task < FileFormat? > DetectAsync ( Stream input, CancellationToken cancellationToken = default )
         {
-            if ( file is null )
-                throw new ArgumentNullException ( nameof ( file ) );
+            if ( input is null )
+                throw new ArgumentNullException ( nameof ( input ) );
 
-            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
+            return await input.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
-                0 => await DetectContainerAsync ( file, cancellationToken ).ConfigureAwait ( false ),
+                0 => await DetectContainerAsync ( input, cancellationToken ).ConfigureAwait ( false ),
                 _ => null
             };
         }

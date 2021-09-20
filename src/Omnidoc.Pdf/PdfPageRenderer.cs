@@ -11,7 +11,7 @@ namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public sealed class PdfPageRenderer : AsyncDisposable, IPageRenderer
+    public class PdfPageRenderer : AsyncDisposable, IPageRenderer
     {
         public PdfPageRenderer ( FpdfPageT page )
         {

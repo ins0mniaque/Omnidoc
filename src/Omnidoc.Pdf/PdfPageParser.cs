@@ -17,7 +17,7 @@ namespace Omnidoc.Pdf
     using static PDFiumCore.fpdfview;
     using static PDFiumCore.fpdf_text;
 
-    public sealed class PdfPageParser : AsyncDisposable, IPageParser
+    public class PdfPageParser : AsyncDisposable, IPageParser
     {
         public PdfPageParser ( FpdfPageT page )
         {

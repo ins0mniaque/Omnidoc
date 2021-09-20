@@ -10,7 +10,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Zip
 {
-    public sealed class ZipFormatDetector : AsyncDisposable, IFileFormatDetector
+    public class ZipFormatDetector : AsyncDisposable, IFileFormatDetector
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -24,12 +24,12 @@ namespace Omnidoc.Zip
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task < FileFormat? > DetectAsync ( Stream file, CancellationToken cancellationToken = default )
+        public async Task < FileFormat? > DetectAsync ( Stream input, CancellationToken cancellationToken = default )
         {
-            if ( file is null )
-                throw new ArgumentNullException ( nameof ( file ) );
+            if ( input is null )
+                throw new ArgumentNullException ( nameof ( input ) );
 
-            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
+            return await input.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
                 0 => FileFormats.Zip,
                 _ => null

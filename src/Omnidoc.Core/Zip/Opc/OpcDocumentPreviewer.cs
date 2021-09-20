@@ -18,9 +18,9 @@ namespace Omnidoc.Zip.Opc
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task < bool > TryPreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
+        public async Task < bool > TryPreviewAsync ( Stream input, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {
-            using var archive = new ZipArchive ( document );
+            using var archive = new ZipArchive ( input );
 
             var thumbnail = await archive.TryOpenThumbnailAsync ( cancellationToken ).ConfigureAwait ( false );
             if ( thumbnail is null )

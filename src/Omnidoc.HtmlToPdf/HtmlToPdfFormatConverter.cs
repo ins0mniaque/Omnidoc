@@ -22,13 +22,13 @@ namespace Omnidoc.HtmlToPdf
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task ConvertAsync ( Stream file, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
+        public async Task ConvertAsync ( Stream input, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
         {
-            if ( file    is null ) throw new ArgumentNullException ( nameof ( file    ) );
+            if ( input   is null ) throw new ArgumentNullException ( nameof ( input   ) );
             if ( output  is null ) throw new ArgumentNullException ( nameof ( output  ) );
             if ( options is null ) throw new ArgumentNullException ( nameof ( options ) );
 
-            using var reader = new StreamReader ( file );
+            using var reader = new StreamReader ( input );
 
             var html = await reader.ReadToEndAsync ( ).ConfigureAwait ( false );
 

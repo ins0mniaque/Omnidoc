@@ -30,9 +30,9 @@ namespace Omnidoc.Image
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task ConvertAsync ( Stream file, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
+        public async Task ConvertAsync ( Stream input, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
         {
-            if ( file    is null ) throw new ArgumentNullException ( nameof ( file    ) );
+            if ( input   is null ) throw new ArgumentNullException ( nameof ( input   ) );
             if ( output  is null ) throw new ArgumentNullException ( nameof ( output  ) );
             if ( options is null ) throw new ArgumentNullException ( nameof ( options ) );
 
@@ -44,7 +44,7 @@ namespace Omnidoc.Image
                           options.Format == FileFormats.Tiff ? new TiffEncoder ( ) :
                                                (IImageEncoder) new PngEncoder  ( );
 
-            using var reader = await LoadAsync ( Configuration.Default, file, cancellationToken ).ConfigureAwait ( false );
+            using var reader = await LoadAsync ( Configuration.Default, input, cancellationToken ).ConfigureAwait ( false );
 
             await reader.SaveAsync ( output, encoder, cancellationToken ).ConfigureAwait ( false );
         }

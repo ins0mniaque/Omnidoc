@@ -11,6 +11,6 @@ namespace Omnidoc.Core
         string        Path     { get; }
         FileMetadata? Metadata { get; }
 
-        Task < Stream > ReadAsync ( CancellationToken cancellationToken = default );
+        Task < Stream > OpenAsync ( CancellationToken cancellationToken = default );
     }
 }

@@ -1,11 +1,4 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Omnidoc.Core
+﻿namespace Omnidoc.Core
 {
-    public interface IDocumentRenderer : IService
-    {
-        Task < IPager < IPageRenderer > > LoadAsync ( Stream document, CancellationToken cancellationToken = default );
-    }
+    public interface IDocumentRenderer : IDocumentLoader < IPager < IPageRenderer >, IPageRenderer > { }
 }

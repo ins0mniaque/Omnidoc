@@ -1,11 +1,7 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Omnidoc.Core
+﻿namespace Omnidoc.Core
 {
-    public interface IDocumentParser : IService
+    public interface IDocumentParser : IDocumentLoader < IPager < IPageParser >, IPageParser >
     {
-        Task < IPager < IPageParser > > LoadAsync ( Stream document, CancellationToken cancellationToken = default );
+
     }
 }

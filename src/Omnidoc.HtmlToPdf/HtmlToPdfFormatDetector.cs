@@ -25,13 +25,13 @@ namespace Omnidoc.HtmlToPdf
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task < FileFormat? > DetectAsync ( Stream file, CancellationToken cancellationToken = default )
+        public async Task < FileFormat? > DetectAsync ( Stream input, CancellationToken cancellationToken = default )
         {
-            if ( file is null )
-                throw new ArgumentNullException ( nameof ( file ) );
+            if ( input is null )
+                throw new ArgumentNullException ( nameof ( input ) );
 
             // TODO: Improve HTML detection
-            return await file.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
+            return await input.MatchAsync ( signatures, cancellationToken ).ConfigureAwait ( false ) switch
             {
                 0 => FileFormats.Html,
                 1 => FileFormats.Pdf,

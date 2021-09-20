@@ -20,9 +20,9 @@ namespace Omnidoc.Xps
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public Task < IPager < IPageParser > > LoadAsync ( Stream document, CancellationToken cancellationToken = default )
+        public Task < IPager < IPageParser > > LoadAsync ( Stream input, CancellationToken cancellationToken = default )
         {
-            return Task.Run ( ( ) => Load ( document ), cancellationToken );
+            return Task.Run ( ( ) => Load ( input ), cancellationToken );
         }
 
         private static IPager < IPageParser > Load ( Stream document )

@@ -10,7 +10,7 @@ namespace Omnidoc.Pdf
 {
     using static PDFiumCore.fpdfview;
 
-    public sealed class PdfDocumentPreviewer : AsyncDisposable, IDocumentPreviewer
+    public class PdfDocumentPreviewer : AsyncDisposable, IDocumentPreviewer
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -20,9 +20,9 @@ namespace Omnidoc.Pdf
 
         public IServiceDescriptor Descriptor => descriptor;
 
-        public async Task < bool > TryPreviewAsync ( Stream document, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
+        public async Task < bool > TryPreviewAsync ( Stream input, Stream output, RenderingOptions options, CancellationToken cancellationToken = default )
         {
-            using var fileAccess = document.ToFileAccess ( );
+            using var fileAccess = input.ToFileAccess ( );
 
             using var pdf  = FPDF_LoadCustomDocument ( fileAccess, null ).AsDisposable ( FPDF_CloseDocument );
             using var page = FPDF_LoadPage           ( pdf, 0 )          .AsDisposable ( FPDF_ClosePage     );

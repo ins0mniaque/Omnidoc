@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using PDFiumCore;
 
 using Omnidoc.Core;
 using Omnidoc.Core.Disposables;
@@ -8,9 +6,7 @@ using Omnidoc.Services;
 
 namespace Omnidoc.Pdf
 {
-    using static PDFiumCore.fpdfview;
-
-    public sealed class PdfDocumentRenderer : AsyncDisposable, IDocumentRenderer
+    public class PdfDocumentRenderer : PdfLoader < IPager < IPageRenderer > >, IDocumentRenderer
     {
         private static readonly IServiceDescriptor descriptor = new ServiceDescriptor
         (
@@ -18,19 +14,13 @@ namespace Omnidoc.Pdf
             new [ ] { FileFormats.Bmp }
         );
 
+        public PdfDocumentRenderer ( ) : base ( CreatePager ) { }
+
         public IServiceDescriptor Descriptor => descriptor;
 
-        public Task < IPager < IPageRenderer > > LoadAsync ( Stream document, CancellationToken cancellationToken = default )
+        private static IPager < IPageRenderer > CreatePager ( Disposable < FpdfDocumentT > document )
         {
-            return Task.Run ( ( ) => Load ( document ), cancellationToken );
-        }
-
-        private static IPager < IPageRenderer > Load ( Stream document )
-        {
-            var fileAccess = document.ToFileAccess ( );
-
-            return new PdfPager < IPageRenderer > ( FPDF_LoadCustomDocument ( fileAccess, null ), fileAccess,
-                                                    page => new PdfPageRenderer ( page ) );
+            return new PdfPager < IPageRenderer > ( document, page => new PdfPageRenderer ( page ) );
         }
     }
 }

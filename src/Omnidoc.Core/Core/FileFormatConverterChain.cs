@@ -26,9 +26,9 @@ namespace Omnidoc.Core
 
         public IServiceDescriptor Descriptor { get; }
 
-        public virtual async Task ConvertAsync ( Stream file, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
+        public virtual async Task ConvertAsync ( Stream input, Stream output, OutputOptions options, CancellationToken cancellationToken = default )
         {
-            if ( file    is null ) throw new ArgumentNullException   ( nameof ( file    ) );
+            if ( input   is null ) throw new ArgumentNullException   ( nameof ( input   ) );
             if ( output  is null ) throw new ArgumentNullException   ( nameof ( output  ) );
             if ( options is null ) throw new ArgumentNullException   ( nameof ( options ) );
             if ( Chain   is null ) throw new ObjectDisposedException ( GetType ( ).Name );
@@ -44,18 +44,18 @@ namespace Omnidoc.Core
                     var converterOptions = isLast ? options : new OutputOptions ( SelectOutputFormat ( converter, Chain [ index + 1 ] ) );
                     var converterOutput  = isLast ? output  : buffer = CreateBufferStream ( ) ?? throw new InvalidOperationException ( Strings.Error_FailedToCreateBufferStream );
 
-                    await converter.ConvertAsync   ( file, converterOutput, converterOptions, cancellationToken )
+                    await converter.ConvertAsync   ( input, converterOutput, converterOptions, cancellationToken )
                                    .ConfigureAwait ( false );
 
                     if ( index > 0 && ! isLast )
                     {
-                        buffer = file;
+                        buffer = input;
                         buffer.Dispose ( );
                         buffer = null;
                     }
 
-                    file = converterOutput;
-                    file.Seek ( 0, SeekOrigin.Begin );
+                    input = converterOutput;
+                    input.Seek ( 0, SeekOrigin.Begin );
                 }
             }
             finally

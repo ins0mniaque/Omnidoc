@@ -6,6 +6,6 @@ namespace Omnidoc.Core
 {
     public interface IFileFormatConverter : IService
     {
-        Task ConvertAsync ( Stream file, Stream output, OutputOptions options, CancellationToken cancellationToken = default );
+        Task ConvertAsync ( Stream input, Stream output, OutputOptions options, CancellationToken cancellationToken = default );
     }
 }

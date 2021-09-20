@@ -1,11 +1,4 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Omnidoc.Core
+﻿namespace Omnidoc.Core
 {
-    public interface IArchiveReader : IService
-    {
-        Task < IReadOnlyArchive > LoadAsync ( Stream archive, ArchiveOptions options, CancellationToken cancellationToken = default );
-    }
+    public interface IArchiveReader : IArchiveLoader < IReadOnlyArchive > { }
 }
