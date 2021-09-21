@@ -27,17 +27,17 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// the parent css box of this css box in the hierarchy
         /// </summary>
-        private CssBox _parentBox;
+        private CssBox? _parentBox;
 
         /// <summary>
         /// the root container for the hierarchy
         /// </summary>
-        protected HtmlContainerInt _htmlContainer;
+        protected HtmlContainerInt? _htmlContainer;
 
         /// <summary>
         /// the html tag that is associated with this css box, null if anonymous box
         /// </summary>
-        private readonly HtmlTag _htmltag;
+        private readonly HtmlTag? _htmltag;
 
         private readonly List<CssRect> _boxWords = new();
         private readonly List<CssBox> _boxes = new();
@@ -59,12 +59,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         internal bool _tableFixed;
 
         protected bool _wordsSizeMeasured;
-        private CssBox _listItemBox;
+        private CssBox? _listItemBox;
 
         /// <summary>
         /// handler for loading background image
         /// </summary>
-        private ImageLoadHandler _imageLoadHandler;
+        private ImageLoadHandler? _imageLoadHandler;
 
         #endregion
 
@@ -74,7 +74,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <param name="parentBox">optional: the parent of this css box in html</param>
         /// <param name="tag">optional: the html tag associated with this css box</param>
-        public CssBox(CssBox parentBox, HtmlTag tag)
+        public CssBox(CssBox? parentBox, HtmlTag? tag)
         {
             if (parentBox != null)
             {
@@ -82,13 +82,14 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 _parentBox.Boxes.Add(this);
             }
             _htmltag = tag;
+            _text = SubString.Empty;
         }
 
         /// <summary>
         /// Gets the HtmlContainer of the Box.
         /// WARNING: May be null.
         /// </summary>
-        public HtmlContainerInt HtmlContainer
+        public HtmlContainerInt? HtmlContainer
         {
             get { return _htmlContainer ??= _parentBox?.HtmlContainer; }
             set { _htmlContainer = value; }
@@ -97,7 +98,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets or sets the parent box of this box
         /// </summary>
-        public CssBox ParentBox
+        public CssBox? ParentBox
         {
             get { return _parentBox; }
             set
@@ -109,7 +110,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 _parentBox = value;
 
                 //Add to new parent
-                if (value != null)
+                if (_parentBox != null)
                     _parentBox.Boxes.Add(this);
             }
         }
@@ -317,12 +318,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets or sets the first linebox where content of this box appear
         /// </summary>
-        internal CssLineBox FirstHostingLineBox { get; set; }
+        internal CssLineBox? FirstHostingLineBox { get; set; }
 
         /// <summary>
         /// Gets or sets the last linebox where content of this box appear
         /// </summary>
-        internal CssLineBox LastHostingLineBox { get; set; }
+        internal CssLineBox? LastHostingLineBox { get; set; }
 
         /// <summary>
         /// Create new css box for the given parent with the given html tag.<br/>
@@ -330,7 +331,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="tag">the html tag to define the box</param>
         /// <param name="parent">the box to add the new box to it as child</param>
         /// <returns>the new box</returns>
-        public static CssBox CreateBox(HtmlTag tag, CssBox parent = null)
+        public static CssBox CreateBox(HtmlTag tag, CssBox? parent = null)
         {
             ArgChecker.AssertArgNotNull(tag, "tag");
 
@@ -366,7 +367,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="tag">optional: the html tag to define the box</param>
         /// <param name="before">optional: to insert as specific location in parent box</param>
         /// <returns>the new box</returns>
-        public static CssBox CreateBox(CssBox parent, HtmlTag tag = null, CssBox before = null)
+        public static CssBox CreateBox(CssBox parent, HtmlTag? tag = null, CssBox? before = null)
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
 
@@ -406,7 +407,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="tag">optional: the html tag to define the box</param>
         /// <param name="before">optional: to insert as specific location in parent box</param>
         /// <returns>the new block box</returns>
-        public static CssBox CreateBlock(CssBox parent, HtmlTag tag = null, CssBox before = null)
+        public static CssBox CreateBlock(CssBox parent, HtmlTag? tag = null, CssBox? before = null)
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
 
@@ -1053,7 +1054,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Inherits inheritable values from parent.
         /// </summary>
-        internal new void InheritStyle(CssBox box = null, bool everything = false)
+        internal new void InheritStyle(CssBox? box = null, bool everything = false)
         {
             base.InheritStyle(box ?? ParentBox, everything);
         }
@@ -1063,7 +1064,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <param name="prevSibling">the previous box under the same parent</param>
         /// <returns>Resulting top margin</returns>
-        protected double MarginTopCollapse(CssBoxProperties prevSibling)
+        protected double MarginTopCollapse(CssBoxProperties? prevSibling)
         {
             double value;
             if (prevSibling != null)

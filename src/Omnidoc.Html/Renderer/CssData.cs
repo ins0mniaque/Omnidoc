@@ -86,7 +86,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <returns>collection of css blocks, empty collection if no blocks exists (never null)</returns>
         public IEnumerable<CssBlock> GetCssBlock(string className, string media = "all")
         {
-            List<CssBlock> block = null;
+            List<CssBlock>? block = null;
             if (_mediaBlocks.TryGetValue(media, out var mid))
             {
                 mid.TryGetValue(className, out block);

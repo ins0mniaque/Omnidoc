@@ -13,7 +13,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// the image object if it is image word (can be null if not loaded)
         /// </summary>
-        private RImage _image;
+        private RImage? _image;
 
         /// <summary>
         /// the image rectangle restriction as returned from image load event
@@ -34,7 +34,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the image this words represents (if one exists)
         /// </summary>
-        public override RImage Image
+        public override RImage? Image
         {
             get { return _image; }
             set { _image = value; }

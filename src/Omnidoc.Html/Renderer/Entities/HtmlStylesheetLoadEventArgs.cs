@@ -21,22 +21,22 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly IDictionary<string, string> _attributes;
 
         /// <summary>
         /// provide the new source (file path or URL) to load stylesheet from
         /// </summary>
-        private string _setSrc;
+        private string? _setSrc;
 
         /// <summary>
         /// provide the stylesheet to load
         /// </summary>
-        private string _setStyleSheet;
+        private string? _setStyleSheet;
 
         /// <summary>
         /// provide the stylesheet data to load
         /// </summary>
-        private CssData _setStyleSheetData;
+        private CssData? _setStyleSheetData;
 
         #endregion
 
@@ -46,7 +46,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// </summary>
         /// <param name="src">the source of the image (file path or URL)</param>
         /// <param name="attributes">collection of all the attributes that are defined on the image element</param>
-        internal HtmlStylesheetLoadEventArgs(string src, Dictionary<string, string> attributes)
+        internal HtmlStylesheetLoadEventArgs(string src, IDictionary<string, string> attributes)
         {
             _src = src;
             _attributes = attributes;
@@ -63,7 +63,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        public Dictionary<string, string> Attributes
+        public IDictionary<string, string> Attributes
         {
             get { return _attributes; }
         }
@@ -71,7 +71,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// provide the new source (file path or URL) to load stylesheet from
         /// </summary>
-        public string SetSrc
+        public string? SetSrc
         {
             get { return _setSrc; }
             set { _setSrc = value; }
@@ -80,7 +80,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// provide the stylesheet to load
         /// </summary>
-        public string SetStyleSheet
+        public string? SetStyleSheet
         {
             get { return _setStyleSheet; }
             set { _setStyleSheet = value; }
@@ -89,7 +89,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// provide the stylesheet data to load
         /// </summary>
-        public CssData SetStyleSheetData
+        public CssData? SetStyleSheetData
         {
             get { return _setStyleSheetData; }
             set { _setStyleSheetData = value; }

@@ -17,7 +17,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly IDictionary<string, string> _attributes;
 
         /// <summary>
         /// use to cancel the execution of the link
@@ -28,7 +28,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// Init.
         /// </summary>
         /// <param name="link">the link href that was clicked</param>
-        public HtmlLinkClickedEventArgs(string link, Dictionary<string, string> attributes)
+        public HtmlLinkClickedEventArgs(string link, IDictionary<string, string> attributes)
         {
             _link = link;
             _attributes = attributes;
@@ -45,7 +45,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        public Dictionary<string, string> Attributes
+        public IDictionary<string, string> Attributes
         {
             get { return _attributes; }
         }

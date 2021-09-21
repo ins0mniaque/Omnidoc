@@ -36,7 +36,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <param name="parent">the parent box of this box</param>
         /// <param name="tag">the html tag data of this box</param>
-        public CssBoxImage(CssBox parent, HtmlTag tag)
+        public CssBoxImage(CssBox? parent, HtmlTag tag)
             : base(parent, tag)
         {
             _imageWord = new CssRectImage(this);
@@ -46,7 +46,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Get the image of this image box.
         /// </summary>
-        public RImage Image
+        public RImage? Image
         {
             get { return _imageWord.Image; }
         }

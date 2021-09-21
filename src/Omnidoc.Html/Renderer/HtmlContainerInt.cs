@@ -82,22 +82,22 @@ namespace Omnidoc.Html.Renderer.Core
         /// <summary>
         /// the root css box of the parsed html
         /// </summary>
-        private CssBox _root;
+        private CssBox? _root;
 
         /// <summary>
         /// list of all css boxes that have ":hover" selector on them
         /// </summary>
-        private List<HoverBoxBlock> _hoverBoxes;
+        private List<HoverBoxBlock>? _hoverBoxes;
 
         /// <summary>
         /// Handler for text selection in the html. 
         /// </summary>
-        private SelectionHandler _selectionHandler;
+        private SelectionHandler? _selectionHandler;
 
         /// <summary>
         /// Handler for downloading of images in the html
         /// </summary>
-        private ImageDownloader _imageDownloader;
+        private ImageDownloader? _imageDownloader;
 
         /// <summary>
         /// the text fore color use for selected text
@@ -112,7 +112,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
-        private CssData _cssData;
+        private CssData? _cssData;
 
         /// <summary>
         /// is the load of the html document is complete
@@ -194,13 +194,13 @@ namespace Omnidoc.Html.Renderer.Core
         /// Raised when the set html document has been fully loaded.<br/>
         /// Allows manipulation of the html dom, scroll position, etc.
         /// </summary>
-        public event EventHandler LoadComplete;
+        public event EventHandler? LoadComplete;
 
         /// <summary>
         /// Raised when the user clicks on a link in the html.<br/>
         /// Allows canceling the execution of the link.
         /// </summary>
-        public event EventHandler<HtmlLinkClickedEventArgs> LinkClicked;
+        public event EventHandler<HtmlLinkClickedEventArgs>? LinkClicked;
 
         /// <summary>
         /// Raised when html renderer requires refresh of the control hosting (invalidation and re-layout).
@@ -208,13 +208,13 @@ namespace Omnidoc.Html.Renderer.Core
         /// <remarks>
         /// There is no guarantee that the event will be raised on the main thread, it can be raised on thread-pool thread.
         /// </remarks>
-        public event EventHandler<HtmlRefreshEventArgs> Refresh;
+        public event EventHandler<HtmlRefreshEventArgs>? Refresh;
 
         /// <summary>
         /// Raised when Html Renderer request scroll to specific location.<br/>
         /// This can occur on document anchor click.
         /// </summary>
-        public event EventHandler<HtmlScrollEventArgs> ScrollChange;
+        public event EventHandler<HtmlScrollEventArgs>? ScrollChange;
 
         /// <summary>
         /// Raised when an error occurred during html rendering.<br/>
@@ -222,25 +222,25 @@ namespace Omnidoc.Html.Renderer.Core
         /// <remarks>
         /// There is no guarantee that the event will be raised on the main thread, it can be raised on thread-pool thread.
         /// </remarks>
-        public event EventHandler<HtmlRenderErrorEventArgs> RenderError;
+        public event EventHandler<HtmlRenderErrorEventArgs>? RenderError;
 
         /// <summary>
         /// Raised when a stylesheet is about to be loaded by file path or URI by link element.<br/>
         /// This event allows to provide the stylesheet manually or provide new source (file or Uri) to load from.<br/>
         /// If no alternative data is provided the original source will be used.<br/>
         /// </summary>
-        public event EventHandler<HtmlStylesheetLoadEventArgs> StylesheetLoad;
+        public event EventHandler<HtmlStylesheetLoadEventArgs>? StylesheetLoad;
 
         /// <summary>
         /// Raised when an image is about to be loaded by file path or URI.<br/>
         /// This event allows to provide the image manually, if not handled the image will be loaded from file or download from URI.
         /// </summary>
-        public event EventHandler<HtmlImageLoadEventArgs> ImageLoad;
+        public event EventHandler<HtmlImageLoadEventArgs>? ImageLoad;
 
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
-        public CssData CssData
+        public CssData? CssData
         {
             get { return _cssData; }
         }
@@ -401,23 +401,23 @@ namespace Omnidoc.Html.Renderer.Core
         /// <summary>
         /// Get the currently selected text segment in the html.
         /// </summary>
-        public string SelectedText
+        public string? SelectedText
         {
-            get { return _selectionHandler.GetSelectedText(); }
+            get { return _selectionHandler?.GetSelectedText(); }
         }
 
         /// <summary>
         /// Copy the currently selected html segment with style.
         /// </summary>
-        public string SelectedHtml
+        public string? SelectedHtml
         {
-            get { return _selectionHandler.GetSelectedHtml(); }
+            get { return _selectionHandler?.GetSelectedHtml(); }
         }
 
         /// <summary>
         /// the root css box of the parsed html
         /// </summary>
-        internal CssBox Root
+        internal CssBox? Root
         {
             get { return _root; }
         }
@@ -843,7 +843,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <param name="type">the type of error to report</param>
         /// <param name="message">the error message</param>
         /// <param name="exception">optional: the exception that occured</param>
-        internal void ReportError(HtmlRenderErrorType type, string message, Exception exception = null)
+        internal void ReportError(HtmlRenderErrorType type, string message, Exception? exception = null)
         {
             try
             {

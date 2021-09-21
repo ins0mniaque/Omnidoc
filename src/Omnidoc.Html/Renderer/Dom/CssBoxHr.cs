@@ -16,7 +16,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <param name="parent">the parent box of this box</param>
         /// <param name="tag">the html tag data of this box</param>
-        public CssBoxHr(CssBox parent, HtmlTag tag)
+        public CssBoxHr(CssBox? parent, HtmlTag tag)
             : base(parent, tag)
         {
             Display = CssConstants.Block;

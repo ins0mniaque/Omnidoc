@@ -23,7 +23,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <param name="attributes">the attributes of the link element</param>
         /// <param name="stylesheet">return the stylesheet string that has been loaded (null if failed or <paramref name="stylesheetData"/> is given)</param>
         /// <param name="stylesheetData">return stylesheet data object that was provided by overwrite (null if failed or <paramref name="stylesheet"/> is given)</param>
-        public static void LoadStylesheet(HtmlContainerInt htmlContainer, string src, Dictionary<string, string> attributes, out string stylesheet, out CssData stylesheetData)
+        public static void LoadStylesheet(HtmlContainerInt htmlContainer, string src, IDictionary<string, string> attributes, out string? stylesheet, out CssData? stylesheetData)
         {
             ArgChecker.AssertArgNotNull(htmlContainer, "htmlContainer");
 

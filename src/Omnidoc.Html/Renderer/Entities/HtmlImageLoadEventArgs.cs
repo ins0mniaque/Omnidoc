@@ -14,7 +14,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// <param name="path">the path to the image to load (file path or URL)</param>
     /// <param name="image">the image to use</param>
     /// <param name="imageRectangle">optional: limit to specific rectangle in the loaded image</param>
-    public delegate void HtmlImageLoadCallback(string path, object image, RRect imageRectangle);
+    public delegate void HtmlImageLoadCallback(string? path, object? image, RRect imageRectangle);
 
     /// <summary>
     /// Invoked when an image is about to be loaded by file path, URL or inline data in 'img' element or background-image CSS style.<br/>
@@ -42,7 +42,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the image element
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly IDictionary<string, string>? _attributes;
 
         /// <summary>
         /// Callback used to allow setting image externally and async.
@@ -58,7 +58,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <param name="src">the source of the image (file path or Uri)</param>
         /// <param name="attributes">collection of all the attributes that are defined on the image element</param>
         /// <param name="callback">Callback used to allow setting image externally and async.</param>
-        internal HtmlImageLoadEventArgs(string src, Dictionary<string, string> attributes, HtmlImageLoadCallback callback)
+        internal HtmlImageLoadEventArgs(string src, IDictionary<string, string>? attributes, HtmlImageLoadCallback callback)
         {
             _src = src;
             _attributes = attributes;
@@ -76,7 +76,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the image element or CSS style
         /// </summary>
-        public Dictionary<string, string> Attributes
+        public IDictionary<string, string>? Attributes
         {
             get { return _attributes; }
         }
@@ -98,7 +98,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         public void Callback()
         {
             _handled = true;
-            _callback(null, null, new RRect());
+            _callback(null, null, RRect.Empty);
         }
 
         /// <summary>

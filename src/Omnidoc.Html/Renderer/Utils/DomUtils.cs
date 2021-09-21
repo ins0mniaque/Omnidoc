@@ -442,7 +442,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="styleGen">Optional: controls the way styles are generated when html is generated</param>
         /// <param name="onlySelected">Optional: true - generate only selected html subset, false - generate all (default - false)</param>
         /// <returns>generated html</returns>
-        public static string GenerateHtml(CssBox root, HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline, bool onlySelected = false)
+        public static string GenerateHtml(CssBox? root, HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline, bool onlySelected = false)
         {
             var sb = new StringBuilder();
             if (root != null)

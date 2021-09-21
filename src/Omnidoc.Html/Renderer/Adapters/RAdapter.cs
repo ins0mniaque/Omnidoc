@@ -44,17 +44,17 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// <summary>
         /// default CSS parsed data singleton
         /// </summary>
-        private CssData _defaultCssData;
+        private CssData? _defaultCssData;
 
         /// <summary>
         /// image used to draw loading image icon
         /// </summary>
-        private RImage _loadImage;
+        private RImage? _loadImage;
 
         /// <summary>
         /// image used to draw error image icon
         /// </summary>
-        private RImage _errorImage;
+        private RImage? _errorImage;
 
         #endregion
 
@@ -198,9 +198,10 @@ namespace Omnidoc.Html.Renderer.Adapters
         {
             if (_loadImage == null)
             {
-                var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("Omnidoc.Html.Renderer.Core.Utils.ImageLoad.png");
-                if (stream != null)
-                    _loadImage = ImageFromStream(stream);
+                var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("Omnidoc.Html.Renderer.Core.Utils.ImageLoad.png") ??
+                             throw new InvalidOperationException ( "Embedded resource not found" );
+
+                _loadImage = ImageFromStream(stream);
             }
             return _loadImage;
         }
@@ -212,9 +213,10 @@ namespace Omnidoc.Html.Renderer.Adapters
         {
             if (_errorImage == null)
             {
-                var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("Omnidoc.Html.Renderer.Core.Utils.ImageError.png");
-                if (stream != null)
-                    _errorImage = ImageFromStream(stream);
+                var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("Omnidoc.Html.Renderer.Core.Utils.ImageError.png") ??
+                             throw new InvalidOperationException ( "Embedded resource not found" );
+
+                _errorImage = ImageFromStream(stream);
             }
             return _errorImage;
         }
@@ -281,7 +283,7 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// <param name="name">the name of the image for save dialog</param>
         /// <param name="extension">the extension of the image for save dialog</param>
         /// <param name="control">optional: the control to show the dialog on</param>
-        public void SaveToFile(RImage image, string name, string extension, RControl control = null)
+        public void SaveToFile(RImage image, string name, string extension, RControl? control = null)
         {
             SaveToFileInt(image, name, extension, control);
         }
@@ -434,7 +436,7 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// <param name="name">the name of the image for save dialog</param>
         /// <param name="extension">the extension of the image for save dialog</param>
         /// <param name="control">optional: the control to show the dialog on</param>
-        protected virtual void SaveToFileInt(RImage image, string name, string extension, RControl control = null)
+        protected virtual void SaveToFileInt(RImage image, string name, string extension, RControl? control = null)
         {
             throw new NotImplementedException();
         }

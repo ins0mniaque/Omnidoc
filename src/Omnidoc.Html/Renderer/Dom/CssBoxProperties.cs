@@ -1190,7 +1190,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="style">optional: the style to set</param>
         /// <param name="width">optional: the width to set</param>
         /// <param name="color">optional: the color to set</param>
-        protected void SetAllBorders(string style = null, string width = null, string color = null)
+        protected void SetAllBorders(string? style = null, string? width = null, string? color = null)
         {
             if (style != null)
                 BorderLeftStyle = BorderTopStyle = BorderRightStyle = BorderBottomStyle = style;

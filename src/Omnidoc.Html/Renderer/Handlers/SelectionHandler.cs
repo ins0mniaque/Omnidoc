@@ -33,13 +33,13 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// the starting word of html selection<br/>
         /// where the user started the selection, if the selection is backwards then it will be the last selected word.
         /// </summary>
-        private CssRect _selectionStart;
+        private CssRect? _selectionStart;
 
         /// <summary>
         /// the ending word of html selection<br/>
         /// where the user ended the selection, if the selection is backwards then it will be the first selected word.
         /// </summary>
-        private CssRect _selectionEnd;
+        private CssRect? _selectionEnd;
 
         /// <summary>
         /// the selection start index if the first selected word is partially selected (-1 if not selected or fully selected)
@@ -99,7 +99,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// used to know if drag & drop was already started not to execute the same operation over
         /// </summary>
-        private object _dragDropData;
+        private object? _dragDropData;
 
         #endregion
 

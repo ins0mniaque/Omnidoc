@@ -8,6 +8,8 @@ namespace Omnidoc.Html.Renderer.Core.Utils
     /// </summary>
     internal sealed class SubString
     {
+        public static SubString Empty { get; } = new SubString(string.Empty);
+
         #region Fields and Consts
 
         /// <summary>

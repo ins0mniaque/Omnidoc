@@ -32,7 +32,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// If the word is selected this points to the selection handler for more data
         /// </summary>
-        private SelectionHandler _selection;
+        private SelectionHandler? _selection;
 
         #endregion
 
@@ -136,7 +136,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// If the word is selected this points to the selection handler for more data
         /// </summary>
-        public SelectionHandler Selection
+        public SelectionHandler? Selection
         {
             get { return _selection; }
             set { _selection = value; }
@@ -161,7 +161,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the image this words represents (if one exists)
         /// </summary>
-        public virtual RImage Image
+        public virtual RImage? Image
         {
             get { return null; }
             // ReSharper disable ValueParameterNotUsed
@@ -197,7 +197,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the text of the word
         /// </summary>
-        public virtual string Text
+        public virtual string? Text
         {
             get { return null; }
         }

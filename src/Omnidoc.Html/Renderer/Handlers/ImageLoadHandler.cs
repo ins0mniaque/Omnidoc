@@ -119,7 +119,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <param name="src">the source of the image to load</param>
         /// <param name="attributes">the collection of attributes on the element to use in event</param>
         /// <returns>the image object (null if failed)</returns>
-        public void LoadImage(string src, Dictionary<string, string> attributes)
+        public void LoadImage(string src, IDictionary<string, string>? attributes)
         {
             try
             {
