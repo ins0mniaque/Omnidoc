@@ -247,7 +247,7 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         /// <param name="htmlSource">the html to init with, init empty if not given</param>
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
-        public void SetHtml(string htmlSource, CssData baseCssData = null)
+        public void SetHtml(string htmlSource, CssData? baseCssData = null)
         {
             _htmlContainerInt.SetHtml(htmlSource, baseCssData);
         }

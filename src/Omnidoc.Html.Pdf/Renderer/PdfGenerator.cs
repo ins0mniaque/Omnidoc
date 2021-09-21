@@ -1,11 +1,11 @@
-﻿using PdfSharpCore;
+﻿using System;
+using PdfSharpCore;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
-using System;
+using Omnidoc.Html.Pdf.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Core;
 using Omnidoc.Html.Renderer.Core.Entities;
 using Omnidoc.Html.Renderer.Core.Utils;
-using Omnidoc.Html.Pdf.Renderer.Adapters;
 
 namespace Omnidoc.Html.Pdf.Renderer
 {
@@ -53,32 +53,34 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the generated image of the html</returns>
-        public static PdfDocument GeneratePdf(string html, PageSize pageSize, int margin = 20, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static PdfDocument FromHtml(string html, PageSize pageSize, int margin = 20, CssData? cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
-            var config = new PdfGenerateConfig
+            var config = new PdfPageOptions
             {
                 PageSize = pageSize
             };
             config.SetMargins(margin);
-            return GeneratePdf(html, config, cssData, stylesheetLoad, imageLoad);
+            return FromHtml(html, config, cssData, stylesheetLoad, imageLoad);
         }
 
         /// <summary>
         /// Create PDF document from given HTML.<br/>
         /// </summary>
         /// <param name="html">HTML source to create PDF from</param>
-        /// <param name="config">the configuration to use for the PDF generation (page size/page orientation/margins/etc.)</param>
+        /// <param name="options">the options to use for the PDF generation (page size/page orientation/margins/etc.)</param>
         /// <param name="cssData">optional: the style to use for html rendering (default - use W3 default style)</param>
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the generated image of the html</returns>
-        public static PdfDocument GeneratePdf(string html, PdfGenerateConfig config, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static PdfDocument FromHtml(string html, PdfPageOptions options, CssData? cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
             // create PDF document to render the HTML into
             var document = new PdfDocument();
 
             // add rendered PDF pages to document
-            AddPdfPages(document, html, config, cssData, stylesheetLoad, imageLoad);
+            AddPagesFromHtml(document, html, options, cssData, stylesheetLoad, imageLoad);
 
             return document;
         }
@@ -94,14 +96,15 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the generated image of the html</returns>
-        public static void AddPdfPages(PdfDocument document, string html, PageSize pageSize, int margin = 20, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static void AddPagesFromHtml(this PdfDocument document, string html, PageSize pageSize, int margin = 20, CssData? cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
-            var config = new PdfGenerateConfig
+            var config = new PdfPageOptions
             {
                 PageSize = pageSize
             };
             config.SetMargins(margin);
-            AddPdfPages(document, html, config, cssData, stylesheetLoad, imageLoad);
+            document.AddPagesFromHtml(html, config, cssData, stylesheetLoad, imageLoad);
         }
 
         /// <summary>
@@ -109,27 +112,31 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         /// <param name="document">PDF document to append pages to</param>
         /// <param name="html">HTML source to create PDF from</param>
-        /// <param name="config">the configuration to use for the PDF generation (page size/page orientation/margins/etc.)</param>
+        /// <param name="options">the options to use for the PDF generation (page size/page orientation/margins/etc.)</param>
         /// <param name="cssData">optional: the style to use for html rendering (default - use W3 default style)</param>
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the generated image of the html</returns>
-        public static void AddPdfPages(PdfDocument document, string html, PdfGenerateConfig config, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static void AddPagesFromHtml(this PdfDocument document, string html, PdfPageOptions options, CssData? cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
+            if ( document is null ) throw new ArgumentNullException ( nameof ( document ) );
+            if ( options  is null ) throw new ArgumentNullException ( nameof ( options  ) );
+
             XSize orgPageSize;
             // get the size of each page to layout the HTML in
-            if (config.PageSize != PageSize.Undefined)
-                orgPageSize = PageSizeConverter.ToSize(config.PageSize);
+            if (options.PageSize != PageSize.Undefined)
+                orgPageSize = PageSizeConverter.ToSize(options.PageSize);
             else
-                orgPageSize = config.ManualPageSize;
+                orgPageSize = options.ManualPageSize;
 
-            if (config.PageOrientation == PageOrientation.Landscape)
+            if (options.PageOrientation == PageOrientation.Landscape)
             {
                 // invert pagesize for landscape
                 orgPageSize = new XSize(orgPageSize.Height, orgPageSize.Width);
             }
 
-            var pageSize = new XSize(orgPageSize.Width - config.MarginLeft - config.MarginRight, orgPageSize.Height - config.MarginTop - config.MarginBottom);
+            var pageSize = new XSize(orgPageSize.Width - options.MarginLeft - options.MarginRight, orgPageSize.Height - options.MarginTop - options.MarginBottom);
 
             if (!string.IsNullOrEmpty(html))
             {
@@ -139,14 +146,14 @@ namespace Omnidoc.Html.Pdf.Renderer
                 if (imageLoad != null)
                     container.ImageLoad += imageLoad;
 
-                container.Location = new XPoint(config.MarginLeft, config.MarginTop);
+                container.Location = new XPoint(options.MarginLeft, options.MarginTop);
                 container.MaxSize = new XSize(pageSize.Width, 0);
                 container.SetHtml(html, cssData);
                 container.PageSize = pageSize;
-                container.MarginBottom = config.MarginBottom;
-                container.MarginLeft = config.MarginLeft;
-                container.MarginRight = config.MarginRight;
-                container.MarginTop = config.MarginTop;
+                container.MarginBottom = options.MarginBottom;
+                container.MarginLeft = options.MarginLeft;
+                container.MarginRight = options.MarginRight;
+                container.MarginTop = options.MarginTop;
 
                 // layout the HTML with the page width restriction to know how many pages are required
                 using (var measure = XGraphics.CreateMeasureContext(pageSize, XGraphicsUnit.Point, XPageDirection.Downwards))
@@ -177,8 +184,6 @@ namespace Omnidoc.Html.Pdf.Renderer
                 HandleLinks(document, container, orgPageSize, pageSize);
             }
         }
-
-
 
         #region Private/Protected methods
 

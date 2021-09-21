@@ -38,7 +38,7 @@ namespace Omnidoc.Html.Pdf
         private static void Convert ( string html, Stream output, CancellationToken cancellationToken = default )
         {
             // TODO: Extract page size and margins from CSS (e.g. @page { size = A4 landscape, margin: 1cm })
-            var config = new PdfGenerateConfig ( )
+            var options = new PdfPageOptions ( )
             {
                 PageSize        = PageSize.A4,
                 PageOrientation = PageOrientation.Portrait,
@@ -48,7 +48,7 @@ namespace Omnidoc.Html.Pdf
                 MarginBottom    = 72
             };
 
-            using var pdf = PdfGenerator.GeneratePdf ( html, config );
+            using var pdf = PdfGenerator.FromHtml ( html, options );
 
             cancellationToken.ThrowIfCancellationRequested ( );
 

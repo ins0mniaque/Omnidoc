@@ -4,9 +4,9 @@ using PdfSharpCore.Drawing;
 namespace Omnidoc.Html.Pdf.Renderer
 {
     /// <summary>
-    /// The settings for generating PDF using <see cref="PdfGenerator"/>
+    /// The page options for generating PDF using <see cref="PdfGenerator"/>
     /// </summary>
-    public sealed class PdfGenerateConfig
+    public sealed class PdfPageOptions
     {
         #region Fields/Consts
 
