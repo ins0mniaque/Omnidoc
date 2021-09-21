@@ -11,6 +11,7 @@
 // "The Art of War"
 
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace Omnidoc.Html.Renderer.Core.Utils
@@ -163,10 +164,10 @@ EndSelection:<<<<<<<<4";
             }
 
             // Back-patch offsets (scan only the header part for performance)
-            sb.Replace("<<<<<<<<1", Header.Length.ToString("D9"), 0, Header.Length);
-            sb.Replace("<<<<<<<<2", GetByteCount(sb).ToString("D9"), 0, Header.Length);
-            sb.Replace("<<<<<<<<3", fragmentStart.ToString("D9"), 0, Header.Length);
-            sb.Replace("<<<<<<<<4", fragmentEnd.ToString("D9"), 0, Header.Length);
+            sb.Replace("<<<<<<<<1", Header.Length.ToString("D9", CultureInfo.InvariantCulture), 0, Header.Length);
+            sb.Replace("<<<<<<<<2", GetByteCount(sb).ToString("D9", CultureInfo.InvariantCulture), 0, Header.Length);
+            sb.Replace("<<<<<<<<3", fragmentStart.ToString("D9", CultureInfo.InvariantCulture), 0, Header.Length);
+            sb.Replace("<<<<<<<<4", fragmentEnd.ToString("D9", CultureInfo.InvariantCulture), 0, Header.Length);
 
             return sb.ToString();
         }

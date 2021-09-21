@@ -10,7 +10,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// <summary>
     /// Represents an ARGB (alpha, red, green, blue) color.
     /// </summary>
-    public struct RColor
+    public struct RColor : IEquatable<RColor>
     {
         #region Fields and Consts
 
@@ -211,11 +211,12 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override bool Equals(object obj)
         {
-            if (obj is RColor color)
-            {
-                return _value == color._value;
-            }
-            return false;
+            return obj is RColor other ? Equals(other) : false;
+        }
+
+        public bool Equals(RColor other)
+        {
+            return _value == other._value;
         }
 
         /// <summary>
@@ -251,7 +252,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
             }
             else
                 stringBuilder.Append("Empty");
-            stringBuilder.Append("]");
+            stringBuilder.Append(']');
             return stringBuilder.ToString();
         }
 

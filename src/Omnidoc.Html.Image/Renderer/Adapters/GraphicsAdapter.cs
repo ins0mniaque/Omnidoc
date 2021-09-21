@@ -39,19 +39,19 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
 
         public override void PopClip()
         {
-            _clipStack.Pop();
+            ClipStack.Pop();
             _clipModeStack.Pop();
         }
 
         public override void PushClip(RRect rect)
         {
-            _clipStack.Push(rect);
+            ClipStack.Push(rect);
             _clipModeStack.Push(ClipMode.Replace);
         }
 
         public override void PushClipExclude(RRect rect)
         {
-            _clipStack.Push(rect);
+            ClipStack.Push(rect);
             _clipModeStack.Push(ClipMode.Exclude);
         }
 
@@ -122,8 +122,6 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         {
             return new GraphicsPathAdapter();
         }
-
-        public override void Dispose() { }
 
         public override void DrawLine(RPen pen, double x1, double y1, double x2, double y2)
         {

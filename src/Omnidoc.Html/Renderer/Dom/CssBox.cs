@@ -228,7 +228,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the HTMLTag that hosts this box
         /// </summary>
-        public HtmlTag HtmlTag
+        public HtmlTag? HtmlTag
         {
             get { return _htmltag; }
         }
@@ -723,6 +723,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <returns></returns>
         private int GetIndexForList()
         {
+            if(ParentBox is null)
+                throw new InvalidOperationException("box has no parent");
+
             var reversed = !string.IsNullOrEmpty(ParentBox.GetAttribute("reversed"));
             if (!int.TryParse(ParentBox.GetAttribute("start"), out var index))
             {
@@ -873,7 +876,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         internal double GetMinimumWidth()
         {
             double maxWidth = 0;
-            CssRect maxWidthWord = null;
+            CssRect? maxWidthWord = null;
             GetMinimumWidth_LongestWord(this, ref maxWidth, ref maxWidthWord);
 
             double padding = 0f;
@@ -897,7 +900,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="maxWidth"> </param>
         /// <param name="maxWidthWord"> </param>
         /// <returns></returns>
-        private static void GetMinimumWidth_LongestWord(CssBox box, ref double maxWidth, ref CssRect maxWidthWord)
+        private static void GetMinimumWidth_LongestWord(CssBox box, ref double maxWidth, ref CssRect? maxWidthWord)
         {
             if (box.Words.Count > 0)
             {
@@ -927,10 +930,11 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             double sum = 0f;
             if (box.Size.Width > 90999 || (box.ParentBox != null && box.ParentBox.Size.Width > 90999))
             {
-                while (box != null)
+                CssBox? currentBox = box;
+                while (currentBox != null)
                 {
-                    sum += box.ActualMarginLeft + box.ActualMarginRight;
-                    box = box.ParentBox;
+                    sum += currentBox.ActualMarginLeft + currentBox.ActualMarginRight;
+                    currentBox = currentBox.ParentBox;
                 }
             }
             return sum;
@@ -1275,7 +1279,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         {
             if (rect.Width > 0 && rect.Height > 0)
             {
-                RBrush brush = null;
+                RBrush? brush = null;
 
                 if (BackgroundGradient != CssConstants.None)
                 {
@@ -1292,13 +1296,13 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     // if (isLast)
                     //  rectangle.Width -= ActualWordSpacing + CssUtils.GetWordEndWhitespace(ActualFont);
 
-                    RGraphicsPath roundrect = null;
+                    RGraphicsPath? roundrect = null;
                     if (IsRounded)
                     {
                         roundrect = RenderUtils.GetRoundRect(g, rect, ActualCornerNw, ActualCornerNe, ActualCornerSe, ActualCornerSw);
                     }
 
-                    object prevMode = null;
+                    object? prevMode = null;
                     if (HtmlContainer != null && !HtmlContainer.AvoidGeometryAntialias && IsRounded)
                     {
                         prevMode = g.SetAntiAliasSmoothingMode();
@@ -1313,7 +1317,8 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                         g.DrawRectangle(brush, Math.Ceiling(rect.X), Math.Ceiling(rect.Y), rect.Width, rect.Height);
                     }
 
-                    g.ReturnPreviousSmoothingMode(prevMode);
+                    if(prevMode != null)
+                        g.ReturnPreviousSmoothingMode(prevMode);
 
                     if (roundrect != null)
                         roundrect.Dispose();

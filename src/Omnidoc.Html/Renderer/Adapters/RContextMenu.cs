@@ -35,6 +35,12 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// </summary><param name="parent">the parent control to show in</param><param name="location">the location to show at relative to the parent control</param>
         public abstract void Show(RControl parent, RPoint location);
 
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) { }
     }
 }

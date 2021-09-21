@@ -97,7 +97,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="className">the name of the css class of the block</param>
         /// <param name="blockSource">the CSS block to parse</param>
         /// <returns>the created CSS block instance</returns>
-        public CssBlock ParseCssBlock(string className, string blockSource)
+        public CssBlock? ParseCssBlock(string className, string blockSource)
         {
             return ParseCssBlockImp(className, blockSource);
         }
@@ -133,7 +133,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <returns>stylesheet without comments</returns>
         private static string RemoveStylesheetComments(string stylesheet)
         {
-            StringBuilder sb = null;
+            StringBuilder? sb = null;
 
             int prevIdx = 0, startIdx = 0;
             while (startIdx > -1 && startIdx < stylesheet.Length)
@@ -216,7 +216,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         private void ParseMediaStyleBlocks(CssData cssData, string stylesheet)
         {
             var startIdx = 0;
-            string atrule;
+            string? atrule;
             while ((atrule = RegexParserUtils.GetCssAtRules(stylesheet, ref startIdx)) != null)
             {
                 //Just process @media rules
@@ -292,10 +292,10 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="className">the name of the css class of the block</param>
         /// <param name="blockSource">the CSS block to parse</param>
         /// <returns>the created CSS block instance</returns>
-        private CssBlock ParseCssBlockImp(string className, string blockSource)
+        private CssBlock? ParseCssBlockImp(string className, string blockSource)
         {
             className = className.ToLowerInvariant();
-            string psedoClass = null;
+            string? psedoClass = null;
             var colonIdx = className.IndexOf(":", StringComparison.Ordinal);
             if (colonIdx > -1 && !className.StartsWith("::", StringComparison.Ordinal))
             {
@@ -321,9 +321,9 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="className">the class selector to parse</param>
         /// <param name="firstClass">return the main class the css block is on</param>
         /// <returns>returns the hierarchy of classes or null if single class selector</returns>
-        private static List<CssBlockSelectorItem> ParseCssBlockSelector(string className, out string? firstClass)
+        private static List<CssBlockSelectorItem>? ParseCssBlockSelector(string className, out string? firstClass)
         {
-            List<CssBlockSelectorItem> selectors = null;
+            List<CssBlockSelectorItem>? selectors = null;
 
             firstClass = null;
             var endIdx = className.Length - 1;
@@ -342,8 +342,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
 
                 if (startIdx > -1)
                 {
-                    if (selectors == null)
-                        selectors = new List<CssBlockSelectorItem>();
+                    selectors ??= new List<CssBlockSelectorItem>();
 
                     var subclass = className.Substring(startIdx + 1, endIdx - startIdx);
 
@@ -360,6 +359,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 }
                 else if (firstClass != null)
                 {
+                    selectors ??= new List<CssBlockSelectorItem>();
                     selectors.Add(new CssBlockSelectorItem(className.Substring(0, endIdx + 1), directParent));
                 }
 
@@ -641,7 +641,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="propValue">the value of the property to parse to specific values</param>
         /// <param name="direction">the left, top, right or bottom direction of the border to parse</param>
         /// <param name="properties">the properties collection to add the specific properties to</param>
-        private void ParseBorderProperty(string propValue, string direction, Dictionary<string, string> properties)
+        private void ParseBorderProperty(string propValue, string? direction, Dictionary<string, string> properties)
         {
             ParseBorder(propValue, out var borderWidth, out var borderStyle, out var borderColor);
 
@@ -831,7 +831,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="width"> </param>
         /// <param name="style"></param>
         /// <param name="color"></param>
-        public void ParseBorder(string value, out string width, out string style, out string? color)
+        public void ParseBorder(string value, out string? width, out string? style, out string? color)
         {
             width = style = color = null;
             if (!string.IsNullOrEmpty(value))
@@ -855,11 +855,11 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// Assume given substring is not empty and all indexes are valid!<br/>
         /// </summary>
         /// <returns>found border width value or null</returns>
-        private static string ParseBorderWidth(string str, int idx, int length)
+        private static string? ParseBorderWidth(string str, int idx, int length)
         {
             if ((length > 2 && char.IsDigit(str[idx])) || (length > 3 && str[idx] == '.'))
             {
-                string unit = null;
+                string? unit = null;
                 if (CommonUtils.SubStringEquals(str, idx + length - 2, 2, CssConstants.Px))
                     unit = CssConstants.Px;
                 else if (CommonUtils.SubStringEquals(str, idx + length - 2, 2, CssConstants.Pt))
@@ -900,7 +900,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// Assume given substring is not empty and all indexes are valid!<br/>
         /// </summary>
         /// <returns>found border width value or null</returns>
-        private static string ParseBorderStyle(string str, int idx, int length)
+        private static string? ParseBorderStyle(string str, int idx, int length)
         {
             if (CommonUtils.SubStringEquals(str, idx, length, CssConstants.None))
                 return CssConstants.None;
@@ -930,7 +930,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// Assume given substring is not empty and all indexes are valid!<br/>
         /// </summary>
         /// <returns>found border width value or null</returns>
-        private string ParseBorderColor(string str, int idx, int length)
+        private string? ParseBorderColor(string str, int idx, int length)
         {
             return _valueParser.TryGetColor(str, idx, length, out _) ? str.Substring(idx, length) : null;
         }

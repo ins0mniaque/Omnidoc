@@ -21,7 +21,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        private readonly IDictionary<string, string> _attributes;
+        private readonly IDictionary<string, string>? _attributes;
 
         /// <summary>
         /// provide the new source (file path or URL) to load stylesheet from
@@ -46,7 +46,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// </summary>
         /// <param name="src">the source of the image (file path or URL)</param>
         /// <param name="attributes">collection of all the attributes that are defined on the image element</param>
-        internal HtmlStylesheetLoadEventArgs(string src, IDictionary<string, string> attributes)
+        internal HtmlStylesheetLoadEventArgs(string src, IDictionary<string, string>? attributes)
         {
             _src = src;
             _attributes = attributes;
@@ -63,7 +63,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        public IDictionary<string, string> Attributes
+        public IDictionary<string, string>? Attributes
         {
             get { return _attributes; }
         }

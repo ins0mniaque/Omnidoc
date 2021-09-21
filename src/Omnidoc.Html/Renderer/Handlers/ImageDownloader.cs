@@ -15,7 +15,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
     /// <param name="filePath">the path to the downloaded file</param>
     /// <param name="error">the error if download failed</param>
     /// <param name="canceled">is the file download request was canceled</param>
-    public delegate void DownloadFileAsyncCallback(Uri imageUri, string filePath, Exception error, bool canceled);
+    public delegate void DownloadFileAsyncCallback(Uri imageUri, string filePath, Exception? error, bool canceled);
 
     /// <summary>
     /// Handler for downloading images from the web.<br/>

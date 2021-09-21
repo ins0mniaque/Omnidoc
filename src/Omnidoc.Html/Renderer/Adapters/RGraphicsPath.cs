@@ -8,6 +8,17 @@ namespace Omnidoc.Html.Renderer.Adapters
     public abstract class RGraphicsPath : IDisposable
     {
         /// <summary>
+        /// The 4 corners that are handled in arc rendering.
+        /// </summary>
+        public enum Corner
+        {
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight,
+        }
+
+        /// <summary>
         /// Start path at the given point.
         /// </summary>
         public abstract void Start(double x, double y);
@@ -21,21 +32,13 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// Add circular arc of the given size to the given point from the last point.
         /// </summary>
         public abstract void ArcTo(double x, double y, double size, Corner corner);
-        
-        /// <summary>
-        /// Release path resources.
-        /// </summary>
-        public abstract void Dispose();
 
-        /// <summary>
-        /// The 4 corners that are handled in arc rendering.
-        /// </summary>
-        public enum Corner
+        public void Dispose()
         {
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight,
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
+
+        protected virtual void Dispose(bool disposing) { }
     }
 }

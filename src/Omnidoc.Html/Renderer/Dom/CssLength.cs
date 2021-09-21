@@ -51,7 +51,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             //If no units, has error
             if (length.Length < 3)
             {
-                double.TryParse(length, out _number);
+                _ = double.TryParse(length, out _number);
                 _hasError = true;
                 return;
             }

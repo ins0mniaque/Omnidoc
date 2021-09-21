@@ -6,7 +6,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// <summary>
     ///     Represents an ordered pair of floating-point x- and y-coordinates that defines a point in a two-dimensional plane.
     /// </summary>
-    public struct RPoint
+    public struct RPoint : IEquatable<RPoint>
     {
         /// <summary>
         ///     Represents a new instance of the <see cref="RPoint" /> class with member data left uninitialized.
@@ -231,13 +231,12 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override bool Equals(object obj)
         {
-            if (!(obj is RPoint))
-                return false;
-            var pointF = (RPoint)obj;
-            if (pointF.X == X && pointF.Y == Y)
-                return pointF.GetType().Equals(GetType());
-            else
-                return false;
+            return obj is RPoint other ? Equals(other) : false;
+        }
+
+        public bool Equals(RPoint other)
+        {
+            return X == other.X && Y == other.Y;
         }
 
         /// <summary>

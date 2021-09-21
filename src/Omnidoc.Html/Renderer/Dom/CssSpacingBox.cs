@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+
 using Omnidoc.Html.Renderer.Core.Utils;
 
 namespace Omnidoc.Html.Renderer.Core.Dom
@@ -33,7 +35,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             Display = CssConstants.None;
 
             _startRow = startRow;
-            _endRow = startRow + int.Parse(extendedBox.GetAttribute("rowspan", "1")) - 1;
+            _endRow = startRow + int.Parse(extendedBox.GetAttribute("rowspan", "1"), CultureInfo.InvariantCulture) - 1;
         }
 
         public CssBox ExtendedBox

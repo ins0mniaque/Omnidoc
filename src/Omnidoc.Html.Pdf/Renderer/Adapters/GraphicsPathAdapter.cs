@@ -47,9 +47,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             _lastPoint = new RPoint(x, y);
         }
 
-        public override void Dispose()
-        { }
-
         /// <summary>
         /// Get arc start angle for the given corner.
         /// </summary>

@@ -126,7 +126,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// </summary>
         /// <param name="path">the path to get uri for</param>
         /// <returns>uri or null if not valid</returns>
-        public static Uri TryGetUri(string path)
+        public static Uri? TryGetUri(string path)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="dic">the dictionary</param>
         /// <param name="defaultValue">optional: the default value to return of no elements found in dictionary </param>
         /// <returns>first element or default value</returns>
-        public static TValue GetFirstValueOrDefault<TKey, TValue>(IDictionary<TKey, TValue> dic, TValue? defaultValue = default)
+        public static TValue? GetFirstValueOrDefault<TKey, TValue>(IDictionary<TKey, TValue> dic, TValue? defaultValue = default)
         {
             if (dic != null)
             {
@@ -164,7 +164,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// </summary>
         /// <param name="path">the path to get file info for</param>
         /// <returns>file info or null if not valid</returns>
-        public static FileInfo TryGetFileInfo(string path)
+        public static FileInfo? TryGetFileInfo(string path)
         {
             try
             {
@@ -181,7 +181,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// </summary>
         /// <param name="client">the web client to get the response content type from</param>
         /// <returns>response content type or null</returns>
-        public static string GetResponseContentType(WebClient client)
+        public static string? GetResponseContentType(WebClient client)
         {
             foreach (string header in client.ResponseHeaders)
             {
@@ -202,9 +202,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             var absoluteUri = imageUri.AbsoluteUri;
             var lastSlash = absoluteUri.LastIndexOf('/');
             if (lastSlash == -1)
-            {
-                return null;
-            }
+                lastSlash = 0;
 
             var uriUntilSlash = absoluteUri.Substring(0, lastSlash);
             fileNameBuilder.Append(uriUntilSlash.GetHashCode(StringComparison.Ordinal).ToString(CultureInfo.InvariantCulture));

@@ -9,7 +9,7 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
     /// </summary>
     internal sealed class ImageAdapter : RImage
     {
-        public ImageAdapter(Image image)
+        public ImageAdapter ( Image image )
         {
             Image = image;
         }
@@ -22,9 +22,12 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         public override double Width  => Image.Width;
         public override double Height => Image.Height;
 
-        public override void Dispose()
+        protected override void Dispose ( bool disposing )
         {
-            Image.Dispose();
+            if ( disposing )
+                Image.Dispose ( );
+
+            base.Dispose ( disposing );
         }
     }
 }

@@ -306,7 +306,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         /// <param name="location">the location to find the link at</param>
         /// <returns>css link href if exists or null</returns>
-        public string GetLinkAt(PointF location)
+        public string? GetLinkAt(PointF location)
         {
             return _htmlContainerInt.GetLinkAt(Utils.Convert(location));
         }

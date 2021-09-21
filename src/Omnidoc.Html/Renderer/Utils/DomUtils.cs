@@ -60,7 +60,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="root"></param>
         /// <param name="tagName"></param>
         /// <param name="box"></param>
-        public static CssBox FindParent(CssBox root, string tagName, CssBox box)
+        public static CssBox FindParent(CssBox root, string tagName, CssBox? box)
         {
             if (box == null)
             {
@@ -80,7 +80,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// Gets the previous sibling of this box.
         /// </summary>
         /// <returns>Box before this one on the tree. Null if its the first</returns>
-        public static CssBox GetPreviousSibling(CssBox b)
+        public static CssBox? GetPreviousSibling(CssBox b)
         {
             if (b.ParentBox != null)
             {
@@ -107,6 +107,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <returns>Box before this one on the tree. Null if its the first</returns>
         public static CssBox? GetPreviousContainingBlockSibling(CssBox b)
         {
+            if(b.ParentBox is null)
+                throw new InvalidOperationException("box has no parent");
+
             var conBlock = b;
             var index = conBlock.ParentBox.Boxes.IndexOf(conBlock);
             while (conBlock.ParentBox != null && index < 1 && conBlock.Display != CssConstants.Block && conBlock.Display != CssConstants.Table && conBlock.Display != CssConstants.TableCell && conBlock.Display != CssConstants.ListItem)
@@ -734,6 +737,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="styleGen">Controls the way styles are generated when html is generated</param>
         private static void WriteHtmlTag(CssParser cssParser, StringBuilder sb, CssBox box, HtmlGenerationStyle styleGen)
         {
+            if(box.HtmlTag is null)
+                throw new ArgumentException("box has no tag", nameof(box));
+
             sb.AppendFormat(CultureInfo.InvariantCulture, "<{0}", box.HtmlTag.Name);
 
             // collect all element style properties including from stylesheet
@@ -756,9 +762,13 @@ namespace Omnidoc.Html.Renderer.Core.Utils
                     if (styleGen == HtmlGenerationStyle.Inline && att.Key == HtmlConstants.Style)
                     {
                         // if inline style add the styles to the collection
-                        var block = cssParser.ParseCssBlock(box.HtmlTag.Name, box.HtmlTag.TryGetAttribute("style"));
-                        foreach (var prop in block.Properties)
-                            tagStyles[prop.Key] = prop.Value;
+                        if(box.HtmlTag.TryGetAttribute("style") is string style)
+                        {
+                            var block = cssParser.ParseCssBlock(box.HtmlTag.Name, style);
+                            if (block != null)
+                                foreach (var prop in block.Properties)
+                                    tagStyles[prop.Key] = prop.Value;
+                        }
                     }
                     else if (styleGen == HtmlGenerationStyle.Inline && att.Key == HtmlConstants.Class)
                     {
@@ -892,7 +902,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         {
             builder.AppendFormat(CultureInfo.InvariantCulture, "{0}<{1}", new string(' ', 2 * indent), box.Display);
             if (box.HtmlTag != null)
-                builder.AppendFormat(CultureInfo.InvariantCulture, " element=\"{0}\"", box.HtmlTag != null ? box.HtmlTag.Name : string.Empty);
+                builder.AppendFormat(CultureInfo.InvariantCulture, " element=\"{0}\"", box.HtmlTag.Name);
             if (box.Words.Count > 0)
                 builder.AppendFormat(CultureInfo.InvariantCulture, " words=\"{0}\"", box.Words.Count);
             builder.AppendFormat(CultureInfo.InvariantCulture, "{0}>\r\n", box.Boxes.Count > 0 ? "" : "/");

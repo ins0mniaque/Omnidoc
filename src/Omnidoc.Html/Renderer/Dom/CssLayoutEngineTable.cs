@@ -368,7 +368,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 }
                 var orgNumOfNans = numOfNans;
 
-                double[] orgColWidths = null;
+                double[]? orgColWidths = null;
                 if (numOfNans < _columnWidths.Length)
                 {
                     orgColWidths = new double[_columnWidths.Length];

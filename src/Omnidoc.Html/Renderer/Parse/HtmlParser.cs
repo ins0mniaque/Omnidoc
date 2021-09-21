@@ -236,7 +236,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                     {
                         if (attributes == null)
                             attributes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-                        attributes[key.ToLowerInvariant()] = value;
+                        attributes[key] = value;
                     }
 
                     startIdx = endIdx + (hasPChar ? 2 : 1);

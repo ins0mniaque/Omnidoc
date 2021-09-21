@@ -5,7 +5,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// <summary>
     /// Stores an ordered pair of floating-point numbers, typically the width and height of a rectangle.
     /// </summary>
-    public struct RSize
+    public struct RSize : IEquatable<RSize>
     {
         #region Fields and Consts
 
@@ -278,13 +278,12 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override bool Equals(object obj)
         {
-            if (!(obj is RSize))
-                return false;
-            var sizeF = (RSize)obj;
-            if (Math.Abs(sizeF.Width - Width) < 0.001 && Math.Abs(sizeF.Height - Height) < 0.001)
-                return sizeF.GetType() == GetType();
-            else
-                return false;
+            return obj is RSize other ? Equals(other) : false;
+        }
+
+        public bool Equals(RSize other)
+        {
+            return Math.Abs(other.Width - Width) < 0.001 && Math.Abs(other.Height - Height) < 0.001;
         }
 
         /// <summary>

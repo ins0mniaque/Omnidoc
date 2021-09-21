@@ -39,9 +39,12 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             get { return _image.PixelHeight; }
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _image.Dispose();
+            if(disposing)
+                _image.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

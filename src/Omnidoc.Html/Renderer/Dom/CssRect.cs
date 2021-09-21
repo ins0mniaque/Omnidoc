@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
@@ -256,7 +257,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n"), Text.Length, Text.Length != 1 ? "s" : string.Empty);
+            return string.Format(CultureInfo.InvariantCulture, "{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n", StringComparison.Ordinal), Text.Length, Text.Length != 1 ? "s" : string.Empty);
         }
 
         public bool BreakPage()

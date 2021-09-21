@@ -30,8 +30,5 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         {
             get { return _brush; }
         }
-
-        public override void Dispose()
-        { }
     }
 }

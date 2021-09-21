@@ -5,7 +5,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// <summary>
     /// Stores a set of four floating-point numbers that represent the location and size of a rectangle. 
     /// </summary>
-    public struct RRect
+    public struct RRect : IEquatable<RRect>
     {
         #region Fields and Consts
 
@@ -240,28 +240,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         }
 
         /// <summary>
-        ///     Tests whether <paramref name="obj" /> is a <see cref="RRect" /> with the same location and size of this
-        ///     <see cref="RRect" />.
-        /// </summary>
-        /// <returns>
-        ///     This method returns true if <paramref name="obj" /> is a <see cref="RRect" /> and its X, Y, Width, and Height properties are equal to the corresponding properties of this
-        ///     <see cref="RRect" />; otherwise, false.
-        /// </returns>
-        /// <param name="obj">
-        ///     The <see cref="object" /> to test.
-        /// </param>
-        public override bool Equals(object obj)
-        {
-            if (!(obj is RRect))
-                return false;
-            var rectangleF = (RRect)obj;
-            if (Math.Abs(rectangleF.X - X) < 0.001 && Math.Abs(rectangleF.Y - Y) < 0.001 && Math.Abs(rectangleF.Width - Width) < 0.001)
-                return Math.Abs(rectangleF.Height - Height) < 0.001;
-            else
-                return false;
-        }
-
-        /// <summary>
         ///     Determines if the specified point is contained within this <see cref="RRect" /> structure.
         /// </summary>
         /// <returns>
@@ -447,6 +425,30 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         {
             X += x;
             Y += y;
+        }
+
+        /// <summary>
+        ///     Tests whether <paramref name="obj" /> is a <see cref="RRect" /> with the same location and size of this
+        ///     <see cref="RRect" />.
+        /// </summary>
+        /// <returns>
+        ///     This method returns true if <paramref name="obj" /> is a <see cref="RRect" /> and its X, Y, Width, and Height properties are equal to the corresponding properties of this
+        ///     <see cref="RRect" />; otherwise, false.
+        /// </returns>
+        /// <param name="obj">
+        ///     The <see cref="object" /> to test.
+        /// </param>
+        public override bool Equals(object obj)
+        {
+            return obj is RRect other ? Equals(other) : false;
+        }
+
+        public bool Equals(RRect other)
+        {
+            return Math.Abs(other.X - X) < 0.001 &&
+                   Math.Abs(other.Y - Y) < 0.001 &&
+                   Math.Abs(other.Width - Width) < 0.001 &&
+                   Math.Abs(other.Height - Height) < 0.001;
         }
 
         /// <summary>

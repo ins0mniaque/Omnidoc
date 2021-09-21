@@ -8,6 +8,12 @@ namespace Omnidoc.Html.Renderer.Adapters
     /// </summary>
     public abstract class RBrush : IDisposable
     {
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) { }
     }
 }

@@ -17,7 +17,5 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         /// The actual ImageSharp brush instance.
         /// </summary>
         public IBrush Brush { get; }
-
-        public override void Dispose ( ) { }
     }
 }

@@ -51,13 +51,13 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
 
         public override void PopClip()
         {
-            _clipStack.Pop();
+            ClipStack.Pop();
             _g.Restore();
         }
 
         public override void PushClip(RRect rect)
         {
-            _clipStack.Push(rect);
+            ClipStack.Push(rect);
             _g.Save();
             _g.IntersectClip(Utils.Convert(rect));
         }
@@ -104,7 +104,7 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
 
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
         {
-            var xBrush = ((BrushAdapter)_adapter.GetSolidBrush(color)).Brush;
+            var xBrush = ((BrushAdapter)Adapter.GetSolidBrush(color)).Brush;
             _g.DrawString(str, ((FontAdapter)font).Font, (XBrush)xBrush, point.X, point.Y, _stringFormat);
         }
 
@@ -118,12 +118,13 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             return new GraphicsPathAdapter();
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if (_releaseGraphics)
+            if (disposing && _releaseGraphics)
                 _g.Dispose();
-        }
 
+            base.Dispose(disposing);
+        }
 
         #region Delegate graphics methods
 

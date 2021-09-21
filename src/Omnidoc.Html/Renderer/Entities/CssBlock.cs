@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Omnidoc.Html.Renderer.Core.Utils;
 
@@ -204,7 +205,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             unchecked
             {
-                return ((_class != null ? _class.GetHashCode() : 0) * 397) ^ (_properties != null ? _properties.GetHashCode() : 0);
+                return ((_class != null ? _class.GetHashCode(StringComparison.Ordinal) : 0) * 397) ^ (_properties != null ? _properties.GetHashCode() : 0);
             }
         }
 

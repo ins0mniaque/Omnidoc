@@ -264,7 +264,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <param name="parent">the parent control to show the context menu on</param>
         /// <param name="rect">the rectangle that was clicked to show context menu</param>
         /// <param name="link">the link that was clicked to show context menu on</param>
-        public void ShowContextMenu(RControl parent, CssRect rect, CssBox link)
+        public void ShowContextMenu(RControl parent, CssRect? rect, CssBox? link)
         {
             try
             {
@@ -295,7 +295,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                         _contextMenu.AddItem(_saveImage, rect.Image != null, OnSaveImageClick);
                         if (_htmlContainer.IsSelectionEnabled)
                         {
-                            _contextMenu.AddItem(_copyImageLink, !string.IsNullOrEmpty(_currentRect.OwnerBox.GetAttribute("src")), OnCopyImageLinkClick);
+                            _contextMenu.AddItem(_copyImageLink, !string.IsNullOrEmpty(rect.OwnerBox.GetAttribute("src")), OnCopyImageLinkClick);
                             _contextMenu.AddItem(_copyImage, rect.Image != null, OnCopyImageClick);
                         }
                         _contextMenu.AddDivider();
@@ -361,6 +361,9 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         {
             try
             {
+                if(_parentControl is null || _currentLink is null)
+                    throw new ObjectDisposedException(GetType().Name);
+
                 _currentLink.HtmlContainer.HandleLinkClicked(_parentControl, _parentControl.MouseLocation, _currentLink);
             }
             catch (HtmlLinkClickedException)
@@ -384,6 +387,9 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         {
             try
             {
+                if(_currentLink is null)
+                    throw new ObjectDisposedException(GetType().Name);
+
                 _htmlContainer.Adapter.SetToClipboard(_currentLink.HrefLink);
             }
             catch (Exception ex)
@@ -403,8 +409,13 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         {
             try
             {
+                if(_currentRect is null)
+                    throw new ObjectDisposedException(GetType().Name);
+
                 var imageSrc = _currentRect.OwnerBox.GetAttribute("src");
-                _htmlContainer.Adapter.SaveToFile(_currentRect.Image, Path.GetFileName(imageSrc) ?? "image", Path.GetExtension(imageSrc) ?? "png");
+                _htmlContainer.Adapter.SaveToFile(_currentRect.Image ?? throw new InvalidOperationException("Missing image"),
+                                                  Path.GetFileName(imageSrc) ?? "image",
+                                                  Path.GetExtension(imageSrc) ?? "png");
             }
             catch (Exception ex)
             {
@@ -423,6 +434,9 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         {
             try
             {
+                if(_currentRect is null)
+                    throw new ObjectDisposedException(GetType().Name);
+
                 _htmlContainer.Adapter.SetToClipboard(_currentRect.OwnerBox.GetAttribute("src"));
             }
             catch (Exception ex)
@@ -442,6 +456,9 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         {
             try
             {
+                if(_currentRect is null)
+                    throw new ObjectDisposedException(GetType().Name);
+
                 _htmlContainer.Adapter.SetToClipboard(_currentRect.Image);
             }
             catch (Exception ex)
@@ -480,6 +497,9 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         {
             try
             {
+                if(_parentControl is null)
+                    throw new ObjectDisposedException(GetType().Name);
+
                 _selectionHandler.SelectAll(_parentControl);
             }
             catch (Exception ex)

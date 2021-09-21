@@ -179,7 +179,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <param name="path">the path to the image to load (file path or uri)</param>
         /// <param name="image">the image to load</param>
         /// <param name="imageRectangle">optional: limit to specific rectangle of the image and not all of it</param>
-        private void OnHtmlImageLoadEventCallback(string path, object image, RRect imageRectangle)
+        private void OnHtmlImageLoadEventCallback(string? path, object? image, RRect imageRectangle)
         {
             if (!_disposed)
             {
@@ -219,9 +219,9 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// </summary>
         /// <param name="src">the source that has the base64 encoded image</param>
         /// <returns>image from base64 data string or null if failed</returns>
-        private RImage GetImageFromData(string src)
+        private RImage? GetImageFromData(string src)
         {
-            var s = src[(src.IndexOf(':') + 1)..].Split(new[] { ',' }, 2);
+            var s = src[(src.IndexOf(':', StringComparison.Ordinal) + 1)..].Split(new[] { ',' }, 2);
             if (s.Length == 2)
             {
                 int imagePartsCount = 0, base64PartsCount = 0;
@@ -336,7 +336,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// On download image complete to local file use <see cref="LoadImageFromFile"/> to load the image file.<br/>
         /// If the download canceled do nothing, if failed report error.
         /// </summary>
-        private void OnDownloadImageCompleted(Uri imageUri, string filePath, Exception error, bool canceled)
+        private void OnDownloadImageCompleted(Uri imageUri, string filePath, Exception? error, bool canceled)
         {
             if (!canceled && !_disposed)
             {

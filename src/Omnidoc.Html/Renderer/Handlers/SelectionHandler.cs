@@ -300,7 +300,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// Get the currently selected text segment in the html.<br/>
         /// </summary>
-        public string GetSelectedText()
+        public string? GetSelectedText()
         {
             return _root.HtmlContainer.IsSelectionEnabled ? DomUtils.GetSelectedPlainText(_root) : null;
         }
@@ -308,7 +308,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// Copy the currently selected html segment with style.<br/>
         /// </summary>
-        public string GetSelectedHtml()
+        public string? GetSelectedHtml()
         {
             return _root.HtmlContainer.IsSelectionEnabled ? DomUtils.GenerateHtml(_root, HtmlGenerationStyle.Inline, true) : null;
         }

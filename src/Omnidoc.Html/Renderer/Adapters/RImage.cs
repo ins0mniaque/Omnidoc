@@ -17,6 +17,12 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// </summary>
         public abstract double Height { get; }
 
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) { }
     }
 }

@@ -40,7 +40,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="htmlContainer">the html container to use for reference resolve</param>
         /// <param name="cssData">the css data to use</param>
         /// <returns>the root of the generated tree</returns>
-        public CssBox GenerateCssTree(string html, HtmlContainerInt htmlContainer, ref CssData cssData)
+        public CssBox? GenerateCssTree(string html, HtmlContainerInt htmlContainer, ref CssData cssData)
         {
             var root = HtmlParser.ParseDocument(html);
             if (root != null)
@@ -150,9 +150,9 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 TranslateAttributes(box.HtmlTag, box);
 
                 // Check for the style="" attribute
-                if (box.HtmlTag.HasAttribute("style"))
+                if (box.HtmlTag.TryGetAttribute("style") is string style)
                 {
-                    var block = _cssParser.ParseCssBlock(box.HtmlTag.Name, box.HtmlTag.TryGetAttribute("style"));
+                    var block = _cssParser.ParseCssBlock(box.HtmlTag.Name, style);
                     if (block != null)
                         AssignCssBlock(box, block);
                 }
@@ -287,26 +287,26 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 var matched = false;
                 while (!matched)
                 {
-                    box = box.ParentBox;
-                    while (box != null && box.HtmlTag == null)
-                        box = box.ParentBox;
+                    CssBox? currentBox = box.ParentBox;
+                    while (currentBox != null && currentBox.HtmlTag == null)
+                        currentBox = currentBox.ParentBox;
 
-                    if (box == null)
+                    if (currentBox == null || currentBox.HtmlTag == null)
                         return false;
 
-                    if (box.HtmlTag.Name.Equals(selector.Class, StringComparison.OrdinalIgnoreCase))
+                    if (currentBox.HtmlTag.Name.Equals(selector.Class, StringComparison.OrdinalIgnoreCase))
                         matched = true;
 
-                    if (!matched && box.HtmlTag.HasAttribute("class"))
+                    if (!matched && currentBox.HtmlTag.HasAttribute("class"))
                     {
-                        var className = box.HtmlTag.TryGetAttribute("class");
-                        if (selector.Class.Equals("." + className, StringComparison.OrdinalIgnoreCase) || selector.Class.Equals(box.HtmlTag.Name + "." + className, StringComparison.OrdinalIgnoreCase))
+                        var className = currentBox.HtmlTag.TryGetAttribute("class");
+                        if (selector.Class.Equals("." + className, StringComparison.OrdinalIgnoreCase) || selector.Class.Equals(currentBox.HtmlTag.Name + "." + className, StringComparison.OrdinalIgnoreCase))
                             matched = true;
                     }
 
-                    if (!matched && box.HtmlTag.HasAttribute("id"))
+                    if (!matched && currentBox.HtmlTag.HasAttribute("id"))
                     {
-                        var id = box.HtmlTag.TryGetAttribute("id");
+                        var id = currentBox.HtmlTag.TryGetAttribute("id");
                         if (selector.Class.Equals("#" + id, StringComparison.OrdinalIgnoreCase))
                             matched = true;
                     }
@@ -347,7 +347,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="key">the style key to cehck</param>
         /// <param name="value">the style value to check</param>
         /// <returns>true - style allowed, false - not allowed</returns>
-        private static bool IsStyleOnElementAllowed(CssBox box, string key, string value)
+        private static bool IsStyleOnElementAllowed(CssBox box, string key, string? value)
         {
             if (box.HtmlTag != null && key == HtmlConstants.Display)
             {
@@ -606,7 +606,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 var childBox = box.Boxes[i];
                 if (childBox is CssBoxImage && childBox.Display == CssConstants.Block)
                 {
-                    var block = CssBox.CreateBlock(childBox.ParentBox, null, childBox);
+                    var block = CssBox.CreateBlock(box, null, childBox);
                     childBox.ParentBox = block;
                     childBox.Display = CssConstants.Inline;
                 }
@@ -636,7 +636,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
             }
 
             var lastBr = -1;
-            CssBox brBox;
+            CssBox? brBox;
             do
             {
                 brBox = null;
@@ -681,7 +681,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                     while (tempRightBox != null)
                     {
                         // loop on the created temp right box for the fixed box until no more need (optimization remove recursion)
-                        CssBox newTempRightBox = null;
+                        CssBox? newTempRightBox = null;
                         if (DomUtils.ContainsInlinesOnly(tempRightBox) && !ContainsInlinesOnlyDeep(tempRightBox))
                             newTempRightBox = CorrectBlockInsideInlineImp(tempRightBox);
 
@@ -709,7 +709,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// Rearrange the DOM of the box to have block box with boxes before the inner block box and after.
         /// </summary>
         /// <param name="box">the box that has the problem</param>
-        private static CssBox CorrectBlockInsideInlineImp(CssBox box)
+        private static CssBox? CorrectBlockInsideInlineImp(CssBox box)
         {
             if (box.Display == CssConstants.Inline)
                 box.Display = CssConstants.Block;
@@ -759,7 +759,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="leftBlock">the left block box that is created for the split</param>
         private static void CorrectBlockSplitBadBox(CssBox parentBox, CssBox badBox, CssBox leftBlock)
         {
-            CssBox leftbox = null;
+            CssBox? leftbox = null;
             while (badBox.Boxes[0].IsInline && ContainsInlinesOnlyDeep(badBox.Boxes[0]))
             {
                 if (leftbox == null)

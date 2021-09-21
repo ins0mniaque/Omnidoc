@@ -541,7 +541,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         /// <param name="location">the location to find the link at</param>
         /// <returns>css link href if exists or null</returns>
-        public string GetLinkAt(RPoint location)
+        public string? GetLinkAt(RPoint location)
         {
             var link = DomUtils.GetLinkBox(_root, OffsetByScroll(location));
             return link?.HrefLink;
@@ -648,6 +648,7 @@ namespace Omnidoc.Html.Renderer.Core
         public void HandleMouseUp(RControl parent, RPoint location, RMouseEvent e)
         {
             ArgChecker.AssertArgNotNull(parent, "parent");
+            ArgChecker.AssertArgNotNull(e, "e");
 
             try
             {
@@ -923,7 +924,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// Get image downloader to be used to download images for the current html rendering.<br/>
         /// Lazy create single downloader to be used for all images in the current html.
         /// </summary>
-        internal ImageDownloader GetImageDownloader()
+        internal ImageDownloader? GetImageDownloader()
         {
             return _imageDownloader;
         }
@@ -982,6 +983,9 @@ namespace Omnidoc.Html.Renderer.Core
                 if (_selectionHandler != null)
                     _selectionHandler.Dispose();
                 _selectionHandler = null;
+                if (_imageDownloader != null)
+                    _imageDownloader.Dispose();
+                _imageDownloader = null;
             }
             catch
             { }

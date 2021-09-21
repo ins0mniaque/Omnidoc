@@ -98,12 +98,5 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         {
             return new FontAdapter(new Font(((FontFamilyAdapter)family).FontFamily, (float)size, (FontStyle) (int) style));
         }
-
-        protected override object GetClipboardDataObjectInt(string html, string plainText) => throw new NotSupportedException();
-        protected override void SetToClipboardInt(string text) => throw new NotSupportedException();
-        protected override void SetToClipboardInt(string html, string plainText) => throw new NotSupportedException();
-        protected override void SetToClipboardInt(RImage image) => throw new NotSupportedException();
-        protected override RContextMenu CreateContextMenuInt() => throw new NotSupportedException();
-        protected override void SaveToFileInt(RImage image, string name, string extension, RControl? control = null) => throw new NotSupportedException();
     }
 }
