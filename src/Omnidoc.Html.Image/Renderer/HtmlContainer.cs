@@ -122,7 +122,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
-        public CssData CssData
+        public CssData? CssData
         {
             get { return _htmlContainerInt.CssData; }
         }
@@ -239,7 +239,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// <summary>
         /// Get the currently selected text segment in the html.
         /// </summary>
-        public string SelectedText
+        public string? SelectedText
         {
             get { return _htmlContainerInt.SelectedText; }
         }
@@ -247,7 +247,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// <summary>
         /// Copy the currently selected html segment with style.
         /// </summary>
-        public string SelectedHtml
+        public string? SelectedHtml
         {
             get { return _htmlContainerInt.SelectedHtml; }
         }

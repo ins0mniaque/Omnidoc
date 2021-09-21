@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Omnidoc.HtmlToPdf\Omnidoc.HtmlToPdf.csproj" />
+    <ProjectReference Include="..\..\src\Omnidoc.Html\Omnidoc.Html.csproj" />
+    <ProjectReference Include="..\..\src\Omnidoc.Html.Pdf\Omnidoc.Html.Pdf.csproj" />
     <ProjectReference Include="..\..\src\Omnidoc.Image\Omnidoc.Image.csproj" />
     <ProjectReference Include="..\..\src\Omnidoc.Image.Ocr\Omnidoc.Image.Ocr.csproj" />
     <ProjectReference Include="..\..\src\Omnidoc.Pdf\Omnidoc.Pdf.csproj" />
