@@ -328,10 +328,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         /// <filterpriority>2</filterpriority>
-        public void Dispose()
-        {
-            DisposeContextMenu();
-        }
+        public void Dispose() => DisposeContextMenu();
 
 
         #region Private methods

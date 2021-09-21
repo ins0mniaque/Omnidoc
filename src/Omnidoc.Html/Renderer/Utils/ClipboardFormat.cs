@@ -96,18 +96,18 @@ EndSelection:<<<<<<<<4";
 
             // if given html already provided the fragments we won't add them
             int fragmentStart, fragmentEnd;
-            int fragmentStartIdx = html.IndexOf(StartFragment, StringComparison.OrdinalIgnoreCase);
-            int fragmentEndIdx = html.LastIndexOf(EndFragment, StringComparison.OrdinalIgnoreCase);
+            var fragmentStartIdx = html.IndexOf(StartFragment, StringComparison.OrdinalIgnoreCase);
+            var fragmentEndIdx = html.LastIndexOf(EndFragment, StringComparison.OrdinalIgnoreCase);
 
             // if html tag is missing add it surrounding the given html (critical)
-            int htmlOpenIdx = html.IndexOf("<html", StringComparison.OrdinalIgnoreCase);
-            int htmlOpenEndIdx = htmlOpenIdx > -1 ? html.IndexOf('>', htmlOpenIdx) + 1 : -1;
-            int htmlCloseIdx = html.LastIndexOf("</html", StringComparison.OrdinalIgnoreCase);
+            var htmlOpenIdx = html.IndexOf("<html", StringComparison.OrdinalIgnoreCase);
+            var htmlOpenEndIdx = htmlOpenIdx > -1 ? html.IndexOf('>', htmlOpenIdx) + 1 : -1;
+            var htmlCloseIdx = html.LastIndexOf("</html", StringComparison.OrdinalIgnoreCase);
 
             if (fragmentStartIdx < 0 && fragmentEndIdx < 0)
             {
-                int bodyOpenIdx = html.IndexOf("<body", StringComparison.OrdinalIgnoreCase);
-                int bodyOpenEndIdx = bodyOpenIdx > -1 ? html.IndexOf('>', bodyOpenIdx) + 1 : -1;
+                var bodyOpenIdx = html.IndexOf("<body", StringComparison.OrdinalIgnoreCase);
+                var bodyOpenEndIdx = bodyOpenIdx > -1 ? html.IndexOf('>', bodyOpenIdx) + 1 : -1;
 
                 if (htmlOpenEndIdx < 0 && bodyOpenEndIdx < 0)
                 {
@@ -123,7 +123,7 @@ EndSelection:<<<<<<<<4";
                 else
                 {
                     // insert start/end fragments in the proper place (related to html/body tags if exists) so the paste will work correctly
-                    int bodyCloseIdx = html.LastIndexOf("</body", StringComparison.OrdinalIgnoreCase);
+                    var bodyCloseIdx = html.LastIndexOf("</body", StringComparison.OrdinalIgnoreCase);
 
                     if (htmlOpenEndIdx < 0)
                         sb.Append("<html>");
@@ -155,7 +155,7 @@ EndSelection:<<<<<<<<4";
                 // handle html with existing start\end fragments just need to calculate the correct bytes offset (surround with html tag if missing)
                 if (htmlOpenEndIdx < 0)
                     sb.Append("<html>");
-                int start = GetByteCount(sb);
+                var start = GetByteCount(sb);
                 sb.Append(html);
                 fragmentStart = start + GetByteCount(sb, start, start + fragmentStartIdx) + StartFragment.Length;
                 fragmentEnd = start + GetByteCount(sb, start, start + fragmentEndIdx);
@@ -181,9 +181,9 @@ EndSelection:<<<<<<<<4";
         /// <returns>the number of bytes required to encode the string in UTF-8</returns>
         private static int GetByteCount(StringBuilder sb, int start = 0, int end = -1)
         {
-            int count = 0;
+            var count = 0;
             end = end > -1 ? end : sb.Length;
-            for (int i = start; i < end; i++)
+            for (var i = start; i < end; i++)
             {
                 _byteCount[0] = sb[i];
                 count += Encoding.UTF8.GetByteCount(_byteCount);

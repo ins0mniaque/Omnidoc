@@ -188,10 +188,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///         name="pt" />
         ///     .
         /// </param>
-        public static RPoint Add(RPoint pt, RSize sz)
-        {
-            return new RPoint(pt.X + sz.Width, pt.Y + sz.Height);
-        }
+        public static RPoint Add(RPoint pt, RSize sz) => new(pt.X + sz.Width, pt.Y + sz.Height);
 
         /// <summary>
         ///     Translates a <see cref="RPoint" /> by the negative of a specified size.
@@ -208,10 +205,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///         name="pt" />
         ///     .
         /// </param>
-        public static RPoint Subtract(RPoint pt, RSize sz)
-        {
-            return new RPoint(pt.X - sz.Width, pt.Y - sz.Height);
-        }
+        public static RPoint Subtract(RPoint pt, RSize sz) => new(pt.X - sz.Width, pt.Y - sz.Height);
 
         /// <summary>
         ///     Specifies whether this <see cref="RPoint" /> contains the same coordinates as the specified
@@ -229,15 +223,9 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     The <see cref="object" /> to test.
         /// </param>
         /// <filterpriority>1</filterpriority>
-        public override bool Equals(object obj)
-        {
-            return obj is RPoint other ? Equals(other) : false;
-        }
+        public override bool Equals(object obj) => obj is RPoint other ? Equals(other) : false;
 
-        public bool Equals(RPoint other)
-        {
-            return X == other.X && Y == other.Y;
-        }
+        public bool Equals(RPoint other) => X == other.X && Y == other.Y;
 
         /// <summary>
         ///     Returns a hash code for this <see cref="RPoint" /> structure.
@@ -246,10 +234,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     An integer value that specifies a hash value for this <see cref="RPoint" /> structure.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y);
 
         /// <summary>
         ///     Converts this <see cref="RPoint" /> to a human readable string.
@@ -258,13 +243,10 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     A string that represents this <see cref="RPoint" />.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "{{X={0}, Y={1}}}", new object[]
+        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "{{X={0}, Y={1}}}", new object[]
             {
                 X,
                 Y
             });
-        }
     }
 }

@@ -14,10 +14,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// </summary>
         /// <param name="color">the color to check</param>
         /// <returns>true - visible, false - not visible</returns>
-        public static bool IsColorVisible(RColor color)
-        {
-            return color.A > 0;
-        }
+        public static bool IsColorVisible(RColor color) => color.A > 0;
 
         /// <summary>
         /// Clip the region the graphics will draw on by the overflow style of the containing block.<br/>

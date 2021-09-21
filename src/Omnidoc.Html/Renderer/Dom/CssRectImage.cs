@@ -36,34 +36,28 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public override RImage? Image
         {
-            get { return _image; }
-            set { _image = value; }
+            get => _image;
+            set => _image = value;
         }
 
         /// <summary>
         /// Gets if the word represents an image.
         /// </summary>
-        public override bool IsImage
-        {
-            get { return true; }
-        }
+        public override bool IsImage => true;
 
         /// <summary>
         /// the image rectange restriction as returned from image load event
         /// </summary>
         public RRect ImageRectangle
         {
-            get { return _imageRectangle; }
-            set { _imageRectangle = value; }
+            get => _imageRectangle;
+            set => _imageRectangle = value;
         }
 
         /// <summary>
         /// Represents this word for debugging purposes
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return "Image";
-        }
+        public override string ToString() => "Image";
     }
 }

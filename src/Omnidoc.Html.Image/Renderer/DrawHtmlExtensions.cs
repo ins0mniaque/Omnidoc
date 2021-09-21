@@ -130,24 +130,22 @@ namespace Omnidoc.Html.Image.Renderer
 
             if (!string.IsNullOrEmpty(html))
             {
-                using (var container = new HtmlContainer())
-                {
-                    container.Location = location;
-                    container.MaxSize = maxSize;
-                    container.AvoidAsyncImagesLoading = true;
-                    container.AvoidImagesLateLoading = true;
+                using var container = new HtmlContainer();
+                container.Location = location;
+                container.MaxSize = maxSize;
+                container.AvoidAsyncImagesLoading = true;
+                container.AvoidImagesLateLoading = true;
 
-                    if (stylesheetLoad != null)
-                        container.StylesheetLoad += stylesheetLoad;
-                    if (imageLoad != null)
-                        container.ImageLoad += imageLoad;
+                if (stylesheetLoad != null)
+                    container.StylesheetLoad += stylesheetLoad;
+                if (imageLoad != null)
+                    container.ImageLoad += imageLoad;
 
-                    container.SetHtml(html, cssData);
-                    container.PerformLayout(g);
-                    container.PerformPaint(g);
+                container.SetHtml(html, cssData);
+                container.PerformLayout(g);
+                container.PerformPaint(g);
 
-                    actualSize = container.ActualSize;
-                }
+                actualSize = container.ActualSize;
             }
 
             return g;

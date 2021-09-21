@@ -20,7 +20,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        private static readonly PdfSharpAdapter _instance = new();
 
         #endregion
 
@@ -42,10 +41,7 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        public static PdfSharpAdapter Instance
-        {
-            get { return _instance; }
-        }
+        public static PdfSharpAdapter Instance { get; } = new();
 
         protected override RColor GetColorInt(string colorName)
         {
@@ -55,10 +51,7 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             return RColor.Empty;
         }
 
-        protected override RPen CreatePen(RColor color)
-        {
-            return new PenAdapter(new XPen(Utils.Convert(color)));
-        }
+        protected override RPen CreatePen(RColor color) => new PenAdapter(new XPen(Utils.Convert(color)));
 
         protected override RBrush CreateSolidBrush(RColor color)
         {
@@ -97,10 +90,7 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             return new ImageAdapter((XImage)image);
         }
 
-        protected override RImage ImageFromStreamInt(Stream memoryStream)
-        {
-            return new ImageAdapter(XImage.FromStream(() => memoryStream));
-        }
+        protected override RImage ImageFromStreamInt(Stream memoryStream) => new ImageAdapter(XImage.FromStream(() => memoryStream));
 
         protected override RFont CreateFontInt(string family, double size, RFontStyle style)
         {

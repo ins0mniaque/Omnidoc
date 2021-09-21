@@ -13,12 +13,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     {
         #region Fields and Consts
 
-        private readonly CssBox _extendedBox;
-
-        /// <summary>
-        /// the index of the row where box starts
-        /// </summary>
-        private readonly int _startRow;
 
         /// <summary>
         /// the index of the row where box ends
@@ -31,32 +25,23 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         public CssSpacingBox(CssBox tableBox, ref CssBox extendedBox, int startRow)
             : base(tableBox, new HtmlTag("none", false, new Dictionary<string, string> { { "colspan", "1" } }))
         {
-            _extendedBox = extendedBox;
+            ExtendedBox = extendedBox;
             Display = CssConstants.None;
 
-            _startRow = startRow;
+            StartRow = startRow;
             _endRow = startRow + int.Parse(extendedBox.GetAttribute("rowspan", "1"), CultureInfo.InvariantCulture) - 1;
         }
 
-        public CssBox ExtendedBox
-        {
-            get { return _extendedBox; }
-        }
+        public CssBox ExtendedBox { get; }
 
         /// <summary>
         /// Gets the index of the row where box starts
         /// </summary>
-        public int StartRow
-        {
-            get { return _startRow; }
-        }
+        public int StartRow { get; }
 
         /// <summary>
         /// Gets the index of the row where box ends
         /// </summary>
-        public int EndRow
-        {
-            get { return _endRow; }
-        }
+        public int EndRow => _endRow;
     }
 }

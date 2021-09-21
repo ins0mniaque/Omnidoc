@@ -16,18 +16,13 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <summary>
         /// Brush for selection background
         /// </summary>
-        private static readonly RColor _defaultSelectionBackcolor = RColor.FromArgb(0xa9, 0x33, 0x99, 0xFF);
-
         #endregion
 
 
         /// <summary>
         /// Brush for selection background
         /// </summary>
-        public static RColor DefaultSelectionBackcolor
-        {
-            get { return _defaultSelectionBackcolor; }
-        }
+        public static RColor DefaultSelectionBackcolor { get; } = RColor.FromArgb(0xa9, 0x33, 0x99, 0xFF);
 
         /// <summary>
         /// Gets the white space width of the specified box
@@ -52,78 +47,75 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="cssBox">the CSS box to get it's property value</param>
         /// <param name="propName">the name of the CSS property</param>
         /// <returns>the value of the property, null if no such property exists</returns>
-        public static string? GetPropertyValue(CssBox cssBox, string propName)
+        public static string? GetPropertyValue(CssBox cssBox, string propName) => propName switch
         {
-            return propName switch
-            {
-                "border-bottom-width" => cssBox.BorderBottomWidth,
-                "border-left-width" => cssBox.BorderLeftWidth,
-                "border-right-width" => cssBox.BorderRightWidth,
-                "border-top-width" => cssBox.BorderTopWidth,
-                "border-bottom-style" => cssBox.BorderBottomStyle,
-                "border-left-style" => cssBox.BorderLeftStyle,
-                "border-right-style" => cssBox.BorderRightStyle,
-                "border-top-style" => cssBox.BorderTopStyle,
-                "border-bottom-color" => cssBox.BorderBottomColor,
-                "border-left-color" => cssBox.BorderLeftColor,
-                "border-right-color" => cssBox.BorderRightColor,
-                "border-top-color" => cssBox.BorderTopColor,
-                "border-spacing" => cssBox.BorderSpacing,
-                "border-collapse" => cssBox.BorderCollapse,
-                "corner-radius" => cssBox.CornerRadius,
-                "corner-nw-radius" => cssBox.CornerNwRadius,
-                "corner-ne-radius" => cssBox.CornerNeRadius,
-                "corner-se-radius" => cssBox.CornerSeRadius,
-                "corner-sw-radius" => cssBox.CornerSwRadius,
-                "margin-bottom" => cssBox.MarginBottom,
-                "margin-left" => cssBox.MarginLeft,
-                "margin-right" => cssBox.MarginRight,
-                "margin-top" => cssBox.MarginTop,
-                "padding-bottom" => cssBox.PaddingBottom,
-                "padding-left" => cssBox.PaddingLeft,
-                "padding-right" => cssBox.PaddingRight,
-                "padding-top" => cssBox.PaddingTop,
-                "page-break-inside" => cssBox.PageBreakInside,
-                "left" => cssBox.Left,
-                "top" => cssBox.Top,
-                "width" => cssBox.Width,
-                "max-width" => cssBox.MaxWidth,
-                "height" => cssBox.Height,
-                "background-color" => cssBox.BackgroundColor,
-                "background-image" => cssBox.BackgroundImage,
-                "background-position" => cssBox.BackgroundPosition,
-                "background-repeat" => cssBox.BackgroundRepeat,
-                "background-gradient" => cssBox.BackgroundGradient,
-                "background-gradient-angle" => cssBox.BackgroundGradientAngle,
-                "content" => cssBox.Content,
-                "color" => cssBox.Color,
-                "display" => cssBox.Display,
-                "direction" => cssBox.Direction,
-                "empty-cells" => cssBox.EmptyCells,
-                "float" => cssBox.Float,
-                "position" => cssBox.Position,
-                "line-height" => cssBox.LineHeight,
-                "vertical-align" => cssBox.VerticalAlign,
-                "text-indent" => cssBox.TextIndent,
-                "text-align" => cssBox.TextAlign,
-                "text-decoration" => cssBox.TextDecoration,
-                "white-space" => cssBox.WhiteSpace,
-                "word-break" => cssBox.WordBreak,
-                "visibility" => cssBox.Visibility,
-                "word-spacing" => cssBox.WordSpacing,
-                "font-family" => cssBox.FontFamily,
-                "font-size" => cssBox.FontSize,
-                "font-style" => cssBox.FontStyle,
-                "font-variant" => cssBox.FontVariant,
-                "font-weight" => cssBox.FontWeight,
-                "list-style" => cssBox.ListStyle,
-                "list-style-position" => cssBox.ListStylePosition,
-                "list-style-image" => cssBox.ListStyleImage,
-                "list-style-type" => cssBox.ListStyleType,
-                "overflow" => cssBox.Overflow,
-                _ => null,
-            };
-        }
+            "border-bottom-width" => cssBox.BorderBottomWidth,
+            "border-left-width" => cssBox.BorderLeftWidth,
+            "border-right-width" => cssBox.BorderRightWidth,
+            "border-top-width" => cssBox.BorderTopWidth,
+            "border-bottom-style" => cssBox.BorderBottomStyle,
+            "border-left-style" => cssBox.BorderLeftStyle,
+            "border-right-style" => cssBox.BorderRightStyle,
+            "border-top-style" => cssBox.BorderTopStyle,
+            "border-bottom-color" => cssBox.BorderBottomColor,
+            "border-left-color" => cssBox.BorderLeftColor,
+            "border-right-color" => cssBox.BorderRightColor,
+            "border-top-color" => cssBox.BorderTopColor,
+            "border-spacing" => cssBox.BorderSpacing,
+            "border-collapse" => cssBox.BorderCollapse,
+            "corner-radius" => cssBox.CornerRadius,
+            "corner-nw-radius" => cssBox.CornerNwRadius,
+            "corner-ne-radius" => cssBox.CornerNeRadius,
+            "corner-se-radius" => cssBox.CornerSeRadius,
+            "corner-sw-radius" => cssBox.CornerSwRadius,
+            "margin-bottom" => cssBox.MarginBottom,
+            "margin-left" => cssBox.MarginLeft,
+            "margin-right" => cssBox.MarginRight,
+            "margin-top" => cssBox.MarginTop,
+            "padding-bottom" => cssBox.PaddingBottom,
+            "padding-left" => cssBox.PaddingLeft,
+            "padding-right" => cssBox.PaddingRight,
+            "padding-top" => cssBox.PaddingTop,
+            "page-break-inside" => cssBox.PageBreakInside,
+            "left" => cssBox.Left,
+            "top" => cssBox.Top,
+            "width" => cssBox.Width,
+            "max-width" => cssBox.MaxWidth,
+            "height" => cssBox.Height,
+            "background-color" => cssBox.BackgroundColor,
+            "background-image" => cssBox.BackgroundImage,
+            "background-position" => cssBox.BackgroundPosition,
+            "background-repeat" => cssBox.BackgroundRepeat,
+            "background-gradient" => cssBox.BackgroundGradient,
+            "background-gradient-angle" => cssBox.BackgroundGradientAngle,
+            "content" => cssBox.Content,
+            "color" => cssBox.Color,
+            "display" => cssBox.Display,
+            "direction" => cssBox.Direction,
+            "empty-cells" => cssBox.EmptyCells,
+            "float" => cssBox.Float,
+            "position" => cssBox.Position,
+            "line-height" => cssBox.LineHeight,
+            "vertical-align" => cssBox.VerticalAlign,
+            "text-indent" => cssBox.TextIndent,
+            "text-align" => cssBox.TextAlign,
+            "text-decoration" => cssBox.TextDecoration,
+            "white-space" => cssBox.WhiteSpace,
+            "word-break" => cssBox.WordBreak,
+            "visibility" => cssBox.Visibility,
+            "word-spacing" => cssBox.WordSpacing,
+            "font-family" => cssBox.FontFamily,
+            "font-size" => cssBox.FontSize,
+            "font-style" => cssBox.FontStyle,
+            "font-variant" => cssBox.FontVariant,
+            "font-weight" => cssBox.FontWeight,
+            "list-style" => cssBox.ListStyle,
+            "list-style-position" => cssBox.ListStylePosition,
+            "list-style-image" => cssBox.ListStyleImage,
+            "list-style-type" => cssBox.ListStyleType,
+            "overflow" => cssBox.Overflow,
+            _ => null,
+        };
 
         /// <summary>
         /// Set CSS box property value by the CSS name.<br/>

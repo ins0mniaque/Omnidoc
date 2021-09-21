@@ -287,7 +287,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 var matched = false;
                 while (!matched)
                 {
-                    CssBox? currentBox = box.ParentBox;
+                    var currentBox = box.ParentBox;
                     while (currentBox != null && currentBox.HtmlTag == null)
                         currentBox = currentBox.ParentBox;
 
@@ -501,14 +501,11 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// </summary>
         /// <param name="table"></param>
         /// <param name="border"></param>
-        private static void ApplyTableBorder(CssBox table, string border)
-        {
-            SetForAllCells(table, cell =>
-            {
-                cell.BorderLeftStyle = cell.BorderTopStyle = cell.BorderRightStyle = cell.BorderBottomStyle = CssConstants.Solid;
-                cell.BorderLeftWidth = cell.BorderTopWidth = cell.BorderRightWidth = cell.BorderBottomWidth = border;
-            });
-        }
+        private static void ApplyTableBorder(CssBox table, string border) => SetForAllCells(table, cell =>
+                                                                           {
+                                                                               cell.BorderLeftStyle = cell.BorderTopStyle = cell.BorderRightStyle = cell.BorderBottomStyle = CssConstants.Solid;
+                                                                               cell.BorderLeftWidth = cell.BorderTopWidth = cell.BorderRightWidth = cell.BorderBottomWidth = border;
+                                                                           });
 
         /// <summary>
         /// Cascades to the TD's the border spacified in the TABLE tag.

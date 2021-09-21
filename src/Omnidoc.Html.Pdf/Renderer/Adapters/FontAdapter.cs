@@ -13,7 +13,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-        private readonly XFont _font;
 
         /// <summary>
         /// the vertical offset of the font underline location from the top of the font.
@@ -38,20 +37,17 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// </summary>
         public FontAdapter(XFont font)
         {
-            _font = font;
+            Font = font;
         }
 
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-        public XFont Font
-        {
-            get { return _font; }
-        }
+        public XFont Font { get; }
 
         public override double Size
         {
-            get { return _font.Size; }
+            get { return Font.Size; }
         }
 
         public override double UnderlineOffset

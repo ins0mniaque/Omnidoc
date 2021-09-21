@@ -7,39 +7,24 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </summary>
     internal sealed class HoverBoxBlock
     {
-        /// <summary>
-        /// the box that has :hover css on
-        /// </summary>
-        private readonly CssBox _cssBox;
-
-        /// <summary>
-        /// the :hover style block data
-        /// </summary>
-        private readonly CssBlock _cssBlock;
 
         /// <summary>
         /// Init.
         /// </summary>
         public HoverBoxBlock(CssBox cssBox, CssBlock cssBlock)
         {
-            _cssBox = cssBox;
-            _cssBlock = cssBlock;
+            CssBox = cssBox;
+            CssBlock = cssBlock;
         }
 
         /// <summary>
         /// the box that has :hover css on
         /// </summary>
-        public CssBox CssBox
-        {
-            get { return _cssBox; }
-        }
+        public CssBox CssBox { get; }
 
         /// <summary>
         /// the :hover style block data
         /// </summary>
-        public CssBlock CssBlock
-        {
-            get { return _cssBlock; }
-        }
+        public CssBlock CssBlock { get; }
     }
 }

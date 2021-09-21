@@ -97,10 +97,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="className">the name of the css class of the block</param>
         /// <param name="blockSource">the CSS block to parse</param>
         /// <returns>the created CSS block instance</returns>
-        public CssBlock? ParseCssBlock(string className, string blockSource)
-        {
-            return ParseCssBlockImp(className, blockSource);
-        }
+        public CssBlock? ParseCssBlock(string className, string blockSource) => ParseCssBlockImp(className, blockSource);
 
         /// <summary>
         /// Parse a complex font family css property to check if it contains multiple fonts and if the font exists.<br/>
@@ -108,20 +105,14 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// </summary>
         /// <param name="value">the font-family value to parse</param>
         /// <returns>parsed font-family value</returns>
-        public string ParseFontFamily(string value)
-        {
-            return ParseFontFamilyProperty(value);
-        }
+        public string ParseFontFamily(string value) => ParseFontFamilyProperty(value);
 
         /// <summary>
         /// Parses a color value in CSS style; e.g. #ff0000, red, rgb(255,0,0), rgb(100%, 0, 0) 
         /// </summary>
         /// <param name="colorStr">color string value to parse</param>
         /// <returns>color value</returns>
-        public RColor ParseColor(string colorStr)
-        {
-            return _valueParser.GetActualColor(colorStr);
-        }
+        public RColor ParseColor(string colorStr) => _valueParser.GetActualColor(colorStr);
 
 
         #region Private methods
@@ -930,10 +921,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// Assume given substring is not empty and all indexes are valid!<br/>
         /// </summary>
         /// <returns>found border width value or null</returns>
-        private string? ParseBorderColor(string str, int idx, int length)
-        {
-            return _valueParser.TryGetColor(str, idx, length, out _) ? str.Substring(idx, length) : null;
-        }
+        private string? ParseBorderColor(string str, int idx, int length) => _valueParser.TryGetColor(str, idx, length, out _) ? str.Substring(idx, length) : null;
 
         #endregion
     }

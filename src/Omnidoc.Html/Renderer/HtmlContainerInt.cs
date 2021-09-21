@@ -72,17 +72,6 @@ namespace Omnidoc.Html.Renderer.Core
         /// <summary>
         /// Main adapter to framework specific logic.
         /// </summary>
-        private readonly RAdapter _adapter;
-
-        /// <summary>
-        /// parser for CSS data
-        /// </summary>
-        private readonly CssParser _cssParser;
-
-        /// <summary>
-        /// the root css box of the parsed html
-        /// </summary>
-        private CssBox? _root;
 
         /// <summary>
         /// list of all css boxes that have ":hover" selector on them
@@ -98,16 +87,6 @@ namespace Omnidoc.Html.Renderer.Core
         /// Handler for downloading of images in the html
         /// </summary>
         private ImageDownloader? _imageDownloader;
-
-        /// <summary>
-        /// the text fore color use for selected text
-        /// </summary>
-        private RColor _selectionForeColor;
-
-        /// <summary>
-        /// the back-color to use for selected text
-        /// </summary>
-        private RColor _selectionBackColor;
 
         /// <summary>
         /// the parsed stylesheet data used for handling the html
@@ -170,25 +149,19 @@ namespace Omnidoc.Html.Renderer.Core
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
-            _cssParser = new CssParser(adapter);
+            Adapter = adapter;
+            CssParser = new CssParser(adapter);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        internal RAdapter Adapter
-        {
-            get { return _adapter; }
-        }
+        internal RAdapter Adapter { get; }
 
         /// <summary>
         /// parser for CSS data
         /// </summary>
-        internal CssParser CssParser
-        {
-            get { return _cssParser; }
-        }
+        internal CssParser CssParser { get; }
 
         /// <summary>
         /// Raised when the set html document has been fully loaded.<br/>
@@ -240,10 +213,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
-        public CssData? CssData
-        {
-            get { return _cssData; }
-        }
+        public CssData? CssData => _cssData;
 
         /// <summary>
         /// Gets or sets a value indicating if anti-aliasing should be avoided for geometry like backgrounds and borders (default - false).
@@ -298,8 +268,8 @@ namespace Omnidoc.Html.Renderer.Core
         /// </example>
         public RPoint ScrollOffset
         {
-            get { return _scrollOffset; }
-            set { _scrollOffset = value; }
+            get => _scrollOffset;
+            set => _scrollOffset = value;
         }
 
         /// <summary>
@@ -308,8 +278,8 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public RPoint Location
         {
-            get { return _location; }
-            set { _location = value; }
+            get => _location;
+            set => _location = value;
         }
 
         /// <summary>
@@ -321,8 +291,8 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public RSize MaxSize
         {
-            get { return _maxSize; }
-            set { _maxSize = value; }
+            get => _maxSize;
+            set => _maxSize = value;
         }
 
         /// <summary>
@@ -330,8 +300,8 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public RSize ActualSize
         {
-            get { return _actualSize; }
-            set { _actualSize = value; }
+            get => _actualSize;
+            set => _actualSize = value;
         }
 
         public RSize PageSize { get; set; }
@@ -341,7 +311,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public int MarginTop
         {
-            get { return _marginTop; }
+            get => _marginTop;
             set
             {
                 if (value > -1)
@@ -354,7 +324,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public int MarginBottom
         {
-            get { return _marginBottom; }
+            get => _marginBottom;
             set
             {
                 if (value > -1)
@@ -367,7 +337,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public int MarginLeft
         {
-            get { return _marginLeft; }
+            get => _marginLeft;
             set
             {
                 if (value > -1)
@@ -380,7 +350,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public int MarginRight
         {
-            get { return _marginRight; }
+            get => _marginRight;
             set
             {
                 if (value > -1)
@@ -401,44 +371,27 @@ namespace Omnidoc.Html.Renderer.Core
         /// <summary>
         /// Get the currently selected text segment in the html.
         /// </summary>
-        public string? SelectedText
-        {
-            get { return _selectionHandler?.GetSelectedText(); }
-        }
+        public string? SelectedText => _selectionHandler?.GetSelectedText();
 
         /// <summary>
         /// Copy the currently selected html segment with style.
         /// </summary>
-        public string? SelectedHtml
-        {
-            get { return _selectionHandler?.GetSelectedHtml(); }
-        }
+        public string? SelectedHtml => _selectionHandler?.GetSelectedHtml();
 
         /// <summary>
         /// the root css box of the parsed html
         /// </summary>
-        internal CssBox? Root
-        {
-            get { return _root; }
-        }
+        internal CssBox? Root { get; private set; }
 
         /// <summary>
         /// the text fore color use for selected text
         /// </summary>
-        internal RColor SelectionForeColor
-        {
-            get { return _selectionForeColor; }
-            set { _selectionForeColor = value; }
-        }
+        internal RColor SelectionForeColor { get; set; }
 
         /// <summary>
         /// the back-color to use for selected text
         /// </summary>
-        internal RColor SelectionBackColor
-        {
-            get { return _selectionBackColor; }
-            set { _selectionBackColor = value; }
-        }
+        internal RColor SelectionBackColor { get; set; }
 
         /// <summary>
         /// Init with optional document and stylesheet.
@@ -451,13 +404,13 @@ namespace Omnidoc.Html.Renderer.Core
             if (!string.IsNullOrEmpty(htmlSource))
             {
                 _loadComplete = false;
-                _cssData = baseCssData ?? _adapter.DefaultCssData;
+                _cssData = baseCssData ?? Adapter.DefaultCssData;
 
-                var parser = new DomParser(_cssParser);
-                _root = parser.GenerateCssTree(htmlSource, this, ref _cssData);
-                if (_root != null)
+                var parser = new DomParser(CssParser);
+                Root = parser.GenerateCssTree(htmlSource, this, ref _cssData);
+                if (Root != null)
                 {
-                    _selectionHandler = new SelectionHandler(_root);
+                    _selectionHandler = new SelectionHandler(Root);
                     _imageDownloader = new ImageDownloader();
                 }
             }
@@ -468,10 +421,10 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         public void Clear()
         {
-            if (_root != null)
+            if (Root != null)
             {
-                _root.Dispose();
-                _root = null;
+                Root.Dispose();
+                Root = null;
 
                 if (_selectionHandler != null)
                     _selectionHandler.Dispose();
@@ -504,7 +457,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <returns>generated html</returns>
         public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline)
         {
-            return DomUtils.GenerateHtml(_root, styleGen);
+            return DomUtils.GenerateHtml(Root, styleGen);
         }
 
         /// <summary>
@@ -518,7 +471,7 @@ namespace Omnidoc.Html.Renderer.Core
         {
             ArgChecker.AssertArgNotNullOrEmpty(attribute, "attribute");
 
-            var cssBox = DomUtils.GetCssBox(_root, OffsetByScroll(location));
+            var cssBox = DomUtils.GetCssBox(Root, OffsetByScroll(location));
             return cssBox != null ? DomUtils.GetAttribute(cssBox, attribute) : null;
         }
 
@@ -530,7 +483,7 @@ namespace Omnidoc.Html.Renderer.Core
         {
             var linkBoxes = new List<CssBox>();
 
-            DomUtils.GetAllLinkBoxes(_root, linkBoxes);
+            DomUtils.GetAllLinkBoxes(Root, linkBoxes);
 
             foreach (var box in linkBoxes)
                 yield return new LinkElementData<RRect>(box.GetAttribute("id"), box.GetAttribute("href"), CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds));
@@ -543,7 +496,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <returns>css link href if exists or null</returns>
         public string? GetLinkAt(RPoint location)
         {
-            var link = DomUtils.GetLinkBox(_root, OffsetByScroll(location));
+            var link = DomUtils.GetLinkBox(Root, OffsetByScroll(location));
             return link?.HrefLink;
         }
 
@@ -558,7 +511,7 @@ namespace Omnidoc.Html.Renderer.Core
         {
             ArgChecker.AssertArgNotNullOrEmpty(elementId, "elementId");
 
-            var box = DomUtils.GetBoxById(_root, elementId.ToLowerInvariant());
+            var box = DomUtils.GetBoxById(Root, elementId.ToLowerInvariant());
             return box != null ? CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds) : (RRect?)null;
         }
 
@@ -571,19 +524,19 @@ namespace Omnidoc.Html.Renderer.Core
             ArgChecker.AssertArgNotNull(g, "g");
 
             _actualSize = RSize.Empty;
-            if (_root != null)
+            if (Root != null)
             {
                 // if width is not restricted we set it to large value to get the actual later
-                _root.Size = new RSize(_maxSize.Width > 0 ? _maxSize.Width : 99999, 0);
-                _root.Location = _location;
-                _root.PerformLayout(g);
+                Root.Size = new RSize(_maxSize.Width > 0 ? _maxSize.Width : 99999, 0);
+                Root.Location = _location;
+                Root.PerformLayout(g);
 
                 if (_maxSize.Width <= 0.1)
                 {
                     // in case the width is not restricted we need to double layout, first will find the width so second can layout by it (center alignment)
-                    _root.Size = new RSize((int)Math.Ceiling(_actualSize.Width), 0);
+                    Root.Size = new RSize((int)Math.Ceiling(_actualSize.Width), 0);
                     _actualSize = RSize.Empty;
-                    _root.PerformLayout(g);
+                    Root.PerformLayout(g);
                 }
 
                 if (!_loadComplete)
@@ -611,9 +564,9 @@ namespace Omnidoc.Html.Renderer.Core
                 g.PushClip(new RRect(MarginLeft, MarginTop, PageSize.Width, PageSize.Height));
             }
 
-            if (_root != null)
+            if (Root != null)
             {
-                _root.Paint(g);
+                Root.Paint(g);
             }
 
             g.PopClip();
@@ -658,7 +611,7 @@ namespace Omnidoc.Html.Renderer.Core
                     if (!ignore && e.LeftButton)
                     {
                         var loc = OffsetByScroll(location);
-                        var link = DomUtils.GetLinkBox(_root, loc);
+                        var link = DomUtils.GetLinkBox(Root, loc);
                         if (link != null)
                         {
                             HandleLinkClicked(parent, location, link);
@@ -977,9 +930,9 @@ namespace Omnidoc.Html.Renderer.Core
                 }
 
                 _cssData = null;
-                if (_root != null)
-                    _root.Dispose();
-                _root = null;
+                if (Root != null)
+                    Root.Dispose();
+                Root = null;
                 if (_selectionHandler != null)
                     _selectionHandler.Dispose();
                 _selectionHandler = null;

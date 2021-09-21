@@ -20,10 +20,7 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         /// </summary>
         public PathBuilder PathBuilder { get; } = new PathBuilder ( );
 
-        public override void Start(double x, double y)
-        {
-            _lastPoint = new RPoint(x, y);
-        }
+        public override void Start(double x, double y) => _lastPoint = new RPoint(x, y);
 
         public override void LineTo(double x, double y)
         {
@@ -34,8 +31,8 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         // TODO: Enable when SixLabors.ImageSharp.Drawing package supports arcs: https://github.com/SixLabors/ImageSharp.Drawing/pull/144
         public override void ArcTo(double x, double y, double size, Corner corner)
         {
-            float left = (float)(Math.Min(x, _lastPoint.X) - (corner == Corner.TopRight || corner == Corner.BottomRight ? size : 0));
-            float top = (float)(Math.Min(y, _lastPoint.Y) - (corner == Corner.BottomLeft || corner == Corner.BottomRight ? size : 0));
+            var left = (float)(Math.Min(x, _lastPoint.X) - (corner == Corner.TopRight || corner == Corner.BottomRight ? size : 0));
+            var top = (float)(Math.Min(y, _lastPoint.Y) - (corner == Corner.BottomLeft || corner == Corner.BottomRight ? size : 0));
             // PathBuilder.AddEllipticalArc(left, top, (float)size * 2, (float)size * 2, 0f, GetStartAngle(corner), 90);
             _lastPoint = new RPoint(x, y);
         }

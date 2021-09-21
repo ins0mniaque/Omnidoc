@@ -10,10 +10,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class GraphicsPathAdapter : RGraphicsPath
     {
-        /// <summary>
-        /// The actual PdfSharp graphics path instance.
-        /// </summary>
-        private readonly XGraphicsPath _graphicsPath = new();
 
         /// <summary>
         /// the last point added to the path to begin next segment from
@@ -23,19 +19,13 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// <summary>
         /// The actual PdfSharp graphics path instance.
         /// </summary>
-        public XGraphicsPath GraphicsPath
-        {
-            get { return _graphicsPath; }
-        }
+        public XGraphicsPath GraphicsPath { get; } = new();
 
-        public override void Start(double x, double y)
-        {
-            _lastPoint = new RPoint(x, y);
-        }
+        public override void Start(double x, double y) => _lastPoint = new RPoint(x, y);
 
         public override void LineTo(double x, double y)
         {
-            _graphicsPath.AddLine((float)_lastPoint.X, (float)_lastPoint.Y, (float)x, (float)y);
+            GraphicsPath.AddLine((float)_lastPoint.X, (float)_lastPoint.Y, (float)x, (float)y);
             _lastPoint = new RPoint(x, y);
         }
 
@@ -43,7 +33,7 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         {
             var left = (float)(Math.Min(x, _lastPoint.X) - (corner == Corner.TopRight || corner == Corner.BottomRight ? size : 0));
             var top = (float)(Math.Min(y, _lastPoint.Y) - (corner == Corner.BottomLeft || corner == Corner.BottomRight ? size : 0));
-            _graphicsPath.AddArc(left, top, (float)size * 2, (float)size * 2, GetStartAngle(corner), 90);
+            GraphicsPath.AddArc(left, top, (float)size * 2, (float)size * 2, GetStartAngle(corner), 90);
             _lastPoint = new RPoint(x, y);
         }
 

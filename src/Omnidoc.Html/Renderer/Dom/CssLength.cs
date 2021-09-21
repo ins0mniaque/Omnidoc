@@ -16,10 +16,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         #region Fields
 
         private readonly double _number;
-        private readonly bool _isRelative;
-        private readonly CssUnit _unit;
-        private readonly string _length;
-        private readonly bool _isPercentage;
         private readonly bool _hasError;
 
         #endregion
@@ -31,10 +27,10 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="length">Length as specified in the Style Sheet or style fragment</param>
         public CssLength(string length)
         {
-            _length = length;
+            Length = length;
             _number = 0f;
-            _unit = CssUnit.None;
-            _isPercentage = false;
+            Unit = CssUnit.None;
+            IsPercentage = false;
 
             //Return zero if no length specified, zero specified
             if (string.IsNullOrEmpty(length) || length == "0")
@@ -44,7 +40,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             if (length.EndsWith("%", StringComparison.Ordinal))
             {
                 _number = CssValueParser.ParseNumber(length, 1);
-                _isPercentage = true;
+                IsPercentage = true;
                 return;
             }
 
@@ -66,31 +62,31 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             switch (u)
             {
                 case CssConstants.Em:
-                    _unit = CssUnit.Ems;
-                    _isRelative = true;
+                    Unit = CssUnit.Ems;
+                    IsRelative = true;
                     break;
                 case CssConstants.Ex:
-                    _unit = CssUnit.Ex;
-                    _isRelative = true;
+                    Unit = CssUnit.Ex;
+                    IsRelative = true;
                     break;
                 case CssConstants.Px:
-                    _unit = CssUnit.Pixels;
-                    _isRelative = true;
+                    Unit = CssUnit.Pixels;
+                    IsRelative = true;
                     break;
                 case CssConstants.Mm:
-                    _unit = CssUnit.Milimeters;
+                    Unit = CssUnit.Milimeters;
                     break;
                 case CssConstants.Cm:
-                    _unit = CssUnit.Centimeters;
+                    Unit = CssUnit.Centimeters;
                     break;
                 case CssConstants.In:
-                    _unit = CssUnit.Inches;
+                    Unit = CssUnit.Inches;
                     break;
                 case CssConstants.Pt:
-                    _unit = CssUnit.Points;
+                    Unit = CssUnit.Points;
                     break;
                 case CssConstants.Pc:
-                    _unit = CssUnit.Picas;
+                    Unit = CssUnit.Picas;
                     break;
                 default:
                     _hasError = true;
@@ -109,52 +105,34 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the number in the length
         /// </summary>
-        public double Number
-        {
-            get { return _number; }
-        }
+        public double Number => _number;
 
         /// <summary>
         /// Gets if the length has some parsing error
         /// </summary>
-        public bool HasError
-        {
-            get { return _hasError; }
-        }
+        public bool HasError => _hasError;
 
 
         /// <summary>
         /// Gets if the length represents a precentage (not actually a length)
         /// </summary>
-        public bool IsPercentage
-        {
-            get { return _isPercentage; }
-        }
+        public bool IsPercentage { get; }
 
 
         /// <summary>
         /// Gets if the length is specified in relative units
         /// </summary>
-        public bool IsRelative
-        {
-            get { return _isRelative; }
-        }
+        public bool IsRelative { get; }
 
         /// <summary>
         /// Gets the unit of the length
         /// </summary>
-        public CssUnit Unit
-        {
-            get { return _unit; }
-        }
+        public CssUnit Unit { get; }
 
         /// <summary>
         /// Gets the length as specified in the string
         /// </summary>
-        public string Length
-        {
-            get { return _length; }
-        }
+        public string Length { get; }
 
         #endregion
 

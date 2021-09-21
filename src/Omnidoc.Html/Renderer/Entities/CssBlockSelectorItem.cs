@@ -12,12 +12,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        private readonly string _class;
-
-        /// <summary>
-        /// is the selector item has to be direct parent
-        /// </summary>
-        private readonly bool _directParent;
 
         #endregion
 
@@ -31,32 +25,23 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(@class, "@class");
 
-            _class = @class;
-            _directParent = directParent;
+            Class = @class;
+            DirectParent = directParent;
         }
 
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        public string Class
-        {
-            get { return _class; }
-        }
+        public string Class { get; }
 
         /// <summary>
         /// is the selector item has to be direct parent
         /// </summary>
-        public bool DirectParent
-        {
-            get { return _directParent; }
-        }
+        public bool DirectParent { get; }
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents the current <see cref="object"/>.
         /// </summary>
-        public override string ToString()
-        {
-            return _class + (_directParent ? " > " : string.Empty);
-        }
+        public override string ToString() => Class + (DirectParent ? " > " : string.Empty);
     }
 }

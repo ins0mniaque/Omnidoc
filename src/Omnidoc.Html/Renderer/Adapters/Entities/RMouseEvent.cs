@@ -7,25 +7,18 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// </summary>
     public sealed class RMouseEvent
     {
-        /// <summary>
-        /// Is the left mouse button participated in the event
-        /// </summary>
-        private readonly bool _leftButton;
 
         /// <summary>
         /// Init.
         /// </summary>
         public RMouseEvent(bool leftButton)
         {
-            _leftButton = leftButton;
+            LeftButton = leftButton;
         }
 
         /// <summary>
         /// Is the left mouse button participated in the event
         /// </summary>
-        public bool LeftButton
-        {
-            get { return _leftButton; }
-        }
+        public bool LeftButton { get; }
     }
 }

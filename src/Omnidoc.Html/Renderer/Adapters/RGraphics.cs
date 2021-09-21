@@ -48,20 +48,14 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// </summary>
         /// <param name="color">the color to get the pen for</param>
         /// <returns>pen instance</returns>
-        public RPen GetPen(RColor color)
-        {
-            return Adapter.GetPen(color);
-        }
+        public RPen GetPen(RColor color) => Adapter.GetPen(color);
 
         /// <summary>
         /// Get solid color brush.
         /// </summary>
         /// <param name="color">the color to get the brush for</param>
         /// <returns>solid color brush instance</returns>
-        public RBrush GetSolidBrush(RColor color)
-        {
-            return Adapter.GetSolidBrush(color);
-        }
+        public RBrush GetSolidBrush(RColor color) => Adapter.GetSolidBrush(color);
 
         /// <summary>
         /// Get linear gradient color brush from <paramref name="color1"/> to <paramref name="color2"/>.
@@ -71,19 +65,13 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// <param name="color2">the end color of the gradient</param>
         /// <param name="angle">the angle to move the gradient from start color to end color in the rectangle</param>
         /// <returns>linear gradient color brush instance</returns>
-        public RBrush GetLinearGradientBrush(RRect rect, RColor color1, RColor color2, double angle)
-        {
-            return Adapter.GetLinearGradientBrush(rect, color1, color2, angle);
-        }
+        public RBrush GetLinearGradientBrush(RRect rect, RColor color1, RColor color2, double angle) => Adapter.GetLinearGradientBrush(rect, color1, color2, angle);
 
         /// <summary>
         /// Gets a Rectangle structure that bounds the clipping region of this Graphics.
         /// </summary>
         /// <returns>A rectangle structure that represents a bounding rectangle for the clipping region of this Graphics.</returns>
-        public RRect GetClip()
-        {
-            return ClipStack.Peek();
-        }
+        public RRect GetClip() => ClipStack.Peek();
 
         /// <summary>
         /// Pop the latest clip push.

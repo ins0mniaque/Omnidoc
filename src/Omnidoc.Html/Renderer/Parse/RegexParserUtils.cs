@@ -136,10 +136,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="regex"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static string? Search(string regex, string source)
-        {
-            return Search(regex, source, out _);
-        }
+        public static string? Search(string regex, string source) => Search(regex, source, out _);
 
         /// <summary>
         /// Searches the specified regex on the source

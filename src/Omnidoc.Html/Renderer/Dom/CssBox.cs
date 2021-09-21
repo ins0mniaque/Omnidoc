@@ -33,17 +33,8 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// the root container for the hierarchy
         /// </summary>
         protected HtmlContainerInt? _htmlContainer;
-
-        /// <summary>
-        /// the html tag that is associated with this css box, null if anonymous box
-        /// </summary>
-        private readonly HtmlTag? _htmltag;
-
         private readonly List<CssRect> _boxWords = new();
-        private readonly List<CssBox> _boxes = new();
-        private readonly List<CssLineBox> _lineBoxes = new();
         private readonly List<CssLineBox> _parentLineBoxes = new();
-        private readonly Dictionary<CssLineBox, RRect> _rectangles = new();
 
         /// <summary>
         /// the inner text of the box
@@ -81,7 +72,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 _parentBox = parentBox;
                 _parentBox.Boxes.Add(this);
             }
-            _htmltag = tag;
+            HtmlTag = tag;
             _text = SubString.Empty;
         }
 
@@ -91,8 +82,8 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public HtmlContainerInt HtmlContainer
         {
-            get { return (_htmlContainer ??= _parentBox?.HtmlContainer) ?? throw new InvalidOperationException("Missing HtmlContainer"); }
-            set { _htmlContainer = value; }
+            get => (_htmlContainer ??= _parentBox?.HtmlContainer) ?? throw new InvalidOperationException("Missing HtmlContainer");
+            set => _htmlContainer = value;
         }
 
         /// <summary>
@@ -100,7 +91,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public CssBox? ParentBox
         {
-            get { return _parentBox; }
+            get => _parentBox;
             set
             {
                 //Remove from last parent
@@ -118,44 +109,27 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the children boxes of this box
         /// </summary>
-        public List<CssBox> Boxes
-        {
-            get { return _boxes; }
-        }
+        public List<CssBox> Boxes { get; } = new();
 
         /// <summary>
         /// Is the box is of "br" element.
         /// </summary>
-        public bool IsBrElement
-        {
-            get {
-                return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
-            }
-        }
+        public bool IsBrElement => HtmlTag != null && HtmlTag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// is the box "Display" is "Inline", is this is an inline box and not block.
         /// </summary>
-        public bool IsInline
-        {
-            get { return (Display == CssConstants.Inline || Display == CssConstants.InlineBlock) && !IsBrElement; }
-        }
+        public bool IsInline => (Display == CssConstants.Inline || Display == CssConstants.InlineBlock) && !IsBrElement;
 
         /// <summary>
         /// is the box "Display" is "Block", is this is an block box and not inline.
         /// </summary>
-        public bool IsBlock
-        {
-            get { return Display == CssConstants.Block; }
-        }
+        public bool IsBlock => Display == CssConstants.Block;
 
         /// <summary>
         /// Is the css box clickable (by default only "a" element is clickable)
         /// </summary>
-        public virtual bool IsClickable
-        {
-            get { return HtmlTag != null && HtmlTag.Name == HtmlConstants.A && !HtmlTag.HasAttribute("id"); }
-        }
+        public virtual bool IsClickable => HtmlTag != null && HtmlTag.Name == HtmlConstants.A && !HtmlTag.HasAttribute("id");
 
         /// <summary>
         /// Gets a value indicating whether this instance or one of its parents has Position = fixed.
@@ -190,10 +164,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Get the href link of the box (by default get "href" attribute)
         /// </summary>
-        public virtual string HrefLink
-        {
-            get { return GetAttribute(HtmlConstants.Href); }
-        }
+        public virtual string HrefLink => GetAttribute(HtmlConstants.Href);
 
         /// <summary>
         /// Gets the containing block-box of this box. (The nearest parent box with display=block)
@@ -228,18 +199,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the HTMLTag that hosts this box
         /// </summary>
-        public HtmlTag? HtmlTag
-        {
-            get { return _htmltag; }
-        }
+        public HtmlTag? HtmlTag { get; }
 
         /// <summary>
         /// Gets if this box represents an image
         /// </summary>
-        public bool IsImage
-        {
-            get { return Words.Count == 1 && Words[0].IsImage; }
-        }
+        public bool IsImage => Words.Count == 1 && Words[0].IsImage;
 
         /// <summary>
         /// Tells if the box is empty or contains just blank spaces
@@ -267,7 +232,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public SubString Text
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 _text = value;
@@ -278,42 +243,27 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the line-boxes of this box (if block box)
         /// </summary>
-        internal List<CssLineBox> LineBoxes
-        {
-            get { return _lineBoxes; }
-        }
+        internal List<CssLineBox> LineBoxes { get; } = new();
 
         /// <summary>
         /// Gets the linebox(es) that contains words of this box (if inline)
         /// </summary>
-        internal List<CssLineBox> ParentLineBoxes
-        {
-            get { return _parentLineBoxes; }
-        }
+        internal List<CssLineBox> ParentLineBoxes => _parentLineBoxes;
 
         /// <summary>
         /// Gets the rectangles where this box should be painted
         /// </summary>
-        internal Dictionary<CssLineBox, RRect> Rectangles
-        {
-            get { return _rectangles; }
-        }
+        internal Dictionary<CssLineBox, RRect> Rectangles { get; } = new();
 
         /// <summary>
         /// Gets the BoxWords of text in the box
         /// </summary>
-        internal List<CssRect> Words
-        {
-            get { return _boxWords; }
-        }
+        internal List<CssRect> Words => _boxWords;
 
         /// <summary>
         /// Gets the first word of the box
         /// </summary>
-        internal CssRect FirstWord
-        {
-            get { return Words[0]; }
-        }
+        internal CssRect FirstWord => Words[0];
 
         /// <summary>
         /// Gets or sets the first linebox where content of this box appear
@@ -384,13 +334,10 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Create new css block box.
         /// </summary>
         /// <returns>the new block box</returns>
-        public static CssBox CreateBlock()
+        public static CssBox CreateBlock() => new(null, null)
         {
-            return new CssBox(null, null)
-            {
-                Display = CssConstants.Block
-            };
-        }
+            Display = CssConstants.Block
+        };
 
         /// <summary>
         /// Create new css block box for the given parent with the given optional html tag and insert it either
@@ -508,11 +455,11 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="fromBox">the box to move all its child boxes from</param>
         public void SetAllBoxes(CssBox fromBox)
         {
-            foreach (var childBox in fromBox._boxes)
+            foreach (var childBox in fromBox.Boxes)
                 childBox._parentBox = this;
 
-            _boxes.AddRange(fromBox._boxes);
-            fromBox._boxes.Clear();
+            Boxes.AddRange(fromBox.Boxes);
+            fromBox.Boxes.Clear();
         }
 
         /// <summary>
@@ -647,7 +594,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                         ActualBottom = Location.Y;
                         CssLayoutEngine.CreateLineBoxes(g, this); //This will automatically set the bottom of this block
                     }
-                    else if (_boxes.Count > 0)
+                    else if (Boxes.Count > 0)
                     {
                         foreach (var childBox in Boxes)
                         {
@@ -712,10 +659,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Get the parent of this css properties instance.
         /// </summary>
         /// <returns></returns>
-        protected override sealed CssBoxProperties? GetParent()
-        {
-            return _parentBox;
-        }
+        protected override sealed CssBoxProperties? GetParent() => _parentBox;
 
         /// <summary>
         /// Gets the index of the box to be used on a (ordered) list
@@ -851,10 +795,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <param name="attribute">Attribute to retrieve</param>
         /// <returns>Attribute value or string.Empty if no attribute specified</returns>
-        internal string GetAttribute(string attribute)
-        {
-            return GetAttribute(attribute, string.Empty);
-        }
+        internal string GetAttribute(string attribute) => GetAttribute(attribute, string.Empty);
 
         /// <summary>
         /// Gets the value of the specified attribute of the source HTML tag.
@@ -862,10 +803,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="attribute">Attribute to retrieve</param>
         /// <param name="defaultValue">Value to return if attribute is not specified</param>
         /// <returns>Attribute value or defaultValue if no attribute specified</returns>
-        internal string GetAttribute(string attribute, string defaultValue)
-        {
-            return HtmlTag?.TryGetAttribute(attribute, defaultValue) ?? defaultValue ?? string.Empty;
-        }
+        internal string GetAttribute(string attribute, string defaultValue) => HtmlTag?.TryGetAttribute(attribute, defaultValue) ?? defaultValue ?? string.Empty;
 
         /// <summary>
         /// Gets the minimum width that the box can be.<br/>
@@ -930,7 +868,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             double sum = 0f;
             if (box.Size.Width > 90999 || (box.ParentBox != null && box.ParentBox.Size.Width > 90999))
             {
-                CssBox? currentBox = box;
+                var currentBox = box;
                 while (currentBox != null)
                 {
                     sum += currentBox.ActualMarginLeft + currentBox.ActualMarginRight;
@@ -1045,10 +983,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Gets if this box has only inline siblings (including itself)
         /// </summary>
         /// <returns></returns>
-        internal bool HasJustInlineSiblings()
-        {
-            return ParentBox != null && DomUtils.ContainsInlinesOnly(ParentBox);
-        }
+        internal bool HasJustInlineSiblings() => ParentBox != null && DomUtils.ContainsInlinesOnly(ParentBox);
 
         /// <summary>
         /// Gets the rectangles where inline box will be drawn. See Remarks for more info.
@@ -1061,10 +996,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Inherits inheritable values from parent.
         /// </summary>
-        internal new void InheritStyle(CssBox? box = null, bool everything = false)
-        {
-            base.InheritStyle(box ?? ParentBox, everything);
-        }
+        internal new void InheritStyle(CssBox? box = null, bool everything = false) => base.InheritStyle(box ?? ParentBox, everything);
 
         /// <summary>
         /// Gets the result of collapsing the vertical margins of the two boxes
@@ -1147,10 +1079,10 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             double margin = 0;
             if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && ParentBox.ActualMarginBottom < 0.1)
             {
-                var lastChildBottomMargin = _boxes[^1].ActualMarginBottom;
+                var lastChildBottomMargin = Boxes[^1].ActualMarginBottom;
                 margin = Height == "auto" ? Math.Max(ActualMarginBottom, lastChildBottomMargin) : lastChildBottomMargin;
             }
-            return Math.Max(ActualBottom, _boxes[^1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
+            return Math.Max(ActualBottom, Boxes[^1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
         }
 
         /// <summary>
@@ -1449,10 +1381,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Resets the <see cref="Rectangles"/> array
         /// </summary>
-        internal void RectanglesReset()
-        {
-            _rectangles.Clear();
-        }
+        internal void RectanglesReset() => Rectangles.Clear();
 
         /// <summary>
         /// On image load process complete with image request refresh for it to be painted.
@@ -1469,10 +1398,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Get brush for the text depending if there is selected text color set.
         /// </summary>
-        protected RColor GetSelectionForeBrush()
-        {
-            return HtmlContainer.SelectionForeColor != RColor.Empty ? HtmlContainer.SelectionForeColor : ActualColor;
-        }
+        protected RColor GetSelectionForeBrush() => HtmlContainer.SelectionForeColor != RColor.Empty ? HtmlContainer.SelectionForeColor : ActualColor;
 
         /// <summary>
         /// Get brush for selection background depending if it has external and if alpha is required for images.
@@ -1495,15 +1421,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             }
         }
 
-        protected override RFont GetCachedFont(string fontFamily, double fsize, RFontStyle st)
-        {
-            return HtmlContainer.Adapter.GetFont(fontFamily, fsize, st);
-        }
+        protected override RFont GetCachedFont(string fontFamily, double fsize, RFontStyle st) => HtmlContainer.Adapter.GetFont(fontFamily, fsize, st);
 
-        protected override RColor GetActualColor(string colorStr)
-        {
-            return HtmlContainer.CssParser.ParseColor(colorStr);
-        }
+        protected override RColor GetActualColor(string colorStr) => HtmlContainer.CssParser.ParseColor(colorStr);
 
         protected override RPoint GetActualLocation(string X, string Y)
         {

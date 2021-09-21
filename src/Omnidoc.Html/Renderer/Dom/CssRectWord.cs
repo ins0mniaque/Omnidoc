@@ -46,18 +46,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// was there a whitespace before the word chars (before trim)
         /// </summary>
-        public override bool HasSpaceBefore
-        {
-            get { return _hasSpaceBefore; }
-        }
+        public override bool HasSpaceBefore => _hasSpaceBefore;
 
         /// <summary>
         /// was there a whitespace after the word chars (before trim)
         /// </summary>
-        public override bool HasSpaceAfter
-        {
-            get { return _hasSpaceAfter; }
-        }
+        public override bool HasSpaceAfter => _hasSpaceAfter;
 
         /// <summary>
         /// Gets a bool indicating if this word is composed only by spaces.
@@ -79,26 +73,17 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets if the word is composed by only a line break
         /// </summary>
-        public override bool IsLineBreak
-        {
-            get { return Text == "\n"; }
-        }
+        public override bool IsLineBreak => Text == "\n";
 
         /// <summary>
         /// Gets the text of the word
         /// </summary>
-        public override string Text
-        {
-            get { return _text; }
-        }
+        public override string Text => _text;
 
         /// <summary>
         /// Represents this word for debugging purposes
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n", StringComparison.Ordinal), Text.Length, Text.Length != 1 ? "s" : string.Empty);
-        }
+        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n", StringComparison.Ordinal), Text.Length, Text.Length != 1 ? "s" : string.Empty);
     }
 }

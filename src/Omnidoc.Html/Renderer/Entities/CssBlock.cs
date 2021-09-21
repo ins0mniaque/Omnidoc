@@ -20,17 +20,11 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        private readonly string _class;
 
         /// <summary>
         /// the CSS block properties and values
         /// </summary>
         private readonly Dictionary<string, string> _properties;
-
-        /// <summary>
-        /// additional selectors to used in hierarchy (p className1 > className2)
-        /// </summary>
-        private readonly IList<CssBlockSelectorItem>? _selectors;
 
         /// <summary>
         /// is the css block has :hover pseudo-class
@@ -52,8 +46,8 @@ namespace Omnidoc.Html.Renderer.Core.Entities
             ArgChecker.AssertArgNotNullOrEmpty(@class, "@class");
             ArgChecker.AssertArgNotNull(properties, "properties");
 
-            _class = @class;
-            _selectors = selectors;
+            Class = @class;
+            Selectors = selectors;
             _properties = properties;
             _hover = hover;
         }
@@ -61,34 +55,22 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        public string Class
-        {
-            get { return _class; }
-        }
+        public string Class { get; }
 
         /// <summary>
         /// additional selectors to used in hierarchy (p className1 > className2)
         /// </summary>
-        public IList<CssBlockSelectorItem>? Selectors
-        {
-            get { return _selectors; }
-        }
+        public IList<CssBlockSelectorItem>? Selectors { get; }
 
         /// <summary>
         /// Gets the CSS block properties and its values
         /// </summary>
-        public IDictionary<string, string> Properties
-        {
-            get { return _properties; }
-        }
+        public IDictionary<string, string> Properties => _properties;
 
         /// <summary>
         /// is the css block has :hover pseudo-class
         /// </summary>
-        public bool Hover
-        {
-            get { return _hover; }
-        }
+        public bool Hover => _hover;
 
         /// <summary>
         /// Merge the other block properties into this css block.<br/>
@@ -109,10 +91,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// Create deep copy of the CssBlock.
         /// </summary>
         /// <returns>new CssBlock with same data</returns>
-        public CssBlock Clone()
-        {
-            return new CssBlock(_class, new Dictionary<string, string>(_properties), _selectors != null ? new List<CssBlockSelectorItem>(_selectors) : null);
-        }
+        public CssBlock Clone() => new(Class, new Dictionary<string, string>(_properties), Selectors != null ? new List<CssBlockSelectorItem>(Selectors) : null);
 
         /// <summary>
         /// Check if the two css blocks are the same (same class, selectors and properties).
@@ -125,7 +104,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            if (!Equals(other._class, _class))
+            if (!Equals(other.Class, Class))
                 return false;
 
             if (!Equals(other._properties.Count, _properties.Count))
@@ -159,21 +138,21 @@ namespace Omnidoc.Html.Renderer.Core.Entities
 
             if (other.Hover != Hover)
                 return false;
-            if (other._selectors == null && _selectors != null)
+            if (other.Selectors == null && Selectors != null)
                 return false;
-            if (other._selectors != null && _selectors == null)
+            if (other.Selectors != null && Selectors == null)
                 return false;
 
-            if (other._selectors != null && _selectors != null)
+            if (other.Selectors != null && Selectors != null)
             {
-                if (!Equals(other._selectors.Count, _selectors.Count))
+                if (!Equals(other.Selectors.Count, Selectors.Count))
                     return false;
 
-                for (var i = 0; i < _selectors.Count; i++)
+                for (var i = 0; i < Selectors.Count; i++)
                 {
-                    if (!Equals(other._selectors[i].Class, _selectors[i].Class))
+                    if (!Equals(other.Selectors[i].Class, Selectors[i].Class))
                         return false;
-                    if (!Equals(other._selectors[i].DirectParent, _selectors[i].DirectParent))
+                    if (!Equals(other.Selectors[i].DirectParent, Selectors[i].DirectParent))
                         return false;
                 }
             }
@@ -205,7 +184,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             unchecked
             {
-                return ((_class != null ? _class.GetHashCode(StringComparison.Ordinal) : 0) * 397) ^ (_properties != null ? _properties.GetHashCode() : 0);
+                return ((Class != null ? Class.GetHashCode(StringComparison.Ordinal) : 0) * 397) ^ (_properties != null ? _properties.GetHashCode() : 0);
             }
         }
 
@@ -214,7 +193,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// </summary>
         public override string ToString()
         {
-            var str = _class + " { ";
+            var str = Class + " { ";
             foreach (var property in _properties)
             {
                 str += string.Format(CultureInfo.InvariantCulture, "{0}={1}; ", property.Key, property.Value);

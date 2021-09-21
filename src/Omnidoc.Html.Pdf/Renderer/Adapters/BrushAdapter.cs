@@ -9,26 +9,18 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class BrushAdapter : RBrush
     {
-        /// <summary>
-        /// The actual PdfSharp brush instance.<br/>
-        /// Should be <see cref="XBrush"/> but there is some fucking issue inheriting from it =/
-        /// </summary>
-        private readonly object _brush;
 
         /// <summary>
         /// Init.
         /// </summary>
         public BrushAdapter(object brush)
         {
-            _brush = brush;
+            Brush = brush;
         }
 
         /// <summary>
         /// The actual ImageSharp brush instance.
         /// </summary>
-        public object Brush
-        {
-            get { return _brush; }
-        }
+        public object Brush { get; }
     }
 }

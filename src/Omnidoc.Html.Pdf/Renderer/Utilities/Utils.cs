@@ -13,10 +13,7 @@ namespace Omnidoc.Html.Pdf.Renderer.Utilities
         /// <summary>
         /// Convert from ImageSharp point to core point.
         /// </summary>
-        public static RPoint Convert(XPoint p)
-        {
-            return new RPoint(p.X, p.Y);
-        }
+        public static RPoint Convert(XPoint p) => new(p.X, p.Y);
 
         /// <summary>
         /// Convert from ImageSharp point to core point.
@@ -32,50 +29,32 @@ namespace Omnidoc.Html.Pdf.Renderer.Utilities
         /// <summary>
         /// Convert from core point to ImageSharp point.
         /// </summary>
-        public static XPoint Convert(RPoint p)
-        {
-            return new XPoint(p.X, p.Y);
-        }
+        public static XPoint Convert(RPoint p) => new(p.X, p.Y);
 
         /// <summary>
         /// Convert from ImageSharp size to core size.
         /// </summary>
-        public static RSize Convert(XSize s)
-        {
-            return new RSize(s.Width, s.Height);
-        }
+        public static RSize Convert(XSize s) => new(s.Width, s.Height);
 
         /// <summary>
         /// Convert from core size to ImageSharp size.
         /// </summary>
-        public static XSize Convert(RSize s)
-        {
-            return new XSize(s.Width, s.Height);
-        }
+        public static XSize Convert(RSize s) => new(s.Width, s.Height);
 
         /// <summary>
         /// Convert from ImageSharp rectangle to core rectangle.
         /// </summary>
-        public static RRect Convert(XRect r)
-        {
-            return new RRect(r.X, r.Y, r.Width, r.Height);
-        }
+        public static RRect Convert(XRect r) => new(r.X, r.Y, r.Width, r.Height);
 
         /// <summary>
         /// Convert from core rectangle to ImageSharp rectangle.
         /// </summary>
-        public static XRect Convert(RRect r)
-        {
-            return new XRect(r.X, r.Y, r.Width, r.Height);
-        }
+        public static XRect Convert(RRect r) => new(r.X, r.Y, r.Width, r.Height);
 
         /// <summary>
         /// Convert from core color to ImageSharp color.
         /// </summary>
-        public static XColor Convert(RColor c)
-        {
-            return XColor.FromArgb(c.A, c.R, c.G, c.B);
-        }
+        public static XColor Convert(RColor c) => XColor.FromArgb(c.A, c.R, c.G, c.B);
 
         /// <summary>
         /// Convert from color to ImageSharp color.

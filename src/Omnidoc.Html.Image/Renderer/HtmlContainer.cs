@@ -25,15 +25,14 @@ namespace Omnidoc.Html.Image.Renderer
         /// <summary>
         /// The internal core html container
         /// </summary>
-        private readonly HtmlContainerInt _htmlContainerInt;
 
         #endregion
 
         public HtmlContainer()
         {
-            _htmlContainerInt = new HtmlContainerInt(ImageSharpAdapter.Instance);
-            _htmlContainerInt.SetMargins(0);
-            _htmlContainerInt.PageSize = new RSize(99999, 99999);
+            HtmlContainerInt = new HtmlContainerInt(ImageSharpAdapter.Instance);
+            HtmlContainerInt.SetMargins(0);
+            HtmlContainerInt.PageSize = new RSize(99999, 99999);
         }
 
         /// <summary>
@@ -52,8 +51,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public event EventHandler<HtmlLinkClickedEventArgs> LinkClicked
         {
-            add { _htmlContainerInt.LinkClicked += value; }
-            remove { _htmlContainerInt.LinkClicked -= value; }
+            add { HtmlContainerInt.LinkClicked += value; }
+            remove { HtmlContainerInt.LinkClicked -= value; }
         }
 
         /// <summary>
@@ -64,8 +63,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </remarks>
         public event EventHandler<HtmlRefreshEventArgs> Refresh
         {
-            add { _htmlContainerInt.Refresh += value; }
-            remove { _htmlContainerInt.Refresh -= value; }
+            add { HtmlContainerInt.Refresh += value; }
+            remove { HtmlContainerInt.Refresh -= value; }
         }
 
         /// <summary>
@@ -74,8 +73,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public event EventHandler<HtmlScrollEventArgs> ScrollChange
         {
-            add { _htmlContainerInt.ScrollChange += value; }
-            remove { _htmlContainerInt.ScrollChange -= value; }
+            add { HtmlContainerInt.ScrollChange += value; }
+            remove { HtmlContainerInt.ScrollChange -= value; }
         }
 
         /// <summary>
@@ -86,8 +85,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </remarks>
         public event EventHandler<HtmlRenderErrorEventArgs> RenderError
         {
-            add { _htmlContainerInt.RenderError += value; }
-            remove { _htmlContainerInt.RenderError -= value; }
+            add { HtmlContainerInt.RenderError += value; }
+            remove { HtmlContainerInt.RenderError -= value; }
         }
 
         /// <summary>
@@ -97,8 +96,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public event EventHandler<HtmlStylesheetLoadEventArgs> StylesheetLoad
         {
-            add { _htmlContainerInt.StylesheetLoad += value; }
-            remove { _htmlContainerInt.StylesheetLoad -= value; }
+            add { HtmlContainerInt.StylesheetLoad += value; }
+            remove { HtmlContainerInt.StylesheetLoad -= value; }
         }
 
         /// <summary>
@@ -107,33 +106,27 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public event EventHandler<HtmlImageLoadEventArgs> ImageLoad
         {
-            add { _htmlContainerInt.ImageLoad += value; }
-            remove { _htmlContainerInt.ImageLoad -= value; }
+            add { HtmlContainerInt.ImageLoad += value; }
+            remove { HtmlContainerInt.ImageLoad -= value; }
         }
 
         /// <summary>
         /// The internal core html container
         /// </summary>
-        internal HtmlContainerInt HtmlContainerInt
-        {
-            get { return _htmlContainerInt; }
-        }
+        internal HtmlContainerInt HtmlContainerInt { get; }
 
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
-        public CssData? CssData
-        {
-            get { return _htmlContainerInt.CssData; }
-        }
+        public CssData? CssData => HtmlContainerInt.CssData;
 
         /// <summary>
         /// Gets or sets a value indicating if anti-aliasing should be avoided for geometry like backgrounds and borders (default - false).
         /// </summary>
         public bool AvoidGeometryAntialias
         {
-            get { return _htmlContainerInt.AvoidGeometryAntialias; }
-            set { _htmlContainerInt.AvoidGeometryAntialias = value; }
+            get => HtmlContainerInt.AvoidGeometryAntialias;
+            set => HtmlContainerInt.AvoidGeometryAntialias = value;
         }
 
         /// <summary>
@@ -148,8 +141,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </remarks>
         public bool AvoidAsyncImagesLoading
         {
-            get { return _htmlContainerInt.AvoidAsyncImagesLoading; }
-            set { _htmlContainerInt.AvoidAsyncImagesLoading = value; }
+            get => HtmlContainerInt.AvoidAsyncImagesLoading;
+            set => HtmlContainerInt.AvoidAsyncImagesLoading = value;
         }
 
         /// <summary>
@@ -167,8 +160,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </remarks>
         public bool AvoidImagesLateLoading
         {
-            get { return _htmlContainerInt.AvoidImagesLateLoading; }
-            set { _htmlContainerInt.AvoidImagesLateLoading = value; }
+            get => HtmlContainerInt.AvoidImagesLateLoading;
+            set => HtmlContainerInt.AvoidImagesLateLoading = value;
         }
 
         /// <summary>
@@ -177,8 +170,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public bool IsSelectionEnabled
         {
-            get { return _htmlContainerInt.IsSelectionEnabled; }
-            set { _htmlContainerInt.IsSelectionEnabled = value; }
+            get => HtmlContainerInt.IsSelectionEnabled;
+            set => HtmlContainerInt.IsSelectionEnabled = value;
         }
 
         /// <summary>
@@ -186,8 +179,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public bool IsContextMenuEnabled
         {
-            get { return _htmlContainerInt.IsContextMenuEnabled; }
-            set { _htmlContainerInt.IsContextMenuEnabled = value; }
+            get => HtmlContainerInt.IsContextMenuEnabled;
+            set => HtmlContainerInt.IsContextMenuEnabled = value;
         }
 
         /// <summary>
@@ -200,8 +193,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </example>
         public PointF ScrollOffset
         {
-            get { return Utils.ConvertRound(_htmlContainerInt.ScrollOffset); }
-            set { _htmlContainerInt.ScrollOffset = Utils.Convert(value); }
+            get => Utils.ConvertRound(HtmlContainerInt.ScrollOffset);
+            set => HtmlContainerInt.ScrollOffset = Utils.Convert(value);
         }
 
         /// <summary>
@@ -210,8 +203,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public PointF Location
         {
-            get { return Utils.Convert(_htmlContainerInt.Location); }
-            set { _htmlContainerInt.Location = Utils.Convert(value); }
+            get => Utils.Convert(HtmlContainerInt.Location);
+            set => HtmlContainerInt.Location = Utils.Convert(value);
         }
 
         /// <summary>
@@ -223,8 +216,8 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public SizeF MaxSize
         {
-            get { return Utils.Convert(_htmlContainerInt.MaxSize); }
-            set { _htmlContainerInt.MaxSize = Utils.Convert(value); }
+            get => Utils.Convert(HtmlContainerInt.MaxSize);
+            set => HtmlContainerInt.MaxSize = Utils.Convert(value);
         }
 
         /// <summary>
@@ -232,53 +225,38 @@ namespace Omnidoc.Html.Image.Renderer
         /// </summary>
         public SizeF ActualSize
         {
-            get { return Utils.Convert(_htmlContainerInt.ActualSize); }
-            internal set { _htmlContainerInt.ActualSize = Utils.Convert(value); }
+            get => Utils.Convert(HtmlContainerInt.ActualSize);
+            internal set => HtmlContainerInt.ActualSize = Utils.Convert(value);
         }
 
         /// <summary>
         /// Get the currently selected text segment in the html.
         /// </summary>
-        public string? SelectedText
-        {
-            get { return _htmlContainerInt.SelectedText; }
-        }
+        public string? SelectedText => HtmlContainerInt.SelectedText;
 
         /// <summary>
         /// Copy the currently selected html segment with style.
         /// </summary>
-        public string? SelectedHtml
-        {
-            get { return _htmlContainerInt.SelectedHtml; }
-        }
+        public string? SelectedHtml => HtmlContainerInt.SelectedHtml;
 
         /// <summary>
         /// Clear the current selection.
         /// </summary>
-        public void ClearSelection()
-        {
-            HtmlContainerInt.ClearSelection();
-        }
+        public void ClearSelection() => HtmlContainerInt.ClearSelection();
 
         /// <summary>
         /// Init with optional document and stylesheet.
         /// </summary>
         /// <param name="htmlSource">the html to init with, init empty if not given</param>
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
-        public void SetHtml(string htmlSource, CssData? baseCssData = null)
-        {
-            _htmlContainerInt.SetHtml(htmlSource, baseCssData);
-        }
+        public void SetHtml(string htmlSource, CssData? baseCssData = null) => HtmlContainerInt.SetHtml(htmlSource, baseCssData);
 
         /// <summary>
         /// Get html from the current DOM tree with style if requested.
         /// </summary>
         /// <param name="styleGen">Optional: controls the way styles are generated when html is generated (default: <see cref="HtmlGenerationStyle.Inline"/>)</param>
         /// <returns>generated html</returns>
-        public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline)
-        {
-            return _htmlContainerInt.GetHtml(styleGen);
-        }
+        public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline) => HtmlContainerInt.GetHtml(styleGen);
 
         /// <summary>
         /// Get attribute value of element at the given x,y location by given key.<br/>
@@ -287,29 +265,20 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="location">the location to find the attribute at</param>
         /// <param name="attribute">the attribute key to get value by</param>
         /// <returns>found attribute value or null if not found</returns>
-        public string? GetAttributeAt(PointF location, string attribute)
-        {
-            return _htmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
-        }
+        public string? GetAttributeAt(PointF location, string attribute) => HtmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
 
         /// <summary>
         /// Get all the links in the HTML with the element rectangle and href data.
         /// </summary>
         /// <returns>collection of all the links in the HTML</returns>
-        public IEnumerable<LinkElementData<RectangleF>> GetLinks()
-        {
-            return HtmlContainerInt.GetLinks().Select(link => link.Convert(Utils.Convert));
-        }
+        public IEnumerable<LinkElementData<RectangleF>> GetLinks() => HtmlContainerInt.GetLinks().Select(link => link.Convert(Utils.Convert));
 
         /// <summary>
         /// Get css link href at the given x,y location.
         /// </summary>
         /// <param name="location">the location to find the link at</param>
         /// <returns>css link href if exists or null</returns>
-        public string? GetLinkAt(PointF location)
-        {
-            return _htmlContainerInt.GetLinkAt(Utils.Convert(location));
-        }
+        public string? GetLinkAt(PointF location) => HtmlContainerInt.GetLinkAt(Utils.Convert(location));
 
         /// <summary>
         /// Get the rectangle of html element as calculated by html layout.<br/>
@@ -320,7 +289,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// <returns>the rectangle of the element or null if not found</returns>
         public RectangleF? GetElementRectangle(string elementId)
         {
-            var r = _htmlContainerInt.GetElementRectangle(elementId);
+            var r = HtmlContainerInt.GetElementRectangle(elementId);
             return r.HasValue ? Utils.Convert(r.Value) : (RectangleF?)null;
         }
 
@@ -332,10 +301,8 @@ namespace Omnidoc.Html.Image.Renderer
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            using (var ig = new GraphicsAdapter(g))
-            {
-                _htmlContainerInt.PerformLayout(ig);
-            }
+            using var ig = new GraphicsAdapter(g);
+            HtmlContainerInt.PerformLayout(ig);
         }
 
         /// <summary>
@@ -346,15 +313,10 @@ namespace Omnidoc.Html.Image.Renderer
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            using (var ig = new GraphicsAdapter(g))
-            {
-                _htmlContainerInt.PerformPaint(ig);
-            }
+            using var ig = new GraphicsAdapter(g);
+            HtmlContainerInt.PerformPaint(ig);
         }
 
-        public void Dispose()
-        {
-            _htmlContainerInt.Dispose();
-        }
+        public void Dispose() => HtmlContainerInt.Dispose();
     }
 }

@@ -182,7 +182,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         public static string? GetAttribute(CssBox box, string attribute)
         {
             string? value = null;
-            CssBox? currentBox = box;
+            var currentBox = box;
             while (currentBox != null && value == null)
             {
                 value = currentBox.GetAttribute(attribute);

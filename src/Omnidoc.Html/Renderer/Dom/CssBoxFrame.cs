@@ -25,11 +25,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private readonly CssRectImage _imageWord;
 
         /// <summary>
-        /// is the iframe is of embeded video
-        /// </summary>
-        private readonly bool _isVideo;
-
-        /// <summary>
         /// the title of the video
         /// </summary>
         private string? _videoTitle;
@@ -72,17 +67,17 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             {
                 if (uri.Host.IndexOf("youtube.com", StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
-                    _isVideo = true;
+                    IsVideo = true;
                     LoadYoutubeDataAsync(uri);
                 }
                 else if (uri.Host.IndexOf("vimeo.com", StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
-                    _isVideo = true;
+                    IsVideo = true;
                     LoadVimeoDataAsync(uri);
                 }
             }
 
-            if (!_isVideo)
+            if (!IsVideo)
             {
                 SetErrorBorder();
             }
@@ -91,26 +86,17 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Is the css box clickable ("a" element is clickable)
         /// </summary>
-        public override bool IsClickable
-        {
-            get { return true; }
-        }
+        public override bool IsClickable => true;
 
         /// <summary>
         /// Get the href link of the box (by default get "href" attribute)
         /// </summary>
-        public override string HrefLink
-        {
-            get { return _videoLinkUrl ?? GetAttribute("src"); }
-        }
+        public override string HrefLink => _videoLinkUrl ?? GetAttribute("src");
 
         /// <summary>
         /// is the iframe is of embeded video
         /// </summary>
-        public bool IsVideo
-        {
-            get { return _isVideo; }
-        }
+        public bool IsVideo { get; }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -128,26 +114,23 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Load YouTube video data (title, image, link) by calling YouTube API.
         /// </summary>
-        private void LoadYoutubeDataAsync(Uri uri)
-        {
-            ThreadPool.QueueUserWorkItem(state =>
-            {
-                try
-                {
-                    var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&alt=json", uri.Segments[2]));
+        private void LoadYoutubeDataAsync(Uri uri) => ThreadPool.QueueUserWorkItem(state =>
+                                                    {
+                                                        try
+                                                        {
+                                                            var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&alt=json", uri.Segments[2]));
 
-                    using var client = new WebClient();
-                    client.Encoding = Encoding.UTF8;
-                    client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
-                    client.DownloadStringAsync(apiUri);
-                }
-                catch (WebException ex)
-                {
-                    HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
-                    HtmlContainer.RequestRefresh(false);
-                }
-            });
-        }
+                                                            using var client = new WebClient();
+                                                            client.Encoding = Encoding.UTF8;
+                                                            client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
+                                                            client.DownloadStringAsync(apiUri);
+                                                        }
+                                                        catch (WebException ex)
+                                                        {
+                                                            HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
+                                                            HtmlContainer.RequestRefresh(false);
+                                                        }
+                                                    });
 
         /// <summary>
         /// Parse YouTube API response to get video data (title, image, link).
@@ -264,30 +247,27 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Load Vimeo video data (title, image, link) by calling Vimeo API.
         /// </summary>
-        private void LoadVimeoDataAsync(Uri uri)
-        {
-            ThreadPool.QueueUserWorkItem(state =>
-            {
-                try
-                {
-                    var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://vimeo.com/api/v2/video/{0}.json", uri.Segments[2]));
+        private void LoadVimeoDataAsync(Uri uri) => ThreadPool.QueueUserWorkItem(state =>
+                                                  {
+                                                      try
+                                                      {
+                                                          var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://vimeo.com/api/v2/video/{0}.json", uri.Segments[2]));
 
-                    var client = new WebClient
-                    {
-                        Encoding = Encoding.UTF8
-                    };
-                    client.DownloadStringCompleted += OnDownloadVimeoApiCompleted;
-                    client.DownloadStringAsync(apiUri);
-                }
-                catch (WebException ex)
-                {
-                    _imageLoadingComplete = true;
-                    SetErrorBorder();
-                    HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
-                    HtmlContainer.RequestRefresh(false);
-                }
-            });
-        }
+                                                          var client = new WebClient
+                                                          {
+                                                              Encoding = Encoding.UTF8
+                                                          };
+                                                          client.DownloadStringCompleted += OnDownloadVimeoApiCompleted;
+                                                          client.DownloadStringAsync(apiUri);
+                                                      }
+                                                      catch (WebException ex)
+                                                      {
+                                                          _imageLoadingComplete = true;
+                                                          SetErrorBorder();
+                                                          HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
+                                                          HtmlContainer.RequestRefresh(false);
+                                                      }
+                                                  });
 
         /// <summary>
         /// Parse Vimeo API response to get video data (title, image, link).
@@ -488,7 +468,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     }
                 }
             }
-            else if (_isVideo && !_imageLoadingComplete)
+            else if (IsVideo && !_imageLoadingComplete)
             {
                 RenderUtils.DrawImageLoadingIcon(g, HtmlContainer, rect);
                 if (rect.Width > 19 && rect.Height > 19)
@@ -518,7 +498,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         private void DrawPlay(RGraphics g, RRect rect)
         {
-            if (_isVideo && _imageWord.Width > 70 && _imageWord.Height > 50)
+            if (IsVideo && _imageWord.Width > 70 && _imageWord.Height > 50)
             {
                 var prevMode = g.SetAntiAliasSmoothingMode();
 

@@ -41,7 +41,7 @@ namespace Omnidoc.Html.Renderer.Core
 
         /// <summary>
         /// Parse the given stylesheet to <see cref="CssData"/> object.<br/>
-        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
+        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
         /// </summary>
         /// <seealso cref="http://www.w3.org/TR/CSS21/sample.html"/>
@@ -58,10 +58,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <summary>
         /// dictionary of media type to dictionary of css class name to the cssBlocks collection with all the data
         /// </summary>
-        internal IDictionary<string, Dictionary<string, List<CssBlock>>> MediaBlocks
-        {
-            get { return _mediaBlocks; }
-        }
+        internal IDictionary<string, Dictionary<string, List<CssBlock>>> MediaBlocks => _mediaBlocks;
 
         /// <summary>
         /// Check if there are css blocks for the given class selector.
@@ -69,14 +66,11 @@ namespace Omnidoc.Html.Renderer.Core
         /// <param name="className">the class selector to check for css blocks by</param>
         /// <param name="media">optional: the css media type (default - all)</param>
         /// <returns>true - has css blocks for the class, false - otherwise</returns>
-        public bool ContainsCssBlock(string className, string media = "all")
-        {
-            return _mediaBlocks.TryGetValue(media, out var mid) && mid.ContainsKey(className);
-        }
+        public bool ContainsCssBlock(string className, string media = "all") => _mediaBlocks.TryGetValue(media, out var mid) && mid.ContainsKey(className);
 
         /// <summary>
         /// Get collection of css blocks for the requested class selector.<br/>
-        /// the <paramref name="className"/> can be: class name, html element name, html element and 
+        /// the <paramref name="className"/> can be: class name, html element name, html element and
         /// class name (elm.class), hash tag with element id (#id).<br/>
         /// returned all the blocks that word on the requested class selector, it can contain simple
         /// selector or hierarchy selector.
@@ -121,8 +115,7 @@ namespace Omnidoc.Html.Renderer.Core
 
             if (!mid.ContainsKey(cssBlock.Class))
             {
-                var list = new List<CssBlock>();
-                list.Add(cssBlock);
+                var list = new List<CssBlock> { cssBlock };
                 mid[cssBlock.Class] = list;
             }
             else

@@ -13,7 +13,7 @@ namespace Omnidoc.Html.Pdf.Renderer
     {
         /// <summary>
         /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing
         /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
         /// </summary>
         /// <remarks>
@@ -31,17 +31,14 @@ namespace Omnidoc.Html.Pdf.Renderer
 
         /// <summary>
         /// Parse the given stylesheet to <see cref="CssData"/> object.<br/>
-        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
+        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
         /// </summary>
         /// <seealso cref="http://www.w3.org/TR/CSS21/sample.html"/>
         /// <param name="stylesheet">the stylesheet source to parse</param>
         /// <param name="combineWithDefault">true - combine the parsed css data with default css data, false - return only the parsed css data</param>
         /// <returns>the parsed css data</returns>
-        public static CssData ParseStyleSheet(string stylesheet, bool combineWithDefault = true)
-        {
-            return CssData.Parse(PdfSharpAdapter.Instance, stylesheet, combineWithDefault);
-        }
+        public static CssData ParseStyleSheet(string stylesheet, bool combineWithDefault = true) => CssData.Parse(PdfSharpAdapter.Instance, stylesheet, combineWithDefault);
 
         /// <summary>
         /// Create PDF document from given HTML.<br/>

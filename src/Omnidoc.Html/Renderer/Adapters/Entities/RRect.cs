@@ -51,7 +51,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <returns>A <see cref="RPoint" /> that represents the upper-left corner of this <see cref="RRect" /> structure.</returns>
         public RPoint Location
         {
-            get { return new RPoint(X, Y); }
+            get => new(X, Y);
             set
             {
                 X = value.X;
@@ -65,7 +65,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <returns>A <see cref="RSize" /> that represents the width and height of this <see cref="RRect" /> structure.</returns>
         public RSize Size
         {
-            get { return new RSize(Width, Height); }
+            get => new(Width, Height);
             set
             {
                 Width = value.Width;
@@ -111,10 +111,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <returns>
         ///     The x-coordinate of the left edge of this <see cref="RRect" /> structure.
         /// </returns>
-        public double Left
-        {
-            get { return X; }
-        }
+        public double Left => X;
 
         /// <summary>
         ///     Gets the y-coordinate of the top edge of this <see cref="RRect" /> structure.
@@ -122,10 +119,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <returns>
         ///     The y-coordinate of the top edge of this <see cref="RRect" /> structure.
         /// </returns>
-        public double Top
-        {
-            get { return Y; }
-        }
+        public double Top => Y;
 
         /// <summary>
         ///     Gets the x-coordinate that is the sum of <see cref="RRect.X" /> and
@@ -139,10 +133,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///         cref="RRect.Width" />
         ///     of this <see cref="RRect" /> structure.
         /// </returns>
-        public double Right
-        {
-            get { return X + Width; }
-        }
+        public double Right => X + Width;
 
         /// <summary>
         ///     Gets the y-coordinate that is the sum of <see cref="RRect.Y" /> and
@@ -156,10 +147,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///         cref="RRect.Height" />
         ///     of this <see cref="RRect" /> structure.
         /// </returns>
-        public double Bottom
-        {
-            get { return Y + Height; }
-        }
+        public double Bottom => Y + Height;
 
         /// <summary>
         ///     Tests whether the <see cref="RRect.Width" /> or
@@ -234,10 +222,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <param name="top">The y-coordinate of the upper-left corner of the rectangular region. </param>
         /// <param name="right">The x-coordinate of the lower-right corner of the rectangular region. </param>
         /// <param name="bottom">The y-coordinate of the lower-right corner of the rectangular region. </param>
-        public static RRect FromLTRB(double left, double top, double right, double bottom)
-        {
-            return new RRect(left, top, right - left, bottom - top);
-        }
+        public static RRect FromLTRB(double left, double top, double right, double bottom) => new(left, top, right - left, bottom - top);
 
         /// <summary>
         ///     Determines if the specified point is contained within this <see cref="RRect" /> structure.
@@ -266,10 +251,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     structure; otherwise false.
         /// </returns>
         /// <param name="pt">The <see cref="RPoint" /> to test.</param>
-        public bool Contains(RPoint pt)
-        {
-            return Contains(pt.X, pt.Y);
-        }
+        public bool Contains(RPoint pt) => Contains(pt.X, pt.Y);
 
         /// <summary>
         ///     Determines if the rectangular region represented by <paramref name="rect" /> is entirely contained within this
@@ -313,10 +295,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     Inflates this <see cref="RRect" /> by the specified amount.
         /// </summary>
         /// <param name="size">The amount to inflate this rectangle. </param>
-        public void Inflate(RSize size)
-        {
-            Inflate(size.Width, size.Height);
-        }
+        public void Inflate(RSize size) => Inflate(size.Width, size.Height);
 
         /// <summary>
         ///     Creates and returns an inflated copy of the specified <see cref="RRect" /> structure. The copy is inflated by the specified amount. The original rectangle remains unmodified.
@@ -411,10 +390,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     Adjusts the location of this rectangle by the specified amount.
         /// </summary>
         /// <param name="pos">The amount to offset the location. </param>
-        public void Offset(RPoint pos)
-        {
-            Offset(pos.X, pos.Y);
-        }
+        public void Offset(RPoint pos) => Offset(pos.X, pos.Y);
 
         /// <summary>
         ///     Adjusts the location of this rectangle by the specified amount.
@@ -438,27 +414,18 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <param name="obj">
         ///     The <see cref="object" /> to test.
         /// </param>
-        public override bool Equals(object obj)
-        {
-            return obj is RRect other ? Equals(other) : false;
-        }
+        public override bool Equals(object obj) => obj is RRect other ? Equals(other) : false;
 
-        public bool Equals(RRect other)
-        {
-            return Math.Abs(other.X - X) < 0.001 &&
+        public bool Equals(RRect other) => Math.Abs(other.X - X) < 0.001 &&
                    Math.Abs(other.Y - Y) < 0.001 &&
                    Math.Abs(other.Width - Width) < 0.001 &&
                    Math.Abs(other.Height - Height) < 0.001;
-        }
 
         /// <summary>
         ///     Gets the hash code for this <see cref="RRect" /> structure. For information about the use of hash codes, see Object.GetHashCode.
         /// </summary>
         /// <returns>The hash code for this <see cref="RRect" /></returns>
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y, Width, Height);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y, Width, Height);
 
         /// <summary>
         /// Converts the Location and Size of this <see cref="RRect" /> to a human-readable string.
@@ -466,9 +433,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <returns>
         /// A string that contains the position, width, and height of this <see cref="RRect" /> structure for example, "{X=20, Y=20, Width=100, Height=50}".
         /// </returns>
-        public override string ToString()
-        {
-            return "{X=" + X + ",Y=" + Y + ",Width=" + Width + ",Height=" + Height + "}";
-        }
+        public override string ToString() => "{X=" + X + ",Y=" + Y + ",Width=" + Width + ",Height=" + Height + "}";
     }
 }

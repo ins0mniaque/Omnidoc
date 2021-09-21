@@ -120,9 +120,7 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static XSize MilimitersToUnits(double width, double height) {
-            return new XSize(width / 25.4 * 72, height / 25.4 * 72);
-        }
+        public static XSize MilimitersToUnits(double width, double height) => new(width / 25.4 * 72, height / 25.4 * 72);
 
         /// <summary>
         /// Convert the units passed in inches to the units used in PdfSharp
@@ -130,8 +128,6 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static XSize InchesToUnits(double width, double height) {
-            return new XSize(width * 72, height * 72);
-        }
+        public static XSize InchesToUnits(double width, double height) => new(width * 72, height * 72);
     }
 }

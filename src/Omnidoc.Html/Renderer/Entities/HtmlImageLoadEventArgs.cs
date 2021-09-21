@@ -32,17 +32,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// use to cancel the image loading by html renderer, the provided image will be used.
         /// </summary>
-        private bool _handled;
-
-        /// <summary>
-        /// the source of the image (file path or uri)
-        /// </summary>
-        private readonly string _src;
-
-        /// <summary>
-        /// collection of all the attributes that are defined on the image element
-        /// </summary>
-        private readonly IDictionary<string, string>? _attributes;
 
         /// <summary>
         /// Callback used to allow setting image externally and async.
@@ -60,36 +49,26 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <param name="callback">Callback used to allow setting image externally and async.</param>
         internal HtmlImageLoadEventArgs(string src, IDictionary<string, string>? attributes, HtmlImageLoadCallback callback)
         {
-            _src = src;
-            _attributes = attributes;
+            Src = src;
+            Attributes = attributes;
             _callback = callback;
         }
 
         /// <summary>
         /// the source of the image (file path, URL or inline data)
         /// </summary>
-        public string Src
-        {
-            get { return _src; }
-        }
+        public string Src { get; }
 
         /// <summary>
         /// collection of all the attributes that are defined on the image element or CSS style
         /// </summary>
-        public IDictionary<string, string>? Attributes
-        {
-            get { return _attributes; }
-        }
+        public IDictionary<string, string>? Attributes { get; }
 
         /// <summary>
         /// Indicate the image load is handled asynchronously.
         /// Cancel this image loading and overwrite the image asynchronously using callback method.<br/>
         /// </summary>
-        public bool Handled
-        {
-            get { return _handled; }
-            set { _handled = value; }
-        }
+        public bool Handled { get; set; }
 
         /// <summary>
         /// Callback to overwrite the loaded image with error image.<br/>
@@ -97,7 +76,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// </summary>
         public void Callback()
         {
-            _handled = true;
+            Handled = true;
             _callback(null, null, RRect.Empty);
         }
 
@@ -110,7 +89,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(path, "path");
 
-            _handled = true;
+            Handled = true;
             _callback(path, null, RRect.Empty);
         }
 
@@ -126,7 +105,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(path, "path");
 
-            _handled = true;
+            Handled = true;
             _callback(path, null, new RRect(x, y, width, height));
         }
 
@@ -141,7 +120,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             ArgChecker.AssertArgNotNull(image, "image");
 
-            _handled = true;
+            Handled = true;
             _callback(null, image, RRect.Empty);
         }
 
@@ -157,7 +136,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             ArgChecker.AssertArgNotNull(image, "image");
 
-            _handled = true;
+            Handled = true;
             _callback(null, image, new RRect(x, y, width, height));
         }
     }

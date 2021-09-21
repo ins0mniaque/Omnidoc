@@ -9,15 +9,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public sealed class LinkElementData<T>
     {
-        /// <summary>
-        /// the id of the link element if present
-        /// </summary>
-        private readonly string _id;
-
-        /// <summary>
-        /// the href data of the link
-        /// </summary>
-        private readonly string _href;
 
         /// <summary>
         /// the rectangle of element as calculated by html layout
@@ -29,62 +20,44 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// </summary>
         public LinkElementData(string id, string href, T rectangle)
         {
-            _id = id;
-            _href = href;
+            Id = id;
+            Href = href;
             _rectangle = rectangle;
         }
 
         /// <summary>
         /// the id of the link element if present
         /// </summary>
-        public string Id
-        {
-            get { return _id; }
-        }
+        public string Id { get; }
 
         /// <summary>
         /// the href data of the link
         /// </summary>
-        public string Href
-        {
-            get { return _href; }
-        }
+        public string Href { get; }
 
         /// <summary>
         /// the rectangle of element as calculated by html layout
         /// </summary>
-        public T Rectangle
-        {
-            get { return _rectangle; }
-        }
+        public T Rectangle => _rectangle;
 
         /// <summary>
         /// Is the link is directed to another element in the html
         /// </summary>
-        public bool IsAnchor
-        {
-            get { return _href.Length > 0 && _href[0] == '#'; }
-        }
+        public bool IsAnchor => Href.Length > 0 && Href[0] == '#';
 
         /// <summary>
         /// Return the id of the element this anchor link is referencing.
         /// </summary>
-        public string AnchorId
-        {
-            get { return IsAnchor && _href.Length > 1 ? _href[1..] : string.Empty; }
-        }
+        public string AnchorId => IsAnchor && Href.Length > 1 ? Href[1..] : string.Empty;
 
         public LinkElementData<T2> Convert<T2>(Func<T, T2> convert)
         {
             if(convert == null)
                 throw new ArgumentNullException(nameof(convert));
 
-            return new LinkElementData<T2>(_id, _href, convert(_rectangle));
+            return new LinkElementData<T2>(Id, Href, convert(_rectangle));
         }
 
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "Id: {0}, Href: {1}, Rectangle: {2}", _id, _href, _rectangle);
-        }
+        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Id: {0}, Href: {1}, Rectangle: {2}", Id, Href, _rectangle);
     }
 }

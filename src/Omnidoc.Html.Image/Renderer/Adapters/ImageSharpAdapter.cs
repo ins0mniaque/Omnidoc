@@ -22,7 +22,6 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        private static readonly ImageSharpAdapter _instance = new ImageSharpAdapter();
 
         #endregion
 
@@ -43,25 +42,13 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        public static ImageSharpAdapter Instance
-        {
-            get { return _instance; }
-        }
+        public static ImageSharpAdapter Instance { get; } = new ImageSharpAdapter();
 
-        protected override RColor GetColorInt(string colorName)
-        {
-            return Utils.Convert(Color.Parse(colorName));
-        }
+        protected override RColor GetColorInt(string colorName) => Utils.Convert(Color.Parse(colorName));
 
-        protected override RPen CreatePen(RColor color)
-        {
-            return new PenAdapter(new Pen(Utils.Convert(color), 1f));
-        }
+        protected override RPen CreatePen(RColor color) => new PenAdapter(new Pen(Utils.Convert(color), 1f));
 
-        protected override RBrush CreateSolidBrush(RColor color)
-        {
-            return new BrushAdapter(Brushes.Solid(Utils.Convert(color)));
-        }
+        protected override RBrush CreateSolidBrush(RColor color) => new BrushAdapter(Brushes.Solid(Utils.Convert(color)));
 
         protected override RBrush CreateLinearGradientBrush(RRect rect, RColor color1, RColor color2, double angle)
         {
@@ -84,19 +71,10 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
             return new ImageAdapter((Image)image);
         }
 
-        protected override RImage ImageFromStreamInt(Stream memoryStream)
-        {
-            return new ImageAdapter(Image.Load(memoryStream));
-        }
+        protected override RImage ImageFromStreamInt(Stream memoryStream) => new ImageAdapter(Image.Load(memoryStream));
 
-        protected override RFont CreateFontInt(string family, double size, RFontStyle style)
-        {
-            return new FontAdapter(new Font(SystemFonts.Find(family, CultureInfo.InvariantCulture), (float)size, (FontStyle) (int) style));
-        }
+        protected override RFont CreateFontInt(string family, double size, RFontStyle style) => new FontAdapter(new Font(SystemFonts.Find(family, CultureInfo.InvariantCulture), (float)size, (FontStyle)(int)style));
 
-        protected override RFont CreateFontInt(RFontFamily family, double size, RFontStyle style)
-        {
-            return new FontAdapter(new Font(((FontFamilyAdapter)family).FontFamily, (float)size, (FontStyle) (int) style));
-        }
+        protected override RFont CreateFontInt(RFontFamily family, double size, RFontStyle style) => new FontAdapter(new Font(((FontFamilyAdapter)family).FontFamily, (float)size, (FontStyle)(int)style));
     }
 }

@@ -292,10 +292,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// </summary>
         /// <param name="tagName">the tag to check (must be lower case)</param>
         /// <returns>true - is single tag, false - otherwise</returns>
-        public static bool IsSingleTag(string tagName)
-        {
-            return _list.Contains(tagName);
-        }
+        public static bool IsSingleTag(string tagName) => _list.Contains(tagName);
 
         /// <summary>
         /// Decode html encoded string to regular string.<br/>

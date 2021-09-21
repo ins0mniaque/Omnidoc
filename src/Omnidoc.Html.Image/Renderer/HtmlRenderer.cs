@@ -51,9 +51,6 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="stylesheet">the stylesheet source to parse</param>
         /// <param name="combineWithDefault">true - combine the parsed css data with default css data, false - return only the parsed css data</param>
         /// <returns>the parsed css data</returns>
-        public static CssData ParseStyleSheet(string stylesheet, bool combineWithDefault = true)
-        {
-            return CssData.Parse(ImageSharpAdapter.Instance, stylesheet, combineWithDefault);
-        }
+        public static CssData ParseStyleSheet(string stylesheet, bool combineWithDefault = true) => CssData.Parse(ImageSharpAdapter.Instance, stylesheet, combineWithDefault);
     }
 }

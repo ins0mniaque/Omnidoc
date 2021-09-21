@@ -96,11 +96,9 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             return Utils.Convert(size);
         }
 
-        public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
-        {
+        public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth) =>
             // there is no need for it - used for text selection
             throw new NotSupportedException();
-        }
 
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
         {
@@ -108,15 +106,9 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             _g.DrawString(str, ((FontAdapter)font).Font, (XBrush)xBrush, point.X, point.Y, _stringFormat);
         }
 
-        public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation)
-        {
-            return new BrushAdapter(new XTextureBrush(((ImageAdapter)image).Image, Utils.Convert(dstRect), Utils.Convert(translateTransformLocation)));
-        }
+        public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation) => new BrushAdapter(new XTextureBrush(((ImageAdapter)image).Image, Utils.Convert(dstRect), Utils.Convert(translateTransformLocation)));
 
-        public override RGraphicsPath GetGraphicsPath()
-        {
-            return new GraphicsPathAdapter();
-        }
+        public override RGraphicsPath GetGraphicsPath() => new GraphicsPathAdapter();
 
         protected override void Dispose(bool disposing)
         {
@@ -128,15 +120,9 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
 
         #region Delegate graphics methods
 
-        public override void DrawLine(RPen pen, double x1, double y1, double x2, double y2)
-        {
-            _g.DrawLine(((PenAdapter)pen).Pen, x1, y1, x2, y2);
-        }
+        public override void DrawLine(RPen pen, double x1, double y1, double x2, double y2) => _g.DrawLine(((PenAdapter)pen).Pen, x1, y1, x2, y2);
 
-        public override void DrawRectangle(RPen pen, double x, double y, double width, double height)
-        {
-            _g.DrawRectangle(((PenAdapter)pen).Pen, x, y, width, height);
-        }
+        public override void DrawRectangle(RPen pen, double x, double y, double width, double height) => _g.DrawRectangle(((PenAdapter)pen).Pen, x, y, width, height);
 
         public override void DrawRectangle(RBrush brush, double x, double y, double width, double height)
         {
@@ -155,25 +141,13 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             }
         }
 
-        public override void DrawImage(RImage image, RRect destRect, RRect srcRect)
-        {
-            _g.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect), Utils.Convert(srcRect), XGraphicsUnit.Point);
-        }
+        public override void DrawImage(RImage image, RRect destRect, RRect srcRect) => _g.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect), Utils.Convert(srcRect), XGraphicsUnit.Point);
 
-        public override void DrawImage(RImage image, RRect destRect)
-        {
-            _g.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect));
-        }
+        public override void DrawImage(RImage image, RRect destRect) => _g.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect));
 
-        public override void DrawPath(RPen pen, RGraphicsPath path)
-        {
-            _g.DrawPath(((PenAdapter)pen).Pen, ((GraphicsPathAdapter)path).GraphicsPath);
-        }
+        public override void DrawPath(RPen pen, RGraphicsPath path) => _g.DrawPath(((PenAdapter)pen).Pen, ((GraphicsPathAdapter)path).GraphicsPath);
 
-        public override void DrawPath(RBrush brush, RGraphicsPath path)
-        {
-            _g.DrawPath((XBrush)((BrushAdapter)brush).Brush, ((GraphicsPathAdapter)path).GraphicsPath);
-        }
+        public override void DrawPath(RBrush brush, RGraphicsPath path) => _g.DrawPath((XBrush)((BrushAdapter)brush).Brush, ((GraphicsPathAdapter)path).GraphicsPath);
 
         public override void DrawPolygon(RBrush brush, RPoint[] points)
         {

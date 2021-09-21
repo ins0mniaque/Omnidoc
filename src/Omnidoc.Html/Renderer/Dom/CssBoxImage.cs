@@ -46,10 +46,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Get the image of this image box.
         /// </summary>
-        public RImage? Image
-        {
-            get { return _imageWord.Image; }
-        }
+        public RImage? Image => _imageWord.Image;
 
         /// <summary>
         /// Paints the fragment

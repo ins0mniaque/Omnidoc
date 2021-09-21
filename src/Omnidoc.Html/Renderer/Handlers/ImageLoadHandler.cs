@@ -92,26 +92,17 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// the image instance of the loaded image
         /// </summary>
-        public RImage Image
-        {
-            get { return _image ?? throw new InvalidOperationException("Missing image"); }
-        }
+        public RImage Image => _image ?? throw new InvalidOperationException("Missing image");
 
         /// <summary>
         /// Returns true if the image instance is loaded
         /// </summary>
-        public bool HasImage
-        {
-            get { return _image != null; }
-        }
+        public bool HasImage => _image != null;
 
         /// <summary>
         /// the image rectangle restriction as returned from image load event
         /// </summary>
-        public RRect Rectangle
-        {
-            get { return _imageRectangle; }
-        }
+        public RRect Rectangle => _imageRectangle;
 
         /// <summary>
         /// Set image of this image box by analyzing the src attribute.<br/>

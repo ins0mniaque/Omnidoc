@@ -24,31 +24,29 @@ namespace Omnidoc.Html.Image.Renderer
         public static SizeF Measure(string html, float maxWidth = 0, CssData? cssData = null,
             EventHandler<HtmlStylesheetLoadEventArgs>? stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs>? imageLoad = null)
         {
-            SizeF actualSize = SizeF.Empty;
+            var actualSize = SizeF.Empty;
             if (!string.IsNullOrEmpty(html))
             {
-                using (var container = new HtmlContainer())
+                using var container = new HtmlContainer();
+                container.MaxSize = new SizeF(maxWidth, 0);
+                container.AvoidAsyncImagesLoading = true;
+                container.AvoidImagesLateLoading = true;
+
+                if (stylesheetLoad != null)
+                    container.StylesheetLoad += stylesheetLoad;
+                if (imageLoad != null)
+                    container.ImageLoad += imageLoad;
+
+                container.SetHtml(html, cssData);
+
+                // Using empty image to measure text
+                using var image = new Image<Argb32>(0, 0);
+
+                image.Mutate(g =>
                 {
-                    container.MaxSize = new SizeF(maxWidth, 0);
-                    container.AvoidAsyncImagesLoading = true;
-                    container.AvoidImagesLateLoading = true;
-
-                    if (stylesheetLoad != null)
-                        container.StylesheetLoad += stylesheetLoad;
-                    if (imageLoad != null)
-                        container.ImageLoad += imageLoad;
-
-                    container.SetHtml(html, cssData);
-
-                    // Using empty image to measure text
-                    using var image = new Image<Argb32>(0, 0);
-
-                    image.Mutate(g =>
-                    {
-                        container.PerformLayout(g);
-                        actualSize = container.ActualSize;
-                    });
-                }
+                    container.PerformLayout(g);
+                    actualSize = container.ActualSize;
+                });
             }
             return actualSize;
         }

@@ -83,8 +83,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// the width of whitespace between words
         /// </summary>
         private double _actualLineHeight = double.NaN;
-
-        private double _actualWordSpacing = double.NaN;
         private double _actualTextIndent = double.NaN;
         private double _actualBorderSpacingHorizontal = double.NaN;
         private double _actualBorderSpacingVertical = double.NaN;
@@ -103,7 +101,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderBottomWidth
         {
-            get { return _borderBottomWidth; }
+            get => _borderBottomWidth;
             set
             {
                 _borderBottomWidth = value;
@@ -113,7 +111,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderLeftWidth
         {
-            get { return _borderLeftWidth; }
+            get => _borderLeftWidth;
             set
             {
                 _borderLeftWidth = value;
@@ -123,7 +121,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderRightWidth
         {
-            get { return _borderRightWidth; }
+            get => _borderRightWidth;
             set
             {
                 _borderRightWidth = value;
@@ -133,7 +131,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderTopWidth
         {
-            get { return _borderTopWidth; }
+            get => _borderTopWidth;
             set
             {
                 _borderTopWidth = value;
@@ -151,7 +149,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderBottomColor
         {
-            get { return _borderBottomColor; }
+            get => _borderBottomColor;
             set
             {
                 _borderBottomColor = value;
@@ -161,7 +159,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderLeftColor
         {
-            get { return _borderLeftColor; }
+            get => _borderLeftColor;
             set
             {
                 _borderLeftColor = value;
@@ -171,7 +169,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderRightColor
         {
-            get { return _borderRightColor; }
+            get => _borderRightColor;
             set
             {
                 _borderRightColor = value;
@@ -181,7 +179,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string BorderTopColor
         {
-            get { return _borderTopColor; }
+            get => _borderTopColor;
             set
             {
                 _borderTopColor = value;
@@ -195,7 +193,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string CornerRadius
         {
-            get { return _cornerRadius; }
+            get => _cornerRadius;
             set
             {
                 var r = RegexParserUtils.Match(RegexParserUtils.CssLength, value);
@@ -249,7 +247,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string PaddingBottom
         {
-            get { return _paddingBottom; }
+            get => _paddingBottom;
             set
             {
                 _paddingBottom = value;
@@ -259,7 +257,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string PaddingLeft
         {
-            get { return _paddingLeft; }
+            get => _paddingLeft;
             set
             {
                 _paddingLeft = value;
@@ -269,7 +267,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string PaddingRight
         {
-            get { return _paddingRight; }
+            get => _paddingRight;
             set
             {
                 _paddingRight = value;
@@ -279,7 +277,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string PaddingTop
         {
-            get { return _paddingTop; }
+            get => _paddingTop;
             set
             {
                 _paddingTop = value;
@@ -291,7 +289,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string Left
         {
-            get { return _left; }
+            get => _left;
             set
             {
                 _left = value;
@@ -305,8 +303,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string Top
         {
-            get { return _top; }
-            set {
+            get => _top;
+            set
+            {
                 _top = value;
 
                 if (Position == CssConstants.Fixed)
@@ -337,7 +336,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string Color
         {
-            get { return _color; }
+            get => _color;
             set
             {
                 _color = value;
@@ -359,16 +358,16 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string LineHeight
         {
-            get { return _lineHeight; }
-            set { _lineHeight = string.Format(NumberFormatInfo.InvariantInfo, "{0}px", CssValueParser.ParseLength(value, Size.Height, this, CssConstants.Em)); }
+            get => _lineHeight;
+            set => _lineHeight = string.Format(NumberFormatInfo.InvariantInfo, "{0}px", CssValueParser.ParseLength(value, Size.Height, this, CssConstants.Em));
         }
 
         public string VerticalAlign { get; set; } = "baseline";
 
         public string TextIndent
         {
-            get { return _textIndent; }
-            set { _textIndent = NoEms(value); }
+            get => _textIndent;
+            set => _textIndent = NoEms(value);
         }
 
         public string TextAlign { get; set; } = string.Empty;
@@ -381,8 +380,8 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string WordSpacing
         {
-            get { return _wordSpacing; }
-            set { _wordSpacing = NoEms(value); }
+            get => _wordSpacing;
+            set => _wordSpacing = NoEms(value);
         }
 
         public string WordBreak { get; set; } = "normal";
@@ -391,7 +390,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string FontSize
         {
-            get { return _fontSize; }
+            get => _fontSize;
             set
             {
                 var length = RegexParserUtils.Search(RegexParserUtils.CssLength, value);
@@ -446,16 +445,15 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public RPoint Location
         {
-            get {
+            get
+            {
                 if (_location.IsEmpty && Position == CssConstants.Fixed)
                 {
                     _location = GetActualLocation(Left, Top);
                 }
                 return _location;
             }
-            set {
-                _location = value;
-            }
+            set => _location = value;
         }
 
         /// <summary>
@@ -463,33 +461,27 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public RSize Size
         {
-            get { return _size; }
-            set { _size = value; }
+            get => _size;
+            set => _size = value;
         }
 
         /// <summary>
         /// Gets the bounds of the box
         /// </summary>
-        public RRect Bounds
-        {
-            get { return new RRect(Location, Size); }
-        }
+        public RRect Bounds => new(Location, Size);
 
         /// <summary>
         /// Gets the width available on the box, counting padding and margin.
         /// </summary>
-        public double AvailableWidth
-        {
-            get { return Size.Width - ActualBorderLeftWidth - ActualPaddingLeft - ActualPaddingRight - ActualBorderRightWidth; }
-        }
+        public double AvailableWidth => Size.Width - ActualBorderLeftWidth - ActualPaddingLeft - ActualPaddingRight - ActualBorderRightWidth;
 
         /// <summary>
         /// Gets the right of the box. When setting, it will affect only the width of the box.
         /// </summary>
         public double ActualRight
         {
-            get { return Location.X + Size.Width; }
-            set { Size = new RSize(value - Location.X, Size.Height); }
+            get => Location.X + Size.Width;
+            set => Size = new RSize(value - Location.X, Size.Height);
         }
 
         /// <summary>
@@ -498,49 +490,34 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public double ActualBottom
         {
-            get { return Location.Y + Size.Height; }
-            set { Size = new RSize(Size.Width, value - Location.Y); }
+            get => Location.Y + Size.Height;
+            set => Size = new RSize(Size.Width, value - Location.Y);
         }
 
         /// <summary>
         /// Gets the left of the client rectangle (Where content starts rendering)
         /// </summary>
-        public double ClientLeft
-        {
-            get { return Location.X + ActualBorderLeftWidth + ActualPaddingLeft; }
-        }
+        public double ClientLeft => Location.X + ActualBorderLeftWidth + ActualPaddingLeft;
 
         /// <summary>
         /// Gets the top of the client rectangle (Where content starts rendering)
         /// </summary>
-        public double ClientTop
-        {
-            get { return Location.Y + ActualBorderTopWidth + ActualPaddingTop; }
-        }
+        public double ClientTop => Location.Y + ActualBorderTopWidth + ActualPaddingTop;
 
         /// <summary>
         /// Gets the right of the client rectangle
         /// </summary>
-        public double ClientRight
-        {
-            get { return ActualRight - ActualPaddingRight - ActualBorderRightWidth; }
-        }
+        public double ClientRight => ActualRight - ActualPaddingRight - ActualBorderRightWidth;
 
         /// <summary>
         /// Gets the bottom of the client rectangle
         /// </summary>
-        public double ClientBottom
-        {
-            get { return ActualBottom - ActualPaddingBottom - ActualBorderBottomWidth; }
-        }
+        public double ClientBottom => ActualBottom - ActualPaddingBottom - ActualBorderBottomWidth;
 
         /// <summary>
         /// Gets the client rectangle
         /// </summary>
-        public RRect ClientRectangle
-        {
-            get { return RRect.FromLTRB(ClientLeft, ClientTop, ClientRight, ClientBottom); }
-        }
+        public RRect ClientRectangle => RRect.FromLTRB(ClientLeft, ClientTop, ClientRight, ClientBottom);
 
         /// <summary>
         /// Gets the actual height
@@ -657,8 +634,8 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public double CollapsedMarginTop
         {
-            get { return double.IsNaN(_collapsedMarginTop) ? 0 : _collapsedMarginTop; }
-            set { _collapsedMarginTop = value; }
+            get => double.IsNaN(_collapsedMarginTop) ? 0 : _collapsedMarginTop;
+            set => _collapsedMarginTop = value;
         }
 
         /// <summary>
@@ -924,18 +901,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets a value indicating if at least one of the corners of the box is rounded
         /// </summary>
-        public bool IsRounded
-        {
-            get { return ActualCornerNe > 0f || ActualCornerNw > 0f || ActualCornerSe > 0f || ActualCornerSw > 0f; }
-        }
+        public bool IsRounded => ActualCornerNe > 0f || ActualCornerNw > 0f || ActualCornerSe > 0f || ActualCornerSw > 0f;
 
         /// <summary>
         /// Gets the actual width of whitespace between words.
         /// </summary>
-        public double ActualWordSpacing
-        {
-            get { return _actualWordSpacing; }
-        }
+        public double ActualWordSpacing { get; private set; } = double.NaN;
 
         /// <summary>
         /// 
@@ -1004,10 +975,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the actual font of the parent
         /// </summary>
-        public RFont ActualParentFont
-        {
-            get { return GetParent() is CssBoxProperties parent ? parent.ActualFont : ActualFont; }
-        }
+        public RFont ActualParentFont => GetParent() is CssBoxProperties parent ? parent.ActualFont : ActualFont;
 
         /// <summary>
         /// Gets the font that should be actually used to paint the text of the box
@@ -1164,10 +1132,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Gets the height of the font in the specified units
         /// </summary>
         /// <returns></returns>
-        public double GetEmHeight()
-        {
-            return ActualFont.Height;
-        }
+        public double GetEmHeight() => ActualFont.Height;
 
         /// <summary>
         /// Ensures that the specified length is converted to pixels if necessary
@@ -1207,11 +1172,11 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         {
             if (double.IsNaN(ActualWordSpacing))
             {
-                _actualWordSpacing = CssUtils.WhiteSpace(g, this);
+                ActualWordSpacing = CssUtils.WhiteSpace(g, this);
                 if (WordSpacing != CssConstants.Normal)
                 {
                     var len = RegexParserUtils.Search(RegexParserUtils.CssLength, WordSpacing) ?? string.Empty;
-                    _actualWordSpacing += CssValueParser.ParseLength(len, 1, this);
+                    ActualWordSpacing += CssValueParser.ParseLength(len, 1, this);
                 }
             }
         }

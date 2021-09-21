@@ -10,10 +10,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public sealed class HtmlRefreshEventArgs : EventArgs
     {
-        /// <summary>
-        /// is re-layout is required for the refresh
-        /// </summary>
-        private readonly bool _layout;
 
         /// <summary>
         /// Init.
@@ -21,20 +17,14 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <param name="layout">is re-layout is required for the refresh</param>
         public HtmlRefreshEventArgs(bool layout)
         {
-            _layout = layout;
+            Layout = layout;
         }
 
         /// <summary>
         /// is re-layout is required for the refresh
         /// </summary>
-        public bool Layout
-        {
-            get { return _layout; }
-        }
+        public bool Layout { get; }
 
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "Layout: {0}", _layout);
-        }
+        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Layout: {0}", Layout);
     }
 }

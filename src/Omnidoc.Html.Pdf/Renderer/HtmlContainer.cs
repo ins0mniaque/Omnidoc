@@ -22,7 +22,6 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// <summary>
         /// The internal core html container
         /// </summary>
-        private readonly HtmlContainerInt _htmlContainerInt;
 
         #endregion
 
@@ -32,7 +31,7 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public HtmlContainer()
         {
-            _htmlContainerInt = new HtmlContainerInt(PdfSharpAdapter.Instance)
+            HtmlContainerInt = new HtmlContainerInt(PdfSharpAdapter.Instance)
             {
                 AvoidAsyncImagesLoading = true,
                 AvoidImagesLateLoading = true
@@ -45,8 +44,8 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public event EventHandler LoadComplete
         {
-            add { _htmlContainerInt.LoadComplete += value; }
-            remove { _htmlContainerInt.LoadComplete -= value; }
+            add { HtmlContainerInt.LoadComplete += value; }
+            remove { HtmlContainerInt.LoadComplete -= value; }
         }
 
         /// <summary>
@@ -57,8 +56,8 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </remarks>
         public event EventHandler<HtmlRenderErrorEventArgs> RenderError
         {
-            add { _htmlContainerInt.RenderError += value; }
-            remove { _htmlContainerInt.RenderError -= value; }
+            add { HtmlContainerInt.RenderError += value; }
+            remove { HtmlContainerInt.RenderError -= value; }
         }
 
         /// <summary>
@@ -68,8 +67,8 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public event EventHandler<HtmlStylesheetLoadEventArgs> StylesheetLoad
         {
-            add { _htmlContainerInt.StylesheetLoad += value; }
-            remove { _htmlContainerInt.StylesheetLoad -= value; }
+            add { HtmlContainerInt.StylesheetLoad += value; }
+            remove { HtmlContainerInt.StylesheetLoad -= value; }
         }
 
         /// <summary>
@@ -78,24 +77,21 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public event EventHandler<HtmlImageLoadEventArgs> ImageLoad
         {
-            add { _htmlContainerInt.ImageLoad += value; }
-            remove { _htmlContainerInt.ImageLoad -= value; }
+            add { HtmlContainerInt.ImageLoad += value; }
+            remove { HtmlContainerInt.ImageLoad -= value; }
         }
 
         /// <summary>
         /// The internal core html container
         /// </summary>
-        internal HtmlContainerInt HtmlContainerInt
-        {
-            get { return _htmlContainerInt; }
-        }
+        internal HtmlContainerInt HtmlContainerInt { get; }
 
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
         public CssData? CssData
         {
-            get { return _htmlContainerInt.CssData; }
+            get { return HtmlContainerInt.CssData; }
         }
 
         /// <summary>
@@ -103,8 +99,8 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public bool AvoidGeometryAntialias
         {
-            get { return _htmlContainerInt.AvoidGeometryAntialias; }
-            set { _htmlContainerInt.AvoidGeometryAntialias = value; }
+            get { return HtmlContainerInt.AvoidGeometryAntialias; }
+            set { HtmlContainerInt.AvoidGeometryAntialias = value; }
         }
 
         /// <summary>
@@ -117,8 +113,8 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </example>
         public XPoint ScrollOffset
         {
-            get { return Utils.Convert(_htmlContainerInt.ScrollOffset); }
-            set { _htmlContainerInt.ScrollOffset = Utils.Convert(value); }
+            get { return Utils.Convert(HtmlContainerInt.ScrollOffset); }
+            set { HtmlContainerInt.ScrollOffset = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -127,8 +123,8 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public XPoint Location
         {
-            get { return Utils.Convert(_htmlContainerInt.Location); }
-            set { _htmlContainerInt.Location = Utils.Convert(value); }
+            get { return Utils.Convert(HtmlContainerInt.Location); }
+            set { HtmlContainerInt.Location = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -140,8 +136,8 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public XSize MaxSize
         {
-            get { return Utils.Convert(_htmlContainerInt.MaxSize); }
-            set { _htmlContainerInt.MaxSize = Utils.Convert(value); }
+            get { return Utils.Convert(HtmlContainerInt.MaxSize); }
+            set { HtmlContainerInt.MaxSize = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -149,18 +145,18 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public XSize ActualSize
         {
-            get { return Utils.Convert(_htmlContainerInt.ActualSize); }
-            internal set { _htmlContainerInt.ActualSize = Utils.Convert(value); }
+            get { return Utils.Convert(HtmlContainerInt.ActualSize); }
+            internal set { HtmlContainerInt.ActualSize = Utils.Convert(value); }
         }
 
         public XSize PageSize {
             get
             {
-                return new XSize(_htmlContainerInt.PageSize.Width, _htmlContainerInt.PageSize.Height);
+                return new XSize(HtmlContainerInt.PageSize.Width, HtmlContainerInt.PageSize.Height);
             }
             set
             {
-                _htmlContainerInt.PageSize = new RSize(value.Width, value.Height);
+                HtmlContainerInt.PageSize = new RSize(value.Width, value.Height);
             }
         }
 
@@ -169,11 +165,11 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public int MarginTop
         {
-            get { return _htmlContainerInt.MarginTop; }
+            get { return HtmlContainerInt.MarginTop; }
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginTop = value;
+                    HtmlContainerInt.MarginTop = value;
             }
         }
 
@@ -182,11 +178,11 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public int MarginBottom
         {
-            get { return _htmlContainerInt.MarginBottom; }
+            get { return HtmlContainerInt.MarginBottom; }
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginBottom = value;
+                    HtmlContainerInt.MarginBottom = value;
             }
         }
 
@@ -195,11 +191,11 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public int MarginLeft
         {
-            get { return _htmlContainerInt.MarginLeft; }
+            get { return HtmlContainerInt.MarginLeft; }
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginLeft = value;
+                    HtmlContainerInt.MarginLeft = value;
             }
         }
 
@@ -208,11 +204,11 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public int MarginRight
         {
-            get { return _htmlContainerInt.MarginRight; }
+            get { return HtmlContainerInt.MarginRight; }
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginRight = value;
+                    HtmlContainerInt.MarginRight = value;
             }
         }
 
@@ -223,7 +219,7 @@ namespace Omnidoc.Html.Pdf.Renderer
         public void SetMargins(int value)
         {
             if (value > -1)
-                _htmlContainerInt.SetMargins(value);
+                HtmlContainerInt.SetMargins(value);
         }
 
         /// <summary>
@@ -231,7 +227,7 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public string? SelectedText
         {
-            get { return _htmlContainerInt.SelectedText; }
+            get { return HtmlContainerInt.SelectedText; }
         }
 
         /// <summary>
@@ -239,7 +235,7 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         public string? SelectedHtml
         {
-            get { return _htmlContainerInt.SelectedHtml; }
+            get { return HtmlContainerInt.SelectedHtml; }
         }
 
         /// <summary>
@@ -247,20 +243,14 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// </summary>
         /// <param name="htmlSource">the html to init with, init empty if not given</param>
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
-        public void SetHtml(string htmlSource, CssData? baseCssData = null)
-        {
-            _htmlContainerInt.SetHtml(htmlSource, baseCssData);
-        }
+        public void SetHtml(string htmlSource, CssData? baseCssData = null) => HtmlContainerInt.SetHtml(htmlSource, baseCssData);
 
         /// <summary>
         /// Get html from the current DOM tree with style if requested.
         /// </summary>
         /// <param name="styleGen">Optional: controls the way styles are generated when html is generated (default: <see cref="HtmlGenerationStyle.Inline"/>)</param>
         /// <returns>generated html</returns>
-        public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline)
-        {
-            return _htmlContainerInt.GetHtml(styleGen);
-        }
+        public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline) => HtmlContainerInt.GetHtml(styleGen);
 
         /// <summary>
         /// Get attribute value of element at the given x,y location by given key.<br/>
@@ -269,29 +259,20 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// <param name="location">the location to find the attribute at</param>
         /// <param name="attribute">the attribute key to get value by</param>
         /// <returns>found attribute value or null if not found</returns>
-        public string? GetAttributeAt(XPoint location, string attribute)
-        {
-            return _htmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
-        }
+        public string? GetAttributeAt(XPoint location, string attribute) => HtmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
 
         /// <summary>
         /// Get all the links in the HTML with the element rectangle and href data.
         /// </summary>
         /// <returns>collection of all the links in the HTML</returns>
-        public IEnumerable<LinkElementData<XRect>> GetLinks()
-        {
-            return HtmlContainerInt.GetLinks().Select(link => link.Convert(Utils.Convert));
-        }
+        public IEnumerable<LinkElementData<XRect>> GetLinks() => HtmlContainerInt.GetLinks().Select(link => link.Convert(Utils.Convert));
 
         /// <summary>
         /// Get css link href at the given x,y location.
         /// </summary>
         /// <param name="location">the location to find the link at</param>
         /// <returns>css link href if exists or null</returns>
-        public string? GetLinkAt(XPoint location)
-        {
-            return _htmlContainerInt.GetLinkAt(Utils.Convert(location));
-        }
+        public string? GetLinkAt(XPoint location) => HtmlContainerInt.GetLinkAt(Utils.Convert(location));
 
         /// <summary>
         /// Get the rectangle of html element as calculated by html layout.<br/>
@@ -302,7 +283,7 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// <returns>the rectangle of the element or null if not found</returns>
         public XRect? GetElementRectangle(string elementId)
         {
-            var r = _htmlContainerInt.GetElementRectangle(elementId);
+            var r = HtmlContainerInt.GetElementRectangle(elementId);
             return r.HasValue ? Utils.Convert(r.Value) : (XRect?)null;
         }
 
@@ -315,7 +296,7 @@ namespace Omnidoc.Html.Pdf.Renderer
             ArgChecker.AssertArgNotNull(g, "g");
 
             using var ig = new GraphicsAdapter(g);
-            _htmlContainerInt.PerformLayout(ig);
+            HtmlContainerInt.PerformLayout(ig);
         }
 
         /// <summary>
@@ -327,12 +308,9 @@ namespace Omnidoc.Html.Pdf.Renderer
             ArgChecker.AssertArgNotNull(g, "g");
 
             using var ig = new GraphicsAdapter(g);
-            _htmlContainerInt.PerformPaint(ig);
+            HtmlContainerInt.PerformPaint(ig);
         }
 
-        public void Dispose()
-        {
-            _htmlContainerInt.Dispose();
-        }
+        public void Dispose() => HtmlContainerInt.Dispose();
     }
 }

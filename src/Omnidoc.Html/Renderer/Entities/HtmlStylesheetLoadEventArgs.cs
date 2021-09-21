@@ -16,22 +16,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// the source of the stylesheet as found in the HTML (file path or URL)
         /// </summary>
-        private readonly string _src;
-
-        /// <summary>
-        /// collection of all the attributes that are defined on the link element
-        /// </summary>
-        private readonly IDictionary<string, string>? _attributes;
-
-        /// <summary>
-        /// provide the new source (file path or URL) to load stylesheet from
-        /// </summary>
-        private string? _setSrc;
-
-        /// <summary>
-        /// provide the stylesheet to load
-        /// </summary>
-        private string? _setStyleSheet;
 
         /// <summary>
         /// provide the stylesheet data to load
@@ -48,51 +32,37 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <param name="attributes">collection of all the attributes that are defined on the image element</param>
         internal HtmlStylesheetLoadEventArgs(string src, IDictionary<string, string>? attributes)
         {
-            _src = src;
-            _attributes = attributes;
+            Src = src;
+            Attributes = attributes;
         }
 
         /// <summary>
         /// the source of the stylesheet as found in the HTML (file path or URL)
         /// </summary>
-        public string Src
-        {
-            get { return _src; }
-        }
+        public string Src { get; }
 
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        public IDictionary<string, string>? Attributes
-        {
-            get { return _attributes; }
-        }
+        public IDictionary<string, string>? Attributes { get; }
 
         /// <summary>
         /// provide the new source (file path or URL) to load stylesheet from
         /// </summary>
-        public string? SetSrc
-        {
-            get { return _setSrc; }
-            set { _setSrc = value; }
-        }
+        public string? SetSrc { get; set; }
 
         /// <summary>
         /// provide the stylesheet to load
         /// </summary>
-        public string? SetStyleSheet
-        {
-            get { return _setStyleSheet; }
-            set { _setStyleSheet = value; }
-        }
+        public string? SetStyleSheet { get; set; }
 
         /// <summary>
         /// provide the stylesheet data to load
         /// </summary>
         public CssData? SetStyleSheetData
         {
-            get { return _setStyleSheetData; }
-            set { _setStyleSheetData = value; }
+            get => _setStyleSheetData;
+            set => _setStyleSheetData = value;
         }
     }
 }

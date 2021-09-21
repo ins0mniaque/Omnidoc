@@ -290,55 +290,43 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// Get the border color for the given box border.
         /// </summary>
-        private static RColor GetColor(Border border, CssBoxProperties box, string style)
+        private static RColor GetColor(Border border, CssBoxProperties box, string style) => border switch
         {
-            return border switch
-            {
-                Border.Top => style == CssConstants.Inset ? Darken(box.ActualBorderTopColor) : box.ActualBorderTopColor,
-                Border.Right => style == CssConstants.Outset ? Darken(box.ActualBorderRightColor) : box.ActualBorderRightColor,
-                Border.Bottom => style == CssConstants.Outset ? Darken(box.ActualBorderBottomColor) : box.ActualBorderBottomColor,
-                Border.Left => style == CssConstants.Inset ? Darken(box.ActualBorderLeftColor) : box.ActualBorderLeftColor,
-                _ => throw new ArgumentOutOfRangeException(nameof(border)),
-            };
-        }
+            Border.Top => style == CssConstants.Inset ? Darken(box.ActualBorderTopColor) : box.ActualBorderTopColor,
+            Border.Right => style == CssConstants.Outset ? Darken(box.ActualBorderRightColor) : box.ActualBorderRightColor,
+            Border.Bottom => style == CssConstants.Outset ? Darken(box.ActualBorderBottomColor) : box.ActualBorderBottomColor,
+            Border.Left => style == CssConstants.Inset ? Darken(box.ActualBorderLeftColor) : box.ActualBorderLeftColor,
+            _ => throw new ArgumentOutOfRangeException(nameof(border)),
+        };
 
         /// <summary>
         /// Get the border width for the given box border.
         /// </summary>
-        private static double GetWidth(Border border, CssBoxProperties box)
+        private static double GetWidth(Border border, CssBoxProperties box) => border switch
         {
-            return border switch
-            {
-                Border.Top => box.ActualBorderTopWidth,
-                Border.Right => box.ActualBorderRightWidth,
-                Border.Bottom => box.ActualBorderBottomWidth,
-                Border.Left => box.ActualBorderLeftWidth,
-                _ => throw new ArgumentOutOfRangeException(nameof(border)),
-            };
-        }
+            Border.Top => box.ActualBorderTopWidth,
+            Border.Right => box.ActualBorderRightWidth,
+            Border.Bottom => box.ActualBorderBottomWidth,
+            Border.Left => box.ActualBorderLeftWidth,
+            _ => throw new ArgumentOutOfRangeException(nameof(border)),
+        };
 
         /// <summary>
         /// Get the border style for the given box border.
         /// </summary>
-        private static string GetStyle(Border border, CssBoxProperties box)
+        private static string GetStyle(Border border, CssBoxProperties box) => border switch
         {
-            return border switch
-            {
-                Border.Top => box.BorderTopStyle,
-                Border.Right => box.BorderRightStyle,
-                Border.Bottom => box.BorderBottomStyle,
-                Border.Left => box.BorderLeftStyle,
-                _ => throw new ArgumentOutOfRangeException(nameof(border)),
-            };
-        }
+            Border.Top => box.BorderTopStyle,
+            Border.Right => box.BorderRightStyle,
+            Border.Bottom => box.BorderBottomStyle,
+            Border.Left => box.BorderLeftStyle,
+            _ => throw new ArgumentOutOfRangeException(nameof(border)),
+        };
 
         /// <summary>
         /// Makes the specified color darker for inset/outset borders.
         /// </summary>
-        private static RColor Darken(RColor c)
-        {
-            return RColor.FromArgb(c.R / 2, c.G / 2, c.B / 2);
-        }
+        private static RColor Darken(RColor c) => RColor.FromArgb(c.R / 2, c.G / 2, c.B / 2);
 
         #endregion
     }

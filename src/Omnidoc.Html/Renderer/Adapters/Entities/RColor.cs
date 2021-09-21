@@ -33,74 +33,47 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <summary>
         /// Gets a system-defined color.
         /// </summary>
-        public static RColor Transparent
-        {
-            get { return new RColor(0); }
-        }
+        public static RColor Transparent => new(0);
 
         /// <summary>
         ///     Gets a system-defined color that has an ARGB value of #FF000000.
         /// </summary>
-        public static RColor Black
-        {
-            get { return FromArgb(0, 0, 0); }
-        }
+        public static RColor Black => FromArgb(0, 0, 0);
 
         /// <summary>
         /// Gets a system-defined color that has an ARGB value of #FFFFFFFF.
         /// </summary>
-        public static RColor White
-        {
-            get { return FromArgb(255, 255, 255); }
-        }
+        public static RColor White => FromArgb(255, 255, 255);
 
         /// <summary>
         /// Gets a system-defined color that has an ARGB value of #FFF5F5F5.
         /// </summary>
-        public static RColor WhiteSmoke
-        {
-            get { return FromArgb(245, 245, 245); }
-        }
+        public static RColor WhiteSmoke => FromArgb(245, 245, 245);
 
         /// <summary>
         /// Gets a system-defined color that has an ARGB value of #FFD3D3D3.
         /// </summary>
-        public static RColor LightGray
-        {
-            get { return FromArgb(211, 211, 211); }
-        }
+        public static RColor LightGray => FromArgb(211, 211, 211);
 
         /// <summary>
         ///     Gets the red component value of this <see cref="RColor" /> structure.
         /// </summary>
-        public byte R
-        {
-            get { return (byte)((ulong)(_value >> 16) & byte.MaxValue); }
-        }
+        public byte R => (byte)((ulong)(_value >> 16) & byte.MaxValue);
 
         /// <summary>
         ///     Gets the green component value of this <see cref="RColor" /> structure.
         /// </summary>
-        public byte G
-        {
-            get { return (byte)((ulong)(_value >> 8) & byte.MaxValue); }
-        }
+        public byte G => (byte)((ulong)(_value >> 8) & byte.MaxValue);
 
         /// <summary>
         ///     Gets the blue component value of this <see cref="RColor" /> structure.
         /// </summary>
-        public byte B
-        {
-            get { return (byte)((ulong)_value & byte.MaxValue); }
-        }
+        public byte B => (byte)((ulong)_value & byte.MaxValue);
 
         /// <summary>
         ///     Gets the alpha component value of this <see cref="RColor" /> structure.
         /// </summary>
-        public byte A
-        {
-            get { return (byte)((ulong)(_value >> 24) & byte.MaxValue); }
-        }
+        public byte A => (byte)((ulong)(_value >> 24) & byte.MaxValue);
 
         /// <summary>
         ///     Specifies whether this <see cref="RColor" /> structure is uninitialized.
@@ -109,10 +82,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     This property returns true if this color is uninitialized; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public bool IsEmpty
-        {
-            get { return _value == 0; }
-        }
+        public bool IsEmpty => _value == 0;
 
         /// <summary>
         ///     Tests whether two specified <see cref="RColor" /> structures are equivalent.
@@ -192,10 +162,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     <paramref name="red" />, <paramref name="green" />, or <paramref name="blue" /> is less than 0 or greater than 255.
         /// </exception>
         /// <filterpriority>1</filterpriority>
-        public static RColor FromArgb(int red, int green, int blue)
-        {
-            return FromArgb(byte.MaxValue, red, green, blue);
-        }
+        public static RColor FromArgb(int red, int green, int blue) => FromArgb(byte.MaxValue, red, green, blue);
 
         /// <summary>
         ///     Tests whether the specified object is a <see cref="RColor" /> structure and is equivalent to this
@@ -209,15 +176,9 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// </returns>
         /// <param name="obj">The object to test. </param>
         /// <filterpriority>1</filterpriority>
-        public override bool Equals(object obj)
-        {
-            return obj is RColor other ? Equals(other) : false;
-        }
+        public override bool Equals(object obj) => obj is RColor other ? Equals(other) : false;
 
-        public bool Equals(RColor other)
-        {
-            return _value == other._value;
-        }
+        public bool Equals(RColor other) => _value == other._value;
 
         /// <summary>
         ///     Returns a hash code for this <see cref="RColor" /> structure.
@@ -226,10 +187,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     An integer value that specifies the hash code for this <see cref="RColor" />.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override int GetHashCode()
-        {
-            return _value.GetHashCode();
-        }
+        public override int GetHashCode() => _value.GetHashCode();
 
         /// <summary>
         ///     Converts this <see cref="RColor" /> structure to a human-readable string.

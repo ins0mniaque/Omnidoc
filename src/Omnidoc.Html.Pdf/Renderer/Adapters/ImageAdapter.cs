@@ -8,41 +8,34 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class ImageAdapter : RImage
     {
-        /// <summary>
-        /// the underline win-forms image.
-        /// </summary>
-        private readonly XImage _image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="object"/> class.
         /// </summary>
         public ImageAdapter(XImage image)
         {
-            _image = image;
+            Image = image;
         }
 
         /// <summary>
         /// the underline win-forms image.
         /// </summary>
-        public XImage Image
-        {
-            get { return _image; }
-        }
+        public XImage Image { get; }
 
         public override double Width
         {
-            get { return _image.PixelWidth; }
+            get { return Image.PixelWidth; }
         }
 
         public override double Height
         {
-            get { return _image.PixelHeight; }
+            get { return Image.PixelHeight; }
         }
 
         protected override void Dispose(bool disposing)
         {
             if(disposing)
-                _image.Dispose();
+                Image.Dispose();
 
             base.Dispose(disposing);
         }

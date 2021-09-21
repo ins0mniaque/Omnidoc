@@ -9,10 +9,6 @@ namespace Omnidoc.Html.Renderer.Adapters
     /// </summary>
     public abstract class RControl
     {
-        /// <summary>
-        /// The platform adapter.
-        /// </summary>
-        private readonly RAdapter _adapter;
 
         /// <summary>
         /// Init control with platform adapter.
@@ -20,16 +16,13 @@ namespace Omnidoc.Html.Renderer.Adapters
         protected RControl(RAdapter adapter)
         {
             ArgChecker.AssertArgNotNull(adapter, "adapter");
-            _adapter = adapter;
+            Adapter = adapter;
         }
 
         /// <summary>
         /// The platform adapter.
         /// </summary>
-        public RAdapter Adapter
-        {
-            get { return _adapter; }
-        }
+        public RAdapter Adapter { get; }
 
         /// <summary>
         /// Is the left mouse button is currently in pressed state

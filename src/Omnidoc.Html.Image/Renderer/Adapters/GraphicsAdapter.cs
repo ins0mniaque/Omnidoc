@@ -23,7 +23,7 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         // TODO: Implement clipping
         private enum ClipMode { Replace, Exclude }
 
-        private readonly Stack<ClipMode> _clipModeStack = new Stack<ClipMode>();
+        private readonly Stack<ClipMode> _clipModeStack = new();
 
         /// <summary>
         /// Init.
@@ -93,10 +93,10 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
 
             var size = MeasureString(str, font);
 
-            for (int i = 1; i <= str.Length; i++)
+            for (var i = 1; i <= str.Length; i++)
             {
                 charFit = i - 1;
-                RSize pSize = MeasureString(str.Substring(0, i), font);
+                var pSize = MeasureString(str.Substring(0, i), font);
                 if (pSize.Height <= size.Height && pSize.Width < maxWidth)
                     charFitWidth = pSize.Width;
                 else
@@ -118,25 +118,13 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
             return new BrushAdapter(brush);
         }
 
-        public override RGraphicsPath GetGraphicsPath()
-        {
-            return new GraphicsPathAdapter();
-        }
+        public override RGraphicsPath GetGraphicsPath() => new GraphicsPathAdapter();
 
-        public override void DrawLine(RPen pen, double x1, double y1, double x2, double y2)
-        {
-            _g.DrawLines(((PenAdapter)pen).Pen, new PointF((float)x1, (float)y1), new PointF((float)x2, (float)y2));
-        }
+        public override void DrawLine(RPen pen, double x1, double y1, double x2, double y2) => _g.DrawLines(((PenAdapter)pen).Pen, new PointF((float)x1, (float)y1), new PointF((float)x2, (float)y2));
 
-        public override void DrawRectangle(RPen pen, double x, double y, double width, double height)
-        {
-            _g.Draw(((PenAdapter)pen).Pen, new RectangleF((float) x, (float) y, (float) width, (float) height));
-        }
+        public override void DrawRectangle(RPen pen, double x, double y, double width, double height) => _g.Draw(((PenAdapter)pen).Pen, new RectangleF((float)x, (float)y, (float)width, (float)height));
 
-        public override void DrawRectangle(RBrush brush, double x, double y, double width, double height)
-        {
-            _g.Fill(((BrushAdapter)brush).Brush, new RectangleF((float) x, (float) y, (float) width, (float) height));
-        }
+        public override void DrawRectangle(RBrush brush, double x, double y, double width, double height) => _g.Fill(((BrushAdapter)brush).Brush, new RectangleF((float)x, (float)y, (float)width, (float)height));
 
         public override void DrawImage(RImage image, RRect destRect, RRect srcRect)
         {
@@ -165,15 +153,9 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
             _g.DrawImage(source, new SixLabors.ImageSharp.Point((int) destRect.X, (int) destRect.Y), 1f);
         }
 
-        public override void DrawPath(RPen pen, RGraphicsPath path)
-        {
-            _g.Draw(((PenAdapter)pen).Pen, ((GraphicsPathAdapter)path).PathBuilder.Build());
-        }
+        public override void DrawPath(RPen pen, RGraphicsPath path) => _g.Draw(((PenAdapter)pen).Pen, ((GraphicsPathAdapter)path).PathBuilder.Build());
 
-        public override void DrawPath(RBrush brush, RGraphicsPath path)
-        {
-            _g.Fill(((BrushAdapter)brush).Brush, ((GraphicsPathAdapter)path).PathBuilder.Build());
-        }
+        public override void DrawPath(RBrush brush, RGraphicsPath path) => _g.Fill(((BrushAdapter)brush).Brush, ((GraphicsPathAdapter)path).PathBuilder.Build());
 
         public override void DrawPolygon(RBrush brush, RPoint[] points)
         {

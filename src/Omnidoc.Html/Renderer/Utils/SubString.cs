@@ -15,15 +15,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <summary>
         /// the full string that this sub-string is part of
         /// </summary>
-        private readonly string _fullString;
 
         /// <summary>
-        /// the start index of the sub-string
-        /// </summary>
-        private readonly int _startIdx;
-
-        /// <summary>
-        /// the length of the sub-string starting at <see cref="_startIdx"/>
+        /// the length of the sub-string starting at <see cref="StartIdx"/>
         /// </summary>
         private readonly int _length;
 
@@ -38,8 +32,8 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         {
             ArgChecker.AssertArgNotNull(fullString, "fullString");
 
-            _fullString = fullString;
-            _startIdx = 0;
+            FullString = fullString;
+            StartIdx = 0;
             _length = fullString.Length;
         }
 
@@ -58,34 +52,25 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             if (length < 0 || startIdx + length > fullString.Length)
                 throw new ArgumentOutOfRangeException(nameof(length), "Must within fullString boundries");
 
-            _fullString = fullString;
-            _startIdx = startIdx;
+            FullString = fullString;
+            StartIdx = startIdx;
             _length = length;
         }
 
         /// <summary>
         /// the full string that this sub-string is part of
         /// </summary>
-        public string FullString
-        {
-            get { return _fullString; }
-        }
+        public string FullString { get; }
 
         /// <summary>
         /// the start index of the sub-string
         /// </summary>
-        public int StartIdx
-        {
-            get { return _startIdx; }
-        }
+        public int StartIdx { get; }
 
         /// <summary>
-        /// the length of the sub-string starting at <see cref="_startIdx"/>
+        /// the length of the sub-string starting at <see cref="StartIdx"/>
         /// </summary>
-        public int Length
-        {
-            get { return _length; }
-        }
+        public int Length => _length;
 
         /// <summary>
         /// Get string char at specific index.
@@ -98,7 +83,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             {
                 if (idx < 0 || idx > _length)
                     throw new ArgumentOutOfRangeException(nameof(idx), "must be within the string range");
-                return _fullString[_startIdx + idx];
+                return FullString[StartIdx + idx];
             }
         }
 
@@ -106,10 +91,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// Is the sub-string is empty string.
         /// </summary>
         /// <returns>true - empty string, false - otherwise</returns>
-        public bool IsEmpty()
-        {
-            return _length < 1;
-        }
+        public bool IsEmpty() => _length < 1;
 
         /// <summary>
         /// Is the sub-string is empty string or contains only whitespaces.
@@ -119,7 +101,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         {
             for (var i = 0; i < _length; i++)
             {
-                if (!char.IsWhiteSpace(_fullString, _startIdx + i))
+                if (!char.IsWhiteSpace(FullString, StartIdx + i))
                     return false;
             }
             return true;
@@ -135,7 +117,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
                 return false;
             for (var i = 0; i < _length; i++)
             {
-                if (!char.IsWhiteSpace(_fullString, _startIdx + i))
+                if (!char.IsWhiteSpace(FullString, StartIdx + i))
                     return false;
             }
             return true;
@@ -146,10 +128,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// This will create a new string object!
         /// </summary>
         /// <returns>new string that is the sub-string represented by this instance</returns>
-        public string CutSubstring()
-        {
-            return _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty;
-        }
+        public string CutSubstring() => _length > 0 ? FullString.Substring(StartIdx, _length) : string.Empty;
 
         /// <summary>
         /// Retrieves a substring from this instance. The substring starts at a specified character position and has a specified length. 
@@ -167,12 +146,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             if (startIdx + length > _length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            return _fullString.Substring(_startIdx + startIdx, length);
+            return FullString.Substring(StartIdx + startIdx, length);
         }
 
-        public override string ToString()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "Sub-string: {0}", _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty);
-        }
+        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Sub-string: {0}", _length > 0 ? FullString.Substring(StartIdx, _length) : string.Empty);
     }
 }

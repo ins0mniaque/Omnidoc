@@ -16,9 +16,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     {
         #region Fields and Consts
 
-        private readonly List<CssRect> _words;
-        private readonly CssBox _ownerBox;
-        private readonly Dictionary<CssBox, RRect> _rects;
         private readonly List<CssBox> _relatedBoxes;
 
         #endregion
@@ -29,45 +26,33 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public CssLineBox(CssBox ownerBox)
         {
-            _rects = new Dictionary<CssBox, RRect>();
+            Rectangles = new Dictionary<CssBox, RRect>();
             _relatedBoxes = new List<CssBox>();
-            _words = new List<CssRect>();
-            _ownerBox = ownerBox;
-            _ownerBox.LineBoxes.Add(this);
+            Words = new List<CssRect>();
+            OwnerBox = ownerBox;
+            OwnerBox.LineBoxes.Add(this);
         }
 
         /// <summary>
         /// Gets a list of boxes related with the linebox. 
         /// To know the words of the box inside this linebox, use the <see cref="WordsOf"/> method.
         /// </summary>
-        public List<CssBox> RelatedBoxes
-        {
-            get { return _relatedBoxes; }
-        }
+        public List<CssBox> RelatedBoxes => _relatedBoxes;
 
         /// <summary>
         /// Gets the words inside the linebox
         /// </summary>
-        public List<CssRect> Words
-        {
-            get { return _words; }
-        }
+        public List<CssRect> Words { get; }
 
         /// <summary>
         /// Gets the owner box
         /// </summary>
-        public CssBox OwnerBox
-        {
-            get { return _ownerBox; }
-        }
+        public CssBox OwnerBox { get; }
 
         /// <summary>
         /// Gets a List of rectangles that are to be painted on this linebox
         /// </summary>
-        public Dictionary<CssBox, RRect> Rectangles
-        {
-            get { return _rects; }
-        }
+        public Dictionary<CssBox, RRect> Rectangles { get; }
 
         /// <summary>
         /// Get the height of this box line (the max height of all the words)
@@ -77,7 +62,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             get
             {
                 double height = 0;
-                foreach (var rect in _rects)
+                foreach (var rect in Rectangles)
                 {
                     height = Math.Max(height, rect.Value.Height);
                 }
@@ -93,7 +78,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             get
             {
                 double bottom = 0;
-                foreach (var rect in _rects)
+                foreach (var rect in Rectangles)
                 {
                     bottom = Math.Max(bottom, rect.Value.Bottom);
                 }
@@ -253,11 +238,11 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <returns></returns>
         public bool IsLastSelectedWord(CssRect word)
         {
-            for (var i = 0; i < _words.Count - 1; i++)
+            for (var i = 0; i < Words.Count - 1; i++)
             {
-                if (_words[i] == word)
+                if (Words[i] == word)
                 {
-                    return !_words[i + 1].Selected;
+                    return !Words[i + 1].Selected;
                 }
             }
 
