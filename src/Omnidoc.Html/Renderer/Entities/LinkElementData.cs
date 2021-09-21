@@ -9,12 +9,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public sealed class LinkElementData<T>
     {
-
-        /// <summary>
-        /// the rectangle of element as calculated by html layout
-        /// </summary>
-        private readonly T _rectangle;
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -22,7 +16,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             Id = id;
             Href = href;
-            _rectangle = rectangle;
+            Rectangle = rectangle;
         }
 
         /// <summary>
@@ -38,7 +32,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// the rectangle of element as calculated by html layout
         /// </summary>
-        public T Rectangle => _rectangle;
+        public T Rectangle { get; }
 
         /// <summary>
         /// Is the link is directed to another element in the html
@@ -55,9 +49,9 @@ namespace Omnidoc.Html.Renderer.Core.Entities
             if(convert == null)
                 throw new ArgumentNullException(nameof(convert));
 
-            return new LinkElementData<T2>(Id, Href, convert(_rectangle));
+            return new LinkElementData<T2>(Id, Href, convert( Rectangle ) );
         }
 
-        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Id: {0}, Href: {1}, Rectangle: {2}", Id, Href, _rectangle);
+        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Id: {0}, Href: {1}, Rectangle: {2}", Id, Href, Rectangle );
     }
 }

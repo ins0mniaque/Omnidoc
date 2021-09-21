@@ -8,21 +8,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </summary>
     internal sealed class CssRectImage : CssRect
     {
-        #region Fields and Consts
-
-        /// <summary>
-        /// the image object if it is image word (can be null if not loaded)
-        /// </summary>
-        private RImage? _image;
-
-        /// <summary>
-        /// the image rectangle restriction as returned from image load event
-        /// </summary>
-        private RRect _imageRectangle;
-
-        #endregion
-
-
         /// <summary>
         /// Creates a new BoxWord which represents an image
         /// </summary>
@@ -34,11 +19,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the image this words represents (if one exists)
         /// </summary>
-        public override RImage? Image
-        {
-            get => _image;
-            set => _image = value;
-        }
+        public override RImage? Image { get; set; }
 
         /// <summary>
         /// Gets if the word represents an image.
@@ -48,11 +29,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// the image rectange restriction as returned from image load event
         /// </summary>
-        public RRect ImageRectangle
-        {
-            get => _imageRectangle;
-            set => _imageRectangle = value;
-        }
+        public RRect ImageRectangle { get; set; }
 
         /// <summary>
         /// Represents this word for debugging purposes

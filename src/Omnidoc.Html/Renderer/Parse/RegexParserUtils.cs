@@ -8,15 +8,13 @@ namespace Omnidoc.Html.Renderer.Core.Parse
     /// </summary>
     internal static class RegexParserUtils
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Extracts the media types from a media at-rule; e.g. @media print, 3d, screen {
         /// </summary>
         public const string CssMediaTypes = @"@media[^\{\}]*\{";
 
         /// <summary>
-        /// Extracts defined blocks in CSS. 
+        /// Extracts defined blocks in CSS.
         /// WARNING: Blocks will include blocks inside at-rules.
         /// </summary>
         public const string CssBlocks = @"[^\{\}]*\{[^\{\}]*\}";
@@ -76,9 +74,6 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// the regexes cache that is used by the parser so not to create regex each time
         /// </summary>
         private static readonly Dictionary<string, Regex> _regexes = new();
-
-        #endregion
-
 
         /// <summary>
         /// Get CSS at rule from the given stylesheet.

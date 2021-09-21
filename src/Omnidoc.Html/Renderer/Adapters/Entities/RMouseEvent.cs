@@ -7,7 +7,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// </summary>
     public sealed class RMouseEvent
     {
-
         /// <summary>
         /// Init.
         /// </summary>

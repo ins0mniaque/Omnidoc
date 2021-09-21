@@ -21,7 +21,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
     /// Handler for downloading images from the web.<br/>
     /// Single instance of the handler used for all images downloaded in a single html, this way if the html contains more
     /// than one reference to the same image it will be downloaded only once.<br/>
-    /// Also handles corrupt, partial and canceled downloads by first downloading to temp file and only if successful moving to cached 
+    /// Also handles corrupt, partial and canceled downloads by first downloading to temp file and only if successful moving to cached
     /// file location.
     /// </summary>
     internal sealed class ImageDownloader : IDisposable
@@ -32,7 +32,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         private readonly List<WebClient> _clients = new();
 
         /// <summary>
-        /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image 
+        /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image
         /// </summary>
         private readonly Dictionary<string, List<DownloadFileAsyncCallback>> _imageDownloadCallbacks = new();
 
@@ -77,9 +77,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose() => ReleaseObjects();
-
-
-        #region Private/Protected methods
 
         /// <summary>
         /// Download the requested file in the URI to the given file path.<br/>
@@ -153,11 +150,10 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                         throw new ArgumentNullException(nameof(client));
 
                     var contentType = CommonUtils.GetResponseContentType(client);
-                    if (contentType == null || !contentType.StartsWith("image", StringComparison.OrdinalIgnoreCase))
+                    if ( contentType?.StartsWith ( "image", StringComparison.OrdinalIgnoreCase ) != true )
                     {
                         error = new InvalidOperationException("Failed to load image, not image content type: " + contentType);
                     }
-
                 }
 
                 if (error == null)
@@ -219,11 +215,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             }
         }
 
-        #endregion
-
-
-        #region Inner class: DownloadData
-
         private sealed class DownloadData
         {
             public readonly Uri _uri;
@@ -237,7 +228,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 _filePath = filePath;
             }
         }
-
-        #endregion
     }
 }

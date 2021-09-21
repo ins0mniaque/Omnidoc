@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
@@ -82,7 +82,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             if (imageWord.Image != null)
             {
                 // If only the width was set in the html tag, ratio the height.
-                if ((hasImageTagWidth && !hasImageTagHeight) || scaleImageHeight)
+                if (hasImageTagWidth && !hasImageTagHeight || scaleImageHeight)
                 {
                     // Divide the given tag width with the actual image width, to get the ratio.
                     var ratio = imageWord.Width / imageWord.Image.Width;
@@ -210,9 +210,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             //}
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Recursively flows the content of the box using the inline model
         /// </summary>
@@ -266,15 +263,15 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                         if (maxbottom - cury < box.ActualLineHeight)
                             maxbottom += box.ActualLineHeight - (maxbottom - cury);
 
-                        if ((b.WhiteSpace != CssConstants.NoWrap && b.WhiteSpace != CssConstants.Pre && curx + word.Width + rightspacing > limitRight
-                             && (b.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces))
+                        if (b.WhiteSpace != CssConstants.NoWrap && b.WhiteSpace != CssConstants.Pre && curx + word.Width + rightspacing > limitRight
+                             && (b.WhiteSpace != CssConstants.PreWrap || !word.IsSpaces)
                             || word.IsLineBreak || wrapNoWrapBox)
                         {
                             wrapNoWrapBox = false;
                             curx = startx;
 
                             // handle if line is wrapped for the first text element where parent has left margin\padding
-                            if (b == box.Boxes[0] && !word.IsLineBreak && (word == b.Words[0] || (box.ParentBox != null && box.ParentBox.IsBlock)))
+                            if (b == box.Boxes[0] && !word.IsLineBreak && (word == b.Words[0] || box.ParentBox?.IsBlock == true ) )
                                 curx += box.ActualMarginLeft + box.ActualBorderLeftWidth + box.ActualPaddingLeft;
 
                             cury = maxbottom + linespacing;
@@ -332,7 +329,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             }
 
             // handle box that is only a whitespace
-            if (box.Text != null && box.Text.IsWhitespace() && !box.IsImage && box.IsInline && box.Boxes.Count == 0 && box.Words.Count == 0)
+            if ( box.Text?.IsWhitespace ( ) == true && !box.IsImage && box.IsInline && box.Boxes.Count == 0 && box.Words.Count == 0)
             {
                 curx += box.ActualWordSpacing;
             }
@@ -391,7 +388,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
                         if (box.ParentBox != null && box == box.ParentBox.Boxes[0] && word == box.Words[0] && word == line.Words[0] && line != line.OwnerBox.LineBoxes[0] && !word.IsLineBreak)
                             left -= box.ParentBox.ActualMarginLeft + box.ParentBox.ActualBorderLeftWidth + box.ParentBox.ActualPaddingLeft;
-
 
                         x = Math.Min(x, left);
                         r = Math.Max(r, word.Right);
@@ -523,8 +519,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 baseline = Math.Max(baseline, lineBox.Rectangles[box].Top);
             }
 
-            var boxes = new List<CssBox>(lineBox.Rectangles.Keys);
-            foreach (var box in boxes)
+            foreach (var box in new List<CssBox>(lineBox.Rectangles.Keys))
             {
                 //Important notes on http://www.w3.org/TR/CSS21/tables.html#height-layout
                 switch (box.VerticalAlign)
@@ -640,7 +635,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             if (line.Words.Count == 0)
                 return;
 
-
             var lastWord = line.Words[^1];
             var right = line.OwnerBox.ActualRight - line.OwnerBox.ActualPaddingRight - line.OwnerBox.ActualBorderRightWidth;
             var diff = right - lastWord.Right - lastWord.OwnerBox.ActualBorderRightWidth - lastWord.OwnerBox.ActualPaddingRight;
@@ -700,7 +694,5 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             }
             return result;
         }
-
-        #endregion
     }
 }

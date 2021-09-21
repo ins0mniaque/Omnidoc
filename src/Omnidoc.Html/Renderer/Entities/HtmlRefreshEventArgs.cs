@@ -10,7 +10,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public sealed class HtmlRefreshEventArgs : EventArgs
     {
-
         /// <summary>
         /// Init.
         /// </summary>

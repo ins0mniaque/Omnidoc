@@ -7,8 +7,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class XTextureBrush
     {
-        #region Fields/Consts
-
         /// <summary>
         /// The image to draw in the brush
         /// </summary>
@@ -23,9 +21,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// the transform the location of the image to handle center alignment
         /// </summary>
         private readonly XPoint _translateTransformLocation;
-
-        #endregion
-
 
         /// <summary>
         /// Init.

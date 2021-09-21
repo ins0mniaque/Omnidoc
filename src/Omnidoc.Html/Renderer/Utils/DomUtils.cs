@@ -66,7 +66,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             {
                 return root;
             }
-            else if (box.HtmlTag != null && box.HtmlTag.Name.Equals(tagName, StringComparison.OrdinalIgnoreCase))
+            else if ( box.HtmlTag?.Name.Equals ( tagName, StringComparison.OrdinalIgnoreCase ) == true )
             {
                 return box.ParentBox ?? root;
             }
@@ -142,7 +142,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             if (!box.Words[0].IsImage && box.Words[0].HasSpaceBefore && box.IsInline)
             {
                 var sib = GetPreviousContainingBlockSibling(box);
-                if (sib != null && sib.IsInline)
+                if ( sib?.IsInline == true )
                     return true;
             }
             return false;
@@ -351,7 +351,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <returns>css word box if exists or null</returns>
         public static CssRect? GetCssBoxWord(CssBox box, RPoint location)
         {
-            if (box != null && box.Visibility == CssConstants.Visible)
+            if ( box?.Visibility == CssConstants.Visible )
             {
                 if (box.LineBoxes.Count > 0)
                 {
@@ -474,9 +474,6 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             return sb.ToString();
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Get selected plain text of the given html sub-tree.<br/>
         /// Append all the selected words.
@@ -498,7 +495,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             }
 
             // empty span box
-            if (box.Boxes.Count < 1 && box.Text != null && box.Text.IsWhitespace())
+            if ( box.Boxes.Count < 1 && box.Text?.IsWhitespace ( ) == true )
             {
                 sb.Append(' ');
             }
@@ -516,7 +513,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             if (sb.Length > 0)
             {
                 // convert hr to line of dashes
-                if (box.HtmlTag != null && box.HtmlTag.Name == "hr")
+                if ( box.HtmlTag?.Name == "hr" )
                 {
                     if (sb.Length > 1 && sb[^1] != '\n')
                         sb.AppendLine();
@@ -537,7 +534,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
                 }
 
                 // paragraphs has additional newline for nice formatting
-                if (box.HtmlTag != null && box.HtmlTag.Name == "p")
+                if ( box.HtmlTag?.Name == "p" )
                 {
                     var newlines = 0;
                     for (var i = sb.Length - 1; i >= 0 && char.IsWhiteSpace(sb[i]); i--)
@@ -682,12 +679,12 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="selectionRoot">the box the is the root of selected boxes (the first box to contain multiple selected boxes)</param>
         private static void WriteHtml(CssParser cssParser, StringBuilder sb, CssBox box, HtmlGenerationStyle styleGen, Dictionary<CssBox, bool>? selectedBoxes, CssBox? selectionRoot)
         {
-            if (box.HtmlTag == null || selectedBoxes == null || selectedBoxes.ContainsKey(box))
+            if ( box.HtmlTag == null || selectedBoxes?.ContainsKey ( box ) != false )
             {
                 if (box.HtmlTag != null)
                 {
                     if (box.HtmlTag.Name != "link" || !box.HtmlTag.Attributes.ContainsKey("href") ||
-                        (!box.HtmlTag.Attributes["href"].StartsWith("property", StringComparison.Ordinal) && !box.HtmlTag.Attributes["href"].StartsWith("method", StringComparison.Ordinal)))
+                        !box.HtmlTag.Attributes["href"].StartsWith("property", StringComparison.Ordinal) && !box.HtmlTag.Attributes["href"].StartsWith("method", StringComparison.Ordinal))
                     {
                         WriteHtmlTag(cssParser, sb, box, styleGen);
                         if (box == selectionRoot)
@@ -719,7 +716,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
                     WriteHtml(cssParser, sb, childBox, styleGen, selectedBoxes, selectionRoot);
                 }
 
-                if (box.HtmlTag != null && !box.HtmlTag.IsSingle)
+                if ( box.HtmlTag?.IsSingle == false )
                 {
                     if (box == selectionRoot)
                         sb.Append("<!--EndFragment-->");
@@ -915,7 +912,5 @@ namespace Omnidoc.Html.Renderer.Core.Utils
                 builder.AppendFormat(CultureInfo.InvariantCulture, "{0}</{1}>\r\n", new string(' ', 2 * indent), box.Display);
             }
         }
-
-        #endregion
     }
 }

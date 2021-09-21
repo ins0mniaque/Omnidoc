@@ -5,8 +5,6 @@ namespace Omnidoc.Html.Renderer.Core.Utils
 {
     internal static class HtmlUtils
     {
-        #region Fields and Consts
-
         /// <summary>
         /// List of html tags that don't have content
         /// </summary>
@@ -34,9 +32,6 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// the html decode only pairs
         /// </summary>
         private static readonly Dictionary<string, char> _decodeOnly = new(StringComparer.InvariantCultureIgnoreCase);
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -334,9 +329,6 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             return str;
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Decode html special charecters encoded using char entity code (&#8364;)
         /// </summary>
@@ -358,7 +350,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
                 var repl = string.Empty;
                 if (num >= 0 && num <= 0x10ffff && !(num >= 0xd800 && num <= 0xdfff))
                     repl = char.ConvertFromUtf32((int)num);
-                
+
                 str = str.Remove(idx, endIdx - idx);
                 str = str.Insert(idx, repl);
 
@@ -392,7 +384,5 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             }
             return str;
         }
-
-        #endregion
     }
 }

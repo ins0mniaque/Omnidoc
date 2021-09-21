@@ -14,20 +14,15 @@ using Omnidoc.Html.Image.Renderer.Utilities;
 namespace Omnidoc.Html.Image.Renderer
 {
     /// <summary>
-    /// Low level handling of Html Renderer logic, this class is used by <see cref="HtmlParser"/>, 
+    /// Low level handling of Html Renderer logic, this class is used by <see cref="HtmlParser"/>,
     /// <see cref="HtmlMeasurer"/> and <see cref="DrawHtmlExtensions"/>.
     /// </summary>
     /// <seealso cref="HtmlContainerInt"/>
     public sealed class HtmlContainer : IDisposable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// The internal core html container
         /// </summary>
-
-        #endregion
-
         public HtmlContainer()
         {
             HtmlContainerInt = new HtmlContainerInt(ImageSharpAdapter.Instance);
@@ -135,7 +130,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// False - images are loaded asynchronously to html parsing when downloaded from URL or loaded from disk.<br/>
         /// </summary>
         /// <remarks>
-        /// Asynchronously image loading allows to unblock html rendering while image is downloaded or loaded from disk using IO 
+        /// Asynchronously image loading allows to unblock html rendering while image is downloaded or loaded from disk using IO
         /// ports to achieve better performance.<br/>
         /// Asynchronously image loading should be avoided when the full html content must be available during render, like render to image.
         /// </remarks>
@@ -151,7 +146,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// False - images that are not visible because of scroll location are not loaded until they are scrolled to.
         /// </summary>
         /// <remarks>
-        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large 
+        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large
         /// amount of images, as all image loading is delayed (downloading and loading into memory).<br/>
         /// Late image loading may effect the layout and actual size as image without set size will not have actual size until they are loaded
         /// resulting in layout change during user scroll.<br/>

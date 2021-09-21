@@ -57,9 +57,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             }
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Load stylesheet string from given source (file path or uri).
         /// </summary>
@@ -146,7 +143,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                     if (endIdx > idx + 4)
                     {
                         var offset1 = 4 + (stylesheet[idx + 4] == '\'' ? 1 : 0);
-                        var offset2 = (stylesheet[endIdx - 1] == '\'' ? 1 : 0);
+                        var offset2 = stylesheet[endIdx - 1] == '\'' ? 1 : 0;
                         var urlStr = stylesheet.Substring(idx + offset1, endIdx - idx - offset1 - offset2);
                         if (Uri.TryCreate(urlStr, UriKind.Relative, out var url))
                         {
@@ -169,7 +166,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
 
             return stylesheet;
         }
-
-        #endregion
     }
 }

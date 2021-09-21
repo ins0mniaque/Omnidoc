@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
@@ -14,30 +14,23 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </remarks>
     internal sealed class CssLineBox
     {
-        #region Fields and Consts
-
-        private readonly List<CssBox> _relatedBoxes;
-
-        #endregion
-
-
         /// <summary>
         /// Creates a new LineBox
         /// </summary>
         public CssLineBox(CssBox ownerBox)
         {
             Rectangles = new Dictionary<CssBox, RRect>();
-            _relatedBoxes = new List<CssBox>();
+            RelatedBoxes = new List<CssBox>();
             Words = new List<CssRect>();
             OwnerBox = ownerBox;
             OwnerBox.LineBoxes.Add(this);
         }
 
         /// <summary>
-        /// Gets a list of boxes related with the linebox. 
+        /// Gets a list of boxes related with the linebox.
         /// To know the words of the box inside this linebox, use the <see cref="WordsOf"/> method.
         /// </summary>
-        public List<CssBox> RelatedBoxes => _relatedBoxes;
+        public List<CssBox> RelatedBoxes { get; }
 
         /// <summary>
         /// Gets the words inside the linebox
@@ -134,9 +127,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             var topspacing = box.ActualBorderTopWidth + box.ActualPaddingTop;
             var bottomspacing = box.ActualBorderBottomWidth + box.ActualPaddingTop;
 
-            if ((box.FirstHostingLineBox != null && box.FirstHostingLineBox.Equals(this)) || box.IsImage)
+            if ( box.FirstHostingLineBox?.Equals ( this ) == true || box.IsImage)
                 x -= leftspacing;
-            if ((box.LastHostingLineBox != null && box.LastHostingLineBox.Equals(this)) || box.IsImage)
+            if ( box.LastHostingLineBox?.Equals ( this ) == true || box.IsImage)
                 r += rightspacing;
 
             if (!box.IsImage)
@@ -144,7 +137,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 y -= topspacing;
                 b += bottomspacing;
             }
-
 
             if (!Rectangles.ContainsKey(box))
             {
@@ -158,7 +150,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     Math.Max(f.Right, r), Math.Max(f.Bottom, b));
             }
 
-            if (box.ParentBox != null && box.ParentBox.IsInline)
+            if ( box.ParentBox?.IsInline == true )
             {
                 UpdateRectangle(box.ParentBox, x, y, r, b);
             }
@@ -212,14 +204,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             //float newtop = baseline - (Height - OwnerBox.FontDescent - 3); //OLD
             var newtop = baseline; // -GetBaseLineHeight(b, g); //OLD
 
-            if (b.ParentBox != null &&
-                b.ParentBox.Rectangles.ContainsKey(this) &&
+            if ( b.ParentBox?.Rectangles.ContainsKey ( this ) == true &&
                 r.Height < b.ParentBox.Rectangles[this].Height)
             {
                 //Do this only if rectangle is shorter than parent's
                 var recttop = newtop - gap;
-                var newr = new RRect(r.X, recttop, r.Width, r.Height);
-                Rectangles[b] = newr;
+                Rectangles[b] = new RRect(r.X, recttop, r.Width, r.Height);
                 b.OffsetRectangle(this, gap);
             }
 

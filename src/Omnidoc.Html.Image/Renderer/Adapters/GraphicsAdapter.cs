@@ -159,7 +159,7 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
 
         public override void DrawPolygon(RBrush brush, RPoint[] points)
         {
-            if (points != null && points.Length > 0)
+            if ( points?.Length > 0 )
                 _g.FillPolygon(((BrushAdapter)brush).Brush, Utils.Convert(points));
         }
     }

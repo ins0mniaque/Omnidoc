@@ -9,7 +9,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public sealed class HtmlLinkClickedEventArgs : EventArgs
     {
-
         /// <summary>
         /// Init.
         /// </summary>

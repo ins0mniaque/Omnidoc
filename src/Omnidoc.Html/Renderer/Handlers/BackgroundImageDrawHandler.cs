@@ -58,9 +58,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             g.PopClip();
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Get top-left location to start drawing the image at depending on background-position value.
         /// </summary>
@@ -73,7 +70,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             var left = rectangle.Left;
             if (backgroundPosition.IndexOf("left", StringComparison.OrdinalIgnoreCase) > -1)
             {
-                left = (rectangle.Left + .5f);
+                left = rectangle.Left + .5f;
             }
             else if (backgroundPosition.IndexOf("right", StringComparison.OrdinalIgnoreCase) > -1)
             {
@@ -81,7 +78,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             }
             else if (backgroundPosition.IndexOf("0", StringComparison.OrdinalIgnoreCase) < 0)
             {
-                left = (rectangle.Left + (rectangle.Width - imgSize.Width) / 2 + .5f);
+                left = rectangle.Left + (rectangle.Width - imgSize.Width) / 2 + .5f;
             }
 
             var top = rectangle.Top;
@@ -95,7 +92,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             }
             else if (backgroundPosition.IndexOf("0", StringComparison.OrdinalIgnoreCase) < 0)
             {
-                top = (rectangle.Top + (rectangle.Height - imgSize.Height) / 2 + .5f);
+                top = rectangle.Top + (rectangle.Height - imgSize.Height) / 2 + .5f;
             }
 
             return new RPoint(left, top);
@@ -141,7 +138,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             using var brush = g.GetTextureBrush(imageLoadHandler.Image, srcRect, destRect.Location);
             g.DrawRectangle(brush, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
-
-        #endregion
     }
 }

@@ -9,7 +9,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class PenAdapter : RPen
     {
-
         /// <summary>
         /// Init.
         /// </summary>

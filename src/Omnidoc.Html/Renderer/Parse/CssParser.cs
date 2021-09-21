@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,15 +14,13 @@ namespace Omnidoc.Html.Renderer.Core.Parse
     /// </summary>
     internal sealed class CssParser
     {
-        #region Fields and Consts
-
         /// <summary>
         /// split CSS rule
         /// </summary>
         private static readonly char[] _cssBlockSplitters = new[] { '}', ';' };
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private readonly RAdapter _adapter;
 
@@ -35,9 +33,6 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// The chars to trim the css class name by
         /// </summary>
         private static readonly char[] _cssClassTrimChars = new[] { '\r', '\n', '\t', ' ', '-', '!', '<', '>' };
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -54,7 +49,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// Parse the given stylesheet source to CSS blocks dictionary.<br/>
         /// The CSS blocks are organized into two level buckets of media type and class name.<br/>
         /// Root media type are found under 'all' bucket.<br/>
-        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
+        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
         /// </summary>
         /// <seealso cref="http://www.w3.org/TR/CSS21/sample.html"/>
@@ -108,14 +103,11 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         public string ParseFontFamily(string value) => ParseFontFamilyProperty(value);
 
         /// <summary>
-        /// Parses a color value in CSS style; e.g. #ff0000, red, rgb(255,0,0), rgb(100%, 0, 0) 
+        /// Parses a color value in CSS style; e.g. #ff0000, red, rgb(255,0,0), rgb(100%, 0, 0)
         /// </summary>
         /// <param name="colorStr">color string value to parse</param>
         /// <returns>color value</returns>
         public RColor ParseColor(string colorStr) => _valueParser.GetActualColor(colorStr);
-
-
-        #region Private methods
 
         /// <summary>
         /// Remove comments from the given stylesheet.
@@ -132,9 +124,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 startIdx = stylesheet.IndexOf("/*", startIdx, StringComparison.Ordinal);
                 if (startIdx > -1)
                 {
-                    if (sb == null)
-                        sb = new StringBuilder(stylesheet.Length);
-                    sb.Append(stylesheet[prevIdx..startIdx]);
+                    ( sb ??= new StringBuilder(stylesheet.Length) ).Append(stylesheet[prevIdx..startIdx]);
 
                     var endIdx = stylesheet.IndexOf("*/", startIdx + 2, StringComparison.Ordinal);
                     if (endIdx < 0)
@@ -224,18 +214,16 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                     if (line.StartsWith("@media", StringComparison.InvariantCultureIgnoreCase) && line.EndsWith('{'))
                     {
                         //Get specified media types in the at-rule
-                        var media = line[6..^1].Split(' ');
 
                         //Scan media types
-                        foreach (var t in media)
+                        foreach (var t in line[6..^1].Split(' '))
                         {
                             if (!string.IsNullOrEmpty(t.Trim()))
                             {
                                 //Get blocks inside the at-rule
-                                var insideBlocks = RegexParserUtils.Match(RegexParserUtils.CssBlocks, atrule);
 
                                 //Scan blocks and feed them to the style sheet
-                                foreach (Match insideBlock in insideBlocks)
+                                foreach (Match insideBlock in RegexParserUtils.Match(RegexParserUtils.CssBlocks, atrule))
                                 {
                                     FeedStyleBlock(cssData, insideBlock.Value, t.Trim());
                                 }
@@ -260,9 +248,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
             if (startIdx > -1 && endIdx > -1)
             {
                 var blockSource = block.Substring(startIdx + 1, endIdx - startIdx - 1);
-                var classes = block.Substring(0, startIdx).Split(',');
-
-                foreach (var cls in classes)
+                foreach (var cls in block.Substring(0, startIdx).Split(','))
                 {
                     var className = cls.Trim(_cssClassTrimChars);
                     if (!string.IsNullOrEmpty(className))
@@ -386,10 +372,10 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 if (splitIdx > -1)
                 {
                     //Extract property name and value
-                    startIdx += (blockSource[startIdx] == ' ' ? 1 : 0);
+                    startIdx += blockSource[startIdx] == ' ' ? 1 : 0;
                     var adjEndIdx = endIdx - (blockSource[endIdx] == ' ' || blockSource[endIdx] == ';' ? 1 : 0);
                     var propName = blockSource[startIdx..splitIdx].Trim().ToLowerInvariant();
-                    splitIdx += (blockSource[splitIdx + 1] == ' ' ? 2 : 1);
+                    splitIdx += blockSource[splitIdx + 1] == ' ' ? 2 : 1;
                     if (adjEndIdx >= splitIdx)
                     {
                         var propValue = blockSource.Substring(splitIdx, adjEndIdx - splitIdx + 1).Trim();
@@ -567,7 +553,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="propValue">the value of the property to parse</param>
         /// <returns>parsed value</returns>
@@ -816,7 +802,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="width"> </param>
@@ -848,7 +834,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <returns>found border width value or null</returns>
         private static string? ParseBorderWidth(string str, int idx, int length)
         {
-            if ((length > 2 && char.IsDigit(str[idx])) || (length > 3 && str[idx] == '.'))
+            if (length > 2 && char.IsDigit(str[idx]) || length > 3 && str[idx] == '.')
             {
                 string? unit = null;
                 if (CommonUtils.SubStringEquals(str, idx + length - 2, 2, CssConstants.Px))
@@ -922,7 +908,5 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// </summary>
         /// <returns>found border width value or null</returns>
         private string? ParseBorderColor(string str, int idx, int length) => _valueParser.TryGetColor(str, idx, length, out _) ? str.Substring(idx, length) : null;
-
-        #endregion
     }
 }

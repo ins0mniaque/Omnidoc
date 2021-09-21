@@ -3,19 +3,14 @@ using System;
 namespace Omnidoc.Html.Renderer.Adapters.Entities
 {
     /// <summary>
-    /// Stores a set of four floating-point numbers that represent the location and size of a rectangle. 
+    /// Stores a set of four floating-point numbers that represent the location and size of a rectangle.
     /// </summary>
     public struct RRect : IEquatable<RRect>
     {
-        #region Fields and Consts
-
         /// <summary>
         ///     Represents an instance of the <see cref="RRect" /> class with its members uninitialized.
         /// </summary>
         public static readonly RRect Empty;
-
-        #endregion
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RRect" /> class with the specified location and size.
@@ -414,7 +409,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <param name="obj">
         ///     The <see cref="object" /> to test.
         /// </param>
-        public override bool Equals(object obj) => obj is RRect other ? Equals(other) : false;
+        public override bool Equals(object obj) => obj is RRect other && Equals (other);
 
         public bool Equals(RRect other) => Math.Abs(other.X - X) < 0.001 &&
                    Math.Abs(other.Y - Y) < 0.001 &&

@@ -12,8 +12,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// </summary>
     public struct RColor : IEquatable<RColor>
     {
-        #region Fields and Consts
-
         /// <summary>
         ///     Represents a color that is null.
         /// </summary>
@@ -21,9 +19,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         public static readonly RColor Empty;
 
         private readonly long _value;
-
-        #endregion
-
 
         private RColor(long value)
         {
@@ -176,7 +171,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// </returns>
         /// <param name="obj">The object to test. </param>
         /// <filterpriority>1</filterpriority>
-        public override bool Equals(object obj) => obj is RColor other ? Equals(other) : false;
+        public override bool Equals(object obj) => obj is RColor other && Equals (other);
 
         public bool Equals(RColor other) => _value == other._value;
 
@@ -214,16 +209,11 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
             return stringBuilder.ToString();
         }
 
-
-        #region Private methods
-
         private static void CheckByte(int value)
         {
             if (value >= 0 && value <= byte.MaxValue)
                 return;
             throw new ArgumentException("InvalidEx2BoundArgument");
         }
-
-        #endregion
     }
 }

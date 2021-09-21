@@ -11,20 +11,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public sealed class HtmlStylesheetLoadEventArgs : EventArgs
     {
-        #region Fields and Consts
-
-        /// <summary>
-        /// the source of the stylesheet as found in the HTML (file path or URL)
-        /// </summary>
-
-        /// <summary>
-        /// provide the stylesheet data to load
-        /// </summary>
-        private CssData? _setStyleSheetData;
-
-        #endregion
-
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -59,10 +45,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// provide the stylesheet data to load
         /// </summary>
-        public CssData? SetStyleSheetData
-        {
-            get => _setStyleSheetData;
-            set => _setStyleSheetData = value;
-        }
+        public CssData? SetStyleSheetData { get; set; }
     }
 }

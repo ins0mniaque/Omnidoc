@@ -7,12 +7,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// </summary>
     public sealed class RKeyEvent
     {
-
-        /// <summary>
-        /// is 'C' key is pressed
-        /// </summary>
-        private readonly bool _cKeyCode;
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -20,7 +14,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         {
             Control = control;
             AKeyCode = aKeyCode;
-            _cKeyCode = cKeyCode;
+            CKeyCode = cKeyCode;
         }
 
         /// <summary>
@@ -36,6 +30,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// <summary>
         /// is 'C' key is pressed
         /// </summary>
-        public bool CKeyCode => _cKeyCode;
+        public bool CKeyCode { get; }
     }
 }

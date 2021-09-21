@@ -11,14 +11,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
     /// </summary>
     internal static class CssUtils
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Brush for selection background
         /// </summary>
-        #endregion
-
-
         /// <summary>
         /// Brush for selection background
         /// </summary>

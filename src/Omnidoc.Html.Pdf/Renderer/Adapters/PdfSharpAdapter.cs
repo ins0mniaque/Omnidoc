@@ -15,15 +15,9 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class PdfSharpAdapter : RAdapter
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-
-        #endregion
-
-
         /// <summary>
         /// Init color resolve.
         /// </summary>

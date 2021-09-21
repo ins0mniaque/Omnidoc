@@ -7,15 +7,9 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public class CssBlockSelectorItem
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-
-        #endregion
-
-
         /// <summary>
         /// Creates a new block from the block's source
         /// </summary>

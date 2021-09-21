@@ -12,15 +12,10 @@ namespace Omnidoc.Html.Renderer.Core.Parse
     /// </summary>
     internal sealed class CssValueParser
     {
-        #region Fields and Consts
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private readonly RAdapter _adapter;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -126,7 +121,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
 
             if (isPercent)
             {
-                result = (result / 100f) * hundredPercent;
+                result = result / 100f * hundredPercent;
             }
 
             return result;
@@ -137,8 +132,8 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// </summary>
         /// <param name="length">Specified length</param>
         /// <param name="hundredPercent">Equivalent to 100 percent when length is percentage</param>
-        /// <param name="fontAdjust">if the length is in pixels and the length is font related it needs to use 72/96 factor</param>
         /// <param name="box"></param>
+        /// <param name="fontAdjust">if the length is in pixels and the length is font related it needs to use 72/96 factor</param>
         /// <returns>the parsed length value with adjustments</returns>
         public static double ParseLength(string length, double hundredPercent, CssBoxProperties box, bool fontAdjust = false) => ParseLength(length, hundredPercent, box.GetEmHeight(), null, fontAdjust, false);
 
@@ -326,9 +321,6 @@ namespace Omnidoc.Html.Renderer.Core.Parse
             };
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Get color by parsing given hex value color string (#A28B34).
         /// </summary>
@@ -507,7 +499,5 @@ namespace Omnidoc.Html.Renderer.Core.Parse
             }
             return num;
         }
-
-        #endregion
     }
 }

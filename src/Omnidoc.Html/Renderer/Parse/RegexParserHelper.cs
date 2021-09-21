@@ -8,8 +8,6 @@ namespace HtmlRenderer.Parse
     /// </summary>
     internal static class RegexParserHelper
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Extracts CSS style comments; e.g. /* comment */
         /// </summary>
@@ -21,7 +19,7 @@ namespace HtmlRenderer.Parse
         public const string CssMediaTypes = @"@media[^\{\}]*\{";
 
         /// <summary>
-        /// Extracts defined blocks in CSS. 
+        /// Extracts defined blocks in CSS.
         /// WARNING: Blocks will include blocks inside at-rules.
         /// </summary>
         public const string CssBlocks = @"[^\{\}]*\{[^\{\}]*\}";
@@ -54,7 +52,7 @@ namespace HtmlRenderer.Parse
         /// <summary>
         /// Extracts CSS border styles; e.g. solid none dotted
         /// </summary>
-        public const string CssBorderStyle = @"(none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset)";
+        public const string CssBorderStyle = "(none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset)";
 
         /// <summary>
         /// Extracts CSS border widthe; e.g. 1px thin 3em
@@ -95,7 +93,7 @@ namespace HtmlRenderer.Parse
         /// <summary>
         /// Extracts HTML tags
         /// </summary>
-        public const string HtmlTag = @"<[^<>]*>";
+        public const string HtmlTag = "<[^<>]*>";
 
         /// <summary>
         /// Extracts attributes from a HTML tag; e.g. att=value, att="value"
@@ -106,9 +104,6 @@ namespace HtmlRenderer.Parse
         /// the regexes cache that is used by the parser so not to create regex each time
         /// </summary>
         private static readonly Dictionary<string, Regex> _regexes = new();
-
-        #endregion
-
 
         /// <summary>
         /// Get CSS at rule from the given stylesheet.

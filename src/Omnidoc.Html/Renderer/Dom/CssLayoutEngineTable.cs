@@ -13,8 +13,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </summary>
     internal sealed class CssLayoutEngineTable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the main box of the table
         /// </summary>
@@ -40,7 +38,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private readonly List<CssBox> _columns = new();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private readonly List<CssBox> _allRows = new();
 
@@ -51,9 +49,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private double[]? _columnWidths;
 
         private double[]? _columnMinWidths;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -105,7 +100,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="g"></param>
         /// <param name="tableBox"> </param>
@@ -124,9 +119,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 tableBox.HtmlContainer.ReportError(HtmlRenderErrorType.Layout, "Failed table layout", ex);
             }
         }
-
-
-        #region Private Methods
 
         /// <summary>
         /// Analyzes the Table and assigns values to this CssTable object.
@@ -347,7 +339,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="availCellSpace"></param>
         private void DetermineMissingColumnWidths(double availCellSpace)
@@ -839,7 +831,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        /// The table's width can be larger than the result of this method, because of the minimum 
+        /// The table's width can be larger than the result of this method, because of the minimum
         /// size that individual boxes.
         /// </remarks>
         private double GetAvailableTableWidth()
@@ -863,7 +855,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <returns></returns>
         /// <remarks>
-        /// The table's width can be larger than the result of this method, because of the minimum 
+        /// The table's width can be larger than the result of this method, because of the minimum
         /// size that individual boxes.
         /// </remarks>
         private double GetMaxTableWidth()
@@ -1002,7 +994,5 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Gets the actual vertical spacing of the table
         /// </summary>
         private double GetVerticalSpacing() => _tableBox.BorderCollapse == CssConstants.Collapse ? -1f : _tableBox.ActualBorderSpacingVertical;
-
-        #endregion
     }
 }

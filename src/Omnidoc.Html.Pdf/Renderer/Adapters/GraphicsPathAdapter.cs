@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
 using PdfSharpCore.Drawing;
@@ -10,7 +10,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class GraphicsPathAdapter : RGraphicsPath
     {
-
         /// <summary>
         /// the last point added to the path to begin next segment from
         /// </summary>
@@ -40,17 +39,13 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// <summary>
         /// Get arc start angle for the given corner.
         /// </summary>
-        private static int GetStartAngle(Corner corner)
+        private static int GetStartAngle ( Corner corner ) => corner switch
         {
-            var startAngle = corner switch
-            {
-                Corner.TopLeft => 180,
-                Corner.TopRight => 270,
-                Corner.BottomLeft => 90,
-                Corner.BottomRight => 0,
-                _ => throw new ArgumentOutOfRangeException(nameof(corner)),
-            };
-            return startAngle;
-        }
+            Corner.TopLeft => 180,
+            Corner.TopRight => 270,
+            Corner.BottomLeft => 90,
+            Corner.BottomRight => 0,
+            _ => throw new ArgumentOutOfRangeException ( nameof ( corner ) ),
+        };
     }
 }

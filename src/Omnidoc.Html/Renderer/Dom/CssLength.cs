@@ -13,13 +13,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </remarks>
     internal sealed class CssLength
     {
-        #region Fields
-
         private readonly double _number;
-        private readonly bool _hasError;
-
-        #endregion
-
 
         /// <summary>
         /// Creates a new CssLength from a length specified on a CSS style sheet or fragment
@@ -48,7 +42,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             if (length.Length < 3)
             {
                 _ = double.TryParse(length, out _number);
-                _hasError = true;
+                HasError = true;
                 return;
             }
 
@@ -89,18 +83,15 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     Unit = CssUnit.Picas;
                     break;
                 default:
-                    _hasError = true;
+                    HasError = true;
                     return;
             }
 
             if (!double.TryParse(number, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out _number))
             {
-                _hasError = true;
+                HasError = true;
             }
         }
-
-
-        #region Props
 
         /// <summary>
         /// Gets the number in the length
@@ -110,14 +101,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets if the length has some parsing error
         /// </summary>
-        public bool HasError => _hasError;
-
+        public bool HasError { get; }
 
         /// <summary>
         /// Gets if the length represents a precentage (not actually a length)
         /// </summary>
         public bool IsPercentage { get; }
-
 
         /// <summary>
         /// Gets if the length is specified in relative units
@@ -133,11 +122,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Gets the length as specified in the string
         /// </summary>
         public string Length { get; }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// If length is in Ems, returns its value in points
@@ -222,7 +206,5 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 return string.Format(NumberFormatInfo.InvariantInfo, "{0}{1}", Number, u);
             }
         }
-
-        #endregion
     }
 }

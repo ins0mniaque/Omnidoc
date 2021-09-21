@@ -13,8 +13,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
     /// </summary>
     internal sealed class ContextMenuHandler : IDisposable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// select all text
         /// </summary>
@@ -89,9 +87,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// the css link box that context menu shown on
         /// </summary>
         private CssBox? _currentLink;
-
-        #endregion
-
 
         /// <summary>
         /// Init context menu items strings.
@@ -330,9 +325,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <filterpriority>2</filterpriority>
         public void Dispose() => DisposeContextMenu();
 
-
-        #region Private methods
-
         /// <summary>
         /// Dispose of the last used context menu.
         /// </summary>
@@ -340,8 +332,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         {
             try
             {
-                if (_contextMenu != null)
-                    _contextMenu.Dispose();
+                _contextMenu?.Dispose();
                 _contextMenu = null;
                 _parentControl = null;
                 _currentRect = null;
@@ -508,7 +499,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 DisposeContextMenu();
             }
         }
-
-        #endregion
     }
 }

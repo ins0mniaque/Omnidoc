@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 
 namespace Omnidoc.Html.Renderer.Core.Utils
@@ -10,20 +10,6 @@ namespace Omnidoc.Html.Renderer.Core.Utils
     {
         public static SubString Empty { get; } = new SubString(string.Empty);
 
-        #region Fields and Consts
-
-        /// <summary>
-        /// the full string that this sub-string is part of
-        /// </summary>
-
-        /// <summary>
-        /// the length of the sub-string starting at <see cref="StartIdx"/>
-        /// </summary>
-        private readonly int _length;
-
-        #endregion
-
-
         /// <summary>
         /// Init sub-string that is the full string.
         /// </summary>
@@ -34,7 +20,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
 
             FullString = fullString;
             StartIdx = 0;
-            _length = fullString.Length;
+            Length = fullString.Length;
         }
 
         /// <summary>
@@ -54,7 +40,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
 
             FullString = fullString;
             StartIdx = startIdx;
-            _length = length;
+            Length = length;
         }
 
         /// <summary>
@@ -70,7 +56,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <summary>
         /// the length of the sub-string starting at <see cref="StartIdx"/>
         /// </summary>
-        public int Length => _length;
+        public int Length { get; }
 
         /// <summary>
         /// Get string char at specific index.
@@ -81,7 +67,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         {
             get
             {
-                if (idx < 0 || idx > _length)
+                if (idx < 0 || idx > Length )
                     throw new ArgumentOutOfRangeException(nameof(idx), "must be within the string range");
                 return FullString[StartIdx + idx];
             }
@@ -91,7 +77,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// Is the sub-string is empty string.
         /// </summary>
         /// <returns>true - empty string, false - otherwise</returns>
-        public bool IsEmpty() => _length < 1;
+        public bool IsEmpty() => Length < 1;
 
         /// <summary>
         /// Is the sub-string is empty string or contains only whitespaces.
@@ -99,7 +85,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <returns>true - empty or whitespace string, false - otherwise</returns>
         public bool IsEmptyOrWhitespace()
         {
-            for (var i = 0; i < _length; i++)
+            for (var i = 0; i < Length; i++)
             {
                 if (!char.IsWhiteSpace(FullString, StartIdx + i))
                     return false;
@@ -113,9 +99,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <returns>true - empty or whitespace string, false - otherwise</returns>
         public bool IsWhitespace()
         {
-            if (_length < 1)
+            if ( Length < 1)
                 return false;
-            for (var i = 0; i < _length; i++)
+            for (var i = 0; i < Length; i++)
             {
                 if (!char.IsWhiteSpace(FullString, StartIdx + i))
                     return false;
@@ -128,27 +114,27 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// This will create a new string object!
         /// </summary>
         /// <returns>new string that is the sub-string represented by this instance</returns>
-        public string CutSubstring() => _length > 0 ? FullString.Substring(StartIdx, _length) : string.Empty;
+        public string CutSubstring() => Length > 0 ? FullString.Substring(StartIdx, Length ) : string.Empty;
 
         /// <summary>
-        /// Retrieves a substring from this instance. The substring starts at a specified character position and has a specified length. 
+        /// Retrieves a substring from this instance. The substring starts at a specified character position and has a specified length.
         /// </summary>
         /// <param name="startIdx">The zero-based starting character position of a substring in this instance.</param>
         /// <param name="length">The number of characters in the substring. </param>
-        /// <returns>A String equivalent to the substring of length length that begins at startIndex in this instance, or 
+        /// <returns>A String equivalent to the substring of length that begins at startIndex in this instance, or
         /// Empty if startIndex is equal to the length of this instance and length is zero. </returns>
         public string Substring(int startIdx, int length)
         {
-            if (startIdx < 0 || startIdx > _length)
+            if (startIdx < 0 || startIdx > Length )
                 throw new ArgumentOutOfRangeException(nameof(startIdx));
-            if (length > _length)
+            if (length > Length )
                 throw new ArgumentOutOfRangeException(nameof(length));
-            if (startIdx + length > _length)
+            if (startIdx + length > Length )
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             return FullString.Substring(StartIdx + startIdx, length);
         }
 
-        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Sub-string: {0}", _length > 0 ? FullString.Substring(StartIdx, _length) : string.Empty);
+        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Sub-string: {0}", Length > 0 ? FullString.Substring(StartIdx, Length ) : string.Empty);
     }
 }

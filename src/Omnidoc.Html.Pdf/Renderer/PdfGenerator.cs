@@ -182,8 +182,6 @@ namespace Omnidoc.Html.Pdf.Renderer
             }
         }
 
-        #region Private/Protected methods
-
         /// <summary>
         /// Handle HTML links by create PDF Documents link either to external URL or to another page in the document.
         /// </summary>
@@ -219,7 +217,5 @@ namespace Omnidoc.Html.Pdf.Renderer
                 }
             }
         }
-
-        #endregion
     }
 }

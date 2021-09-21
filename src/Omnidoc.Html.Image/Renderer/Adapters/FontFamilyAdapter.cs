@@ -8,7 +8,6 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
     /// </summary>
     internal sealed class FontFamilyAdapter : RFontFamily
     {
-
         /// <summary>
         /// Init.
         /// </summary>

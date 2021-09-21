@@ -9,7 +9,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class BrushAdapter : RBrush
     {
-
         /// <summary>
         /// Init.
         /// </summary>

@@ -6,7 +6,7 @@ using Omnidoc.Html.Renderer.Core.Utils;
 namespace Omnidoc.Html.Renderer.Core.Parse
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     internal static class HtmlParser
     {
@@ -49,7 +49,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                         // parse element tag to css box structure
                         endIdx = ParseHtmlTag(source, tagIdx, ref curBox) + 1;
 
-                        if (curBox.HtmlTag != null && curBox.HtmlTag.Name.Equals(HtmlConstants.Style, StringComparison.OrdinalIgnoreCase))
+                        if ( curBox.HtmlTag?.Name.Equals ( HtmlConstants.Style, StringComparison.OrdinalIgnoreCase ) == true )
                         {
                             var endIdxS = endIdx;
                             endIdx = source.IndexOf("</style>", endIdx, StringComparison.OrdinalIgnoreCase);
@@ -75,9 +75,6 @@ namespace Omnidoc.Html.Renderer.Core.Parse
 
             return root;
         }
-
-
-        #region Private methods
 
         /// <summary>
         /// Add html text anon box to the current box, this box will have the rendered text<br/>
@@ -157,7 +154,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         private static bool ParseHtmlTag(string source, int idx, int length, out string name, out Dictionary<string, string>? attributes)
         {
             idx++;
-            length -= (source[idx + length - 3] == '/' ? 3 : 2);
+            length -= source[idx + length - 3] == '/' ? 3 : 2;
 
             // Check if is end tag
             var isClosing = false;
@@ -243,7 +240,5 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 }
             }
         }
-
-        #endregion
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Omnidoc.Html.Renderer.Core.Utils;
@@ -15,24 +15,13 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </remarks>
     public sealed class CssBlock
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-
         /// <summary>
         /// the CSS block properties and values
         /// </summary>
         private readonly Dictionary<string, string> _properties;
-
-        /// <summary>
-        /// is the css block has :hover pseudo-class
-        /// </summary>
-        private readonly bool _hover;
-
-        #endregion
-
 
         /// <summary>
         /// Creates a new block from the block's source
@@ -49,7 +38,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
             Class = @class;
             Selectors = selectors;
             _properties = properties;
-            _hover = hover;
+            Hover = hover;
         }
 
         /// <summary>
@@ -70,7 +59,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// is the css block has :hover pseudo-class
         /// </summary>
-        public bool Hover => _hover;
+        public bool Hover { get; }
 
         /// <summary>
         /// Merge the other block properties into this css block.<br/>
@@ -118,10 +107,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
                     return false;
             }
 
-            if (!EqualsSelector(other))
-                return false;
-
-            return true;
+            return EqualsSelector ( other );
         }
 
         /// <summary>
@@ -177,14 +163,14 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         }
 
         /// <summary>
-        /// Serves as a hash function for a particular type. 
+        /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>A hash code for the current <see cref="object"/>.</returns>
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Class != null ? Class.GetHashCode(StringComparison.Ordinal) : 0) * 397) ^ (_properties != null ? _properties.GetHashCode() : 0);
+                return (( ( Class?.GetHashCode(StringComparison.Ordinal) ) ?? 0 ) * 397) ^ ( ( _properties?.GetHashCode() ) ?? 0 );
             }
         }
 

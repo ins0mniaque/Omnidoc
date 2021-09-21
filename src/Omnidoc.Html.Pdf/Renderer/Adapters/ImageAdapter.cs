@@ -8,7 +8,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class ImageAdapter : RImage
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="object"/> class.
         /// </summary>

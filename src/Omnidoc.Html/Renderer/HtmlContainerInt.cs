@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Omnidoc.Html.Renderer.Adapters;
@@ -14,7 +14,7 @@ namespace Omnidoc.Html.Renderer.Core
     /// <summary>
     /// Low level handling of Html Renderer logic.<br/>
     /// Allows html layout and rendering without association to actual control, those allowing to handle html rendering on any graphics object.<br/>
-    /// Using this class will require the client to handle all propagation's of mouse/keyboard events, layout/paint calls, scrolling offset, 
+    /// Using this class will require the client to handle all propagation's of mouse/keyboard events, layout/paint calls, scrolling offset,
     /// location/size/rectangle handling and UI refresh requests.<br/>
     /// </summary>
     /// <remarks>
@@ -29,7 +29,7 @@ namespace Omnidoc.Html.Renderer.Core
     /// <para>
     /// <b>ScrollOffset:</b><br/>
     /// This will adjust the rendered html by the given offset so the content will be "scrolled".<br/>
-    /// Element that is rendered at location (50,100) with offset of (0,200) will not be rendered 
+    /// Element that is rendered at location (50,100) with offset of (0,200) will not be rendered
     /// at -100, therefore outside the client rectangle.
     /// </para>
     /// <para>
@@ -51,7 +51,7 @@ namespace Omnidoc.Html.Renderer.Core
     /// Allows to overwrite the loaded image by providing the image object manually, or different source (file or URL) to load from.<br/>
     /// Example: image 'src' can be non-valid string that is interpreted in the overwrite delegate by custom logic to resource image object<br/>
     /// Example: image 'src' in the html is relative - the overwrite intercepts the load and provide full source URL to load the image from<br/>
-    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and provide 
+    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and provide
     /// file path to load the image from.<br/>
     /// If no alternative data is provided the original source will be used.<br/>
     /// </para>
@@ -67,19 +67,16 @@ namespace Omnidoc.Html.Renderer.Core
     /// </remarks>
     public sealed class HtmlContainerInt : IDisposable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Main adapter to framework specific logic.
         /// </summary>
-
         /// <summary>
         /// list of all css boxes that have ":hover" selector on them
         /// </summary>
         private List<HoverBoxBlock>? _hoverBoxes;
 
         /// <summary>
-        /// Handler for text selection in the html. 
+        /// Handler for text selection in the html.
         /// </summary>
         private SelectionHandler? _selectionHandler;
 
@@ -97,27 +94,6 @@ namespace Omnidoc.Html.Renderer.Core
         /// is the load of the html document is complete
         /// </summary>
         private bool _loadComplete;
-
-        /// <summary>
-        /// the top-left most location of the rendered html
-        /// </summary>
-        private RPoint _location;
-
-        /// <summary>
-        /// the max width and height of the rendered html, effects layout, actual size cannot exceed this values.<br/>
-        /// Set zero for unlimited.<br/>
-        /// </summary>
-        private RSize _maxSize;
-
-        /// <summary>
-        /// Gets or sets the scroll offset of the document for scroll controls
-        /// </summary>
-        private RPoint _scrollOffset;
-
-        /// <summary>
-        /// The actual size of the rendered html (after layout)
-        /// </summary>
-        private RSize _actualSize;
 
         /// <summary>
         /// the top margin between the page start and the text
@@ -139,9 +115,6 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         private int _marginRight;
 
-        #endregion
-
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -154,7 +127,7 @@ namespace Omnidoc.Html.Renderer.Core
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal RAdapter Adapter { get; }
 
@@ -226,7 +199,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// False - images are loaded asynchronously to html parsing when downloaded from URL or loaded from disk.<br/>
         /// </summary>
         /// <remarks>
-        /// Asynchronously image loading allows to unblock html rendering while image is downloaded or loaded from disk using IO 
+        /// Asynchronously image loading allows to unblock html rendering while image is downloaded or loaded from disk using IO
         /// ports to achieve better performance.<br/>
         /// Asynchronously image loading should be avoided when the full html content must be available during render, like render to image.
         /// </remarks>
@@ -238,7 +211,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// False - images that are not visible because of scroll location are not loaded until they are scrolled to.
         /// </summary>
         /// <remarks>
-        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large 
+        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large
         /// amount of images, as all image loading is delayed (downloading and loading into memory).<br/>
         /// Late image loading may effect the layout and actual size as image without set size will not have actual size until they are loaded
         /// resulting in layout change during user scroll.<br/>
@@ -266,21 +239,13 @@ namespace Omnidoc.Html.Renderer.Core
         /// Element that is rendered at location (50,100) with offset of (0,200) will not be rendered as it
         /// will be at -100 therefore outside the client rectangle.
         /// </example>
-        public RPoint ScrollOffset
-        {
-            get => _scrollOffset;
-            set => _scrollOffset = value;
-        }
+        public RPoint ScrollOffset { get; set; }
 
         /// <summary>
         /// The top-left most location of the rendered html.<br/>
         /// This will offset the top-left corner of the rendered html.
         /// </summary>
-        public RPoint Location
-        {
-            get => _location;
-            set => _location = value;
-        }
+        public RPoint Location { get; set; }
 
         /// <summary>
         /// The max width and height of the rendered html.<br/>
@@ -289,20 +254,12 @@ namespace Omnidoc.Html.Renderer.Core
         /// <see cref="ActualSize"/> can be exceed the max size by layout restrictions (unwrapable line, set image size, etc.).<br/>
         /// Set zero for unlimited (width\height separately).<br/>
         /// </summary>
-        public RSize MaxSize
-        {
-            get => _maxSize;
-            set => _maxSize = value;
-        }
+        public RSize MaxSize { get; set; }
 
         /// <summary>
         /// The actual size of the rendered html (after layout)
         /// </summary>
-        public RSize ActualSize
-        {
-            get => _actualSize;
-            set => _actualSize = value;
-        }
+        public RSize ActualSize { get; set; }
 
         public RSize PageSize { get; set; }
 
@@ -426,12 +383,10 @@ namespace Omnidoc.Html.Renderer.Core
                 Root.Dispose();
                 Root = null;
 
-                if (_selectionHandler != null)
-                    _selectionHandler.Dispose();
+                _selectionHandler?.Dispose();
                 _selectionHandler = null;
 
-                if (_imageDownloader != null)
-                    _imageDownloader.Dispose();
+                _imageDownloader?.Dispose();
                 _imageDownloader = null;
 
                 _hoverBoxes = null;
@@ -523,19 +478,19 @@ namespace Omnidoc.Html.Renderer.Core
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            _actualSize = RSize.Empty;
+            ActualSize = RSize.Empty;
             if (Root != null)
             {
                 // if width is not restricted we set it to large value to get the actual later
-                Root.Size = new RSize(_maxSize.Width > 0 ? _maxSize.Width : 99999, 0);
-                Root.Location = _location;
+                Root.Size = new RSize( MaxSize.Width > 0 ? MaxSize.Width : 99999, 0);
+                Root.Location = Location;
                 Root.PerformLayout(g);
 
-                if (_maxSize.Width <= 0.1)
+                if ( MaxSize.Width <= 0.1)
                 {
                     // in case the width is not restricted we need to double layout, first will find the width so second can layout by it (center alignment)
-                    Root.Size = new RSize((int)Math.Ceiling(_actualSize.Width), 0);
-                    _actualSize = RSize.Empty;
+                    Root.Size = new RSize((int)Math.Ceiling( ActualSize.Width), 0);
+                    ActualSize = RSize.Empty;
                     Root.PerformLayout(g);
                 }
 
@@ -557,17 +512,14 @@ namespace Omnidoc.Html.Renderer.Core
 
             if (MaxSize.Height > 0)
             {
-                g.PushClip(new RRect(_location.X, _location.Y, Math.Min(_maxSize.Width, PageSize.Width), Math.Min(_maxSize.Height, PageSize.Height)));
+                g.PushClip(new RRect( Location.X, Location.Y, Math.Min( MaxSize.Width, PageSize.Width), Math.Min( MaxSize.Height, PageSize.Height)));
             }
             else
             {
                 g.PushClip(new RRect(MarginLeft, MarginTop, PageSize.Width, PageSize.Height));
             }
 
-            if (Root != null)
-            {
-                Root.Paint(g);
-            }
+            Root?.Paint(g);
 
             g.PopClip();
         }
@@ -583,8 +535,7 @@ namespace Omnidoc.Html.Renderer.Core
 
             try
             {
-                if (_selectionHandler != null)
-                    _selectionHandler.HandleMouseDown(parent, OffsetByScroll(location), IsMouseInContainer(location));
+                _selectionHandler?.HandleMouseDown(parent, OffsetByScroll(location), IsMouseInContainer(location));
             }
             catch (Exception ex)
             {
@@ -701,8 +652,7 @@ namespace Omnidoc.Html.Renderer.Core
 
             try
             {
-                if (_selectionHandler != null)
-                    _selectionHandler.HandleMouseLeave(parent);
+                _selectionHandler?.HandleMouseLeave(parent);
             }
             catch (Exception ex)
             {
@@ -867,10 +817,7 @@ namespace Omnidoc.Html.Renderer.Core
             ArgChecker.AssertArgNotNull(box, "box");
             ArgChecker.AssertArgNotNull(block, "block");
 
-            if (_hoverBoxes == null)
-                _hoverBoxes = new List<HoverBoxBlock>();
-
-            _hoverBoxes.Add(new HoverBoxBlock(box, block));
+            ( _hoverBoxes ??= new List<HoverBoxBlock>() ).Add(new HoverBoxBlock(box, block));
         }
 
         /// <summary>
@@ -891,9 +838,6 @@ namespace Omnidoc.Html.Renderer.Core
             Dispose(true);
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Adjust the offset of the given location by the current scroll offset.
         /// </summary>
@@ -910,7 +854,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// </summary>
         private bool IsMouseInContainer(RPoint location)
         {
-            return location.X >= _location.X && location.X <= _location.X + _actualSize.Width && location.Y >= _location.Y + ScrollOffset.Y && location.Y <= _location.Y + ScrollOffset.Y + _actualSize.Height;
+            return location.X >= Location.X && location.X <= Location.X + ActualSize.Width && location.Y >= Location.Y + ScrollOffset.Y && location.Y <= Location.Y + ScrollOffset.Y + ActualSize.Height;
         }
 
         /// <summary>
@@ -930,20 +874,15 @@ namespace Omnidoc.Html.Renderer.Core
                 }
 
                 _cssData = null;
-                if (Root != null)
-                    Root.Dispose();
+                Root?.Dispose();
                 Root = null;
-                if (_selectionHandler != null)
-                    _selectionHandler.Dispose();
+                _selectionHandler?.Dispose();
                 _selectionHandler = null;
-                if (_imageDownloader != null)
-                    _imageDownloader.Dispose();
+                _imageDownloader?.Dispose();
                 _imageDownloader = null;
             }
             catch
             { }
         }
-
-        #endregion
     }
 }

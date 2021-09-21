@@ -98,7 +98,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         {
             AssertArgNotNullOrEmpty(arg, argName);
 
-            if (false == File.Exists(arg))
+            if ( ! File.Exists ( arg ) )
             {
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Given file in argument '{0}' not exist.", argName), arg);
             }

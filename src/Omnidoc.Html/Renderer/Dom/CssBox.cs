@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Omnidoc.Html.Renderer.Adapters;
@@ -14,16 +14,17 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// Represents a CSS Box of text or replaced elements.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// The Box can contains other boxes, that's the way that the CSS Tree
     /// is composed.
-    /// 
+    /// </para>
+    /// <para>
     /// To know more about boxes visit CSS spec:
     /// http://www.w3.org/TR/CSS21/box.html
+    /// </para>
     /// </remarks>
     internal class CssBox : CssBoxProperties, IDisposable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the parent css box of this css box in the hierarchy
         /// </summary>
@@ -33,8 +34,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// the root container for the hierarchy
         /// </summary>
         protected HtmlContainerInt? _htmlContainer;
-        private readonly List<CssRect> _boxWords = new();
-        private readonly List<CssLineBox> _parentLineBoxes = new();
 
         /// <summary>
         /// the inner text of the box
@@ -56,9 +55,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// handler for loading background image
         /// </summary>
         private ImageLoadHandler? _imageLoadHandler;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -114,7 +110,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Is the box is of "br" element.
         /// </summary>
-        public bool IsBrElement => HtmlTag != null && HtmlTag.Name.Equals("br", StringComparison.OrdinalIgnoreCase);
+        public bool IsBrElement => HtmlTag?.Name.Equals ( "br", StringComparison.OrdinalIgnoreCase ) == true;
 
         /// <summary>
         /// is the box "Display" is "Inline", is this is an inline box and not block.
@@ -129,7 +125,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Is the css box clickable (by default only "a" element is clickable)
         /// </summary>
-        public virtual bool IsClickable => HtmlTag != null && HtmlTag.Name == HtmlConstants.A && !HtmlTag.HasAttribute("id");
+        public virtual bool IsClickable => HtmlTag?.Name == HtmlConstants.A && !HtmlTag.HasAttribute("id");
 
         /// <summary>
         /// Gets a value indicating whether this instance or one of its parents has Position = fixed.
@@ -236,7 +232,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             set
             {
                 _text = value;
-                _boxWords.Clear();
+                Words.Clear();
             }
         }
 
@@ -248,7 +244,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the linebox(es) that contains words of this box (if inline)
         /// </summary>
-        internal List<CssLineBox> ParentLineBoxes => _parentLineBoxes;
+        internal List<CssLineBox> ParentLineBoxes { get; } = new ( );
 
         /// <summary>
         /// Gets the rectangles where this box should be painted
@@ -258,7 +254,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the BoxWords of text in the box
         /// </summary>
-        internal List<CssRect> Words => _boxWords;
+        internal List<CssRect> Words { get; } = new ( );
 
         /// <summary>
         /// Gets the first word of the box
@@ -423,7 +419,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     {
                         g.ResumeClipping();
                     }
-
                 }
             }
             catch (Exception ex)
@@ -433,7 +428,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         }
 
         /// <summary>
-        /// Set this box in 
+        /// Set this box in
         /// </summary>
         /// <param name="before"></param>
         public void SetBeforeBox(CssBox before)
@@ -467,7 +462,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public void ParseToWords()
         {
-            _boxWords.Clear();
+            Words.Clear();
 
             var startIdx = 0;
             var preserveSpaces = WhiteSpace == CssConstants.Pre || WhiteSpace == CssConstants.PreWrap;
@@ -486,7 +481,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     if (endIdx > startIdx)
                     {
                         if (preserveSpaces)
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), false, false));
+                            Words.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), false, false));
                     }
                     else
                     {
@@ -499,9 +494,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
                         if (endIdx > startIdx)
                         {
-                            var hasSpaceBefore = !preserveSpaces && (startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(_text[startIdx - 1]));
-                            var hasSpaceAfter = !preserveSpaces && (endIdx < _text.Length && char.IsWhiteSpace(_text[endIdx]));
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), hasSpaceBefore, hasSpaceAfter));
+                            var hasSpaceBefore = !preserveSpaces && startIdx > 0 && Words.Count == 0 && char.IsWhiteSpace(_text[startIdx - 1]);
+                            var hasSpaceAfter = !preserveSpaces && endIdx < _text.Length && char.IsWhiteSpace(_text[endIdx]);
+                            Words.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(_text.Substring(startIdx, endIdx - startIdx)), hasSpaceBefore, hasSpaceAfter));
                         }
                     }
 
@@ -510,7 +505,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     {
                         endIdx++;
                         if (respoctNewline)
-                            _boxWords.Add(new CssRectWord(this, "\n", false, false));
+                            Words.Add(new CssRectWord(this, "\n", false, false));
                     }
 
                     startIdx = endIdx;
@@ -523,17 +518,13 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public virtual void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            _imageLoadHandler?.Dispose();
 
             foreach (var childBox in Boxes)
             {
                 childBox.Dispose();
             }
         }
-
-
-        #region Private Methods
 
         /// <summary>
         /// Measures the bounds of box and children, recursively.<br/>
@@ -866,7 +857,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private static double GetWidthMarginDeep(CssBox box)
         {
             double sum = 0f;
-            if (box.Size.Width > 90999 || (box.ParentBox != null && box.ParentBox.Size.Width > 90999))
+            if (box.Size.Width > 90999 || box.ParentBox?.Size.Width > 90999 )
             {
                 var currentBox = box;
                 while (currentBox != null)
@@ -938,7 +929,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
             // add the padding 
             paddingSum += box.ActualBorderLeftWidth + box.ActualBorderRightWidth + box.ActualPaddingRight + box.ActualPaddingLeft;
-
 
             // for tables the padding also contains the spacing between cells
             if (box.Display == CssConstants.Table)
@@ -1021,7 +1011,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             }
 
             // fix for hr tag
-            if (value < 0.1 && HtmlTag != null && HtmlTag.Name == "hr")
+            if ( value < 0.1 && HtmlTag?.Name == "hr" )
             {
                 value = GetEmHeight() * 1.1f;
             }
@@ -1111,8 +1101,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 b.OffsetTop(amount);
             }
 
-            if (_listItemBox != null)
-                _listItemBox.OffsetTop(amount);
+            _listItemBox?.OffsetTop(amount);
 
             Location = new RPoint(Location.X, Location.Y + amount);
         }
@@ -1181,10 +1170,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 if (clipped)
                     g.PopClip();
 
-                if (_listItemBox != null)
-                {
-                    _listItemBox.Paint(g);
-                }
+                _listItemBox?.Paint(g);
             }
         }
 
@@ -1194,10 +1180,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             rect.Width += 2;
             clip.Intersect(rect);
 
-            if (clip != RRect.Empty)
-                return true;
-
-            return false;
+            return clip != RRect.Empty;
         }
 
         /// <summary>
@@ -1235,7 +1218,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     }
 
                     object? prevMode = null;
-                    if (HtmlContainer != null && !HtmlContainer.AvoidGeometryAntialias && IsRounded)
+                    if ( HtmlContainer?.AvoidGeometryAntialias == false && IsRounded)
                     {
                         prevMode = g.SetAntiAliasSmoothingMode();
                     }
@@ -1252,12 +1235,11 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     if(prevMode != null)
                         g.ReturnPreviousSmoothingMode(prevMode);
 
-                    if (roundrect != null)
-                        roundrect.Dispose();
+                    roundrect?.Dispose();
                     brush.Dispose();
                 }
 
-                if (_imageLoadHandler != null && _imageLoadHandler.HasImage && isFirst)
+                if ( _imageLoadHandler?.HasImage == true && isFirst)
                 {
                     BackgroundImageDrawHandler.DrawBackgroundImage(g, this, _imageLoadHandler, rect);
                 }
@@ -1453,7 +1435,5 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 return string.Format(CultureInfo.InvariantCulture, "{0}{1} {2}: {3}", ParentBox == null ? "Root: " : string.Empty, tag, Display, Text);
             }
         }
-
-        #endregion
     }
 }

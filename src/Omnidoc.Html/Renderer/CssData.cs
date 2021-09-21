@@ -16,8 +16,6 @@ namespace Omnidoc.Html.Renderer.Core
     /// </remarks>
     public sealed class CssData
     {
-        #region Fields and Consts
-
         /// <summary>
         /// used to return empty array
         /// </summary>
@@ -27,9 +25,6 @@ namespace Omnidoc.Html.Renderer.Core
         /// dictionary of media type to dictionary of css class name to the cssBlocks collection with all the data.
         /// </summary>
         private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _mediaBlocks = new(StringComparer.InvariantCultureIgnoreCase);
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -115,8 +110,7 @@ namespace Omnidoc.Html.Renderer.Core
 
             if (!mid.ContainsKey(cssBlock.Class))
             {
-                var list = new List<CssBlock> { cssBlock };
-                mid[cssBlock.Class] = list;
+                mid[cssBlock.Class] = new List<CssBlock> { cssBlock };
             }
             else
             {

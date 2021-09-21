@@ -13,15 +13,10 @@ namespace Omnidoc.Html.Renderer.Core.Parse
     /// </summary>
     internal sealed class DomParser
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Parser for CSS
         /// </summary>
         private readonly CssParser _cssParser;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -70,9 +65,6 @@ namespace Omnidoc.Html.Renderer.Core.Parse
             return root;
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Read styles defined inside the dom structure in links and style elements.<br/>
         /// If the html tag is "style" tag parse it content and add to the css data for all future tags parsing.<br/>
@@ -112,7 +104,6 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 CascadeParseStyles(childBox, htmlContainer, ref cssData, ref cssDataChanged);
             }
         }
-
 
         /// <summary>
         /// Applies style to all boxes in the tree.<br/>
@@ -184,8 +175,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
 
             if (cssData.ContainsCssBlock("::selection"))
             {
-                var blocks = cssData.GetCssBlock("::selection");
-                foreach (var block in blocks)
+                foreach (var block in cssData.GetCssBlock("::selection"))
                 {
                     if (block.Properties.ContainsKey("color"))
                         htmlContainer.SelectionForeColor = _cssParser.ParseColor(block.Properties["color"]);
@@ -235,8 +225,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="className">the class selector to search for css blocks</param>
         private static void AssignCssBlocks(CssBox box, CssData cssData, string className)
         {
-            var blocks = cssData.GetCssBlock(className);
-            foreach (var block in blocks)
+            foreach (var block in cssData.GetCssBlock(className))
             {
                 if (IsBlockAssignableToBox(box, block))
                 {
@@ -391,7 +380,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="box"></param>
@@ -530,7 +519,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
             {
                 foreach (var l2 in l1.Boxes)
                 {
-                    if (l2.HtmlTag != null && l2.HtmlTag.Name == "td")
+                    if ( l2.HtmlTag?.Name == "td" )
                     {
                         action(l2);
                     }
@@ -568,10 +557,10 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                     keepBox = keepBox || box.Boxes.Count == 1;
 
                     // is it a whitespace between two inline boxes
-                    keepBox = keepBox || (i > 0 && i < box.Boxes.Count - 1 && box.Boxes[i - 1].IsInline && box.Boxes[i + 1].IsInline);
+                    keepBox = keepBox || i > 0 && i < box.Boxes.Count - 1 && box.Boxes[i - 1].IsInline && box.Boxes[i + 1].IsInline;
 
                     // is first/last box where is in inline box and it's next/previous box is inline
-                    keepBox = keepBox || (i == 0 && box.Boxes.Count > 1 && box.Boxes[1].IsInline && box.IsInline) || (i == box.Boxes.Count - 1 && box.Boxes.Count > 1 && box.Boxes[i - 1].IsInline && box.IsInline);
+                    keepBox = keepBox || i == 0 && box.Boxes.Count > 1 && box.Boxes[1].IsInline && box.IsInline || i == box.Boxes.Count - 1 && box.Boxes.Count > 1 && box.Boxes[i - 1].IsInline && box.IsInline;
 
                     if (keepBox)
                     {
@@ -603,8 +592,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
                 var childBox = box.Boxes[i];
                 if (childBox is CssBoxImage && childBox.Display == CssConstants.Block)
                 {
-                    var block = CssBox.CreateBlock(box, null, childBox);
-                    childBox.ParentBox = block;
+                    childBox.ParentBox = (CssBox?) CssBox.CreateBlock(box, null, childBox);
                     childBox.Display = CssConstants.Inline;
                 }
                 else
@@ -803,7 +791,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
             else if (splitBox.ParentBox != null && parentBox.Boxes.Count > 1)
             {
                 splitBox.SetBeforeBox(parentBox.Boxes[1]);
-                if (splitBox.HtmlTag != null && splitBox.HtmlTag.Name == "br" && (leftbox != null || leftBlock.Boxes.Count > 1))
+                if ( splitBox.HtmlTag?.Name == "br" && (leftbox != null || leftBlock.Boxes.Count > 1))
                     splitBox.Display = CssConstants.Inline;
             }
         }
@@ -877,7 +865,5 @@ namespace Omnidoc.Html.Renderer.Core.Parse
 
             return hasBlock && hasInline;
         }
-
-        #endregion
     }
 }

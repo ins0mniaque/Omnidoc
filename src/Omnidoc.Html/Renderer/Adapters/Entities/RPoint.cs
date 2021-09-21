@@ -223,7 +223,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     The <see cref="object" /> to test.
         /// </param>
         /// <filterpriority>1</filterpriority>
-        public override bool Equals(object obj) => obj is RPoint other ? Equals(other) : false;
+        public override bool Equals(object obj) => obj is RPoint other && Equals (other);
 
         public bool Equals(RPoint other) => X == other.X && Y == other.Y;
 

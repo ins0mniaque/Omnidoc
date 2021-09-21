@@ -1,4 +1,4 @@
-﻿// "Therefore those skilled at the unorthodox
+// "Therefore those skilled at the unorthodox
 // are infinite as heaven and earth,
 // inexhaustible as the great rivers.
 // When they come to an end,
@@ -47,7 +47,7 @@ EndSelection:<<<<<<<<4";
         /// <summary>
         /// html comment to point the end of html fragment
         /// </summary>
-        public const string EndFragment = @"<!--EndFragment-->";
+        public const string EndFragment = "<!--EndFragment-->";
 
         /// <summary>
         /// Used to calculate characters byte count in UTF-8
@@ -61,11 +61,11 @@ EndSelection:<<<<<<<<4";
         /// <para>
         /// Builds the CF_HTML header correctly for all possible HTMLs<br/>
         /// If given html contains start/end fragments then it will use them in the header:
-        /// <code><![CDATA[<html><body><!--StartFragment-->hello <b>world</b><!--EndFragment--></body></html>]]></code>
+        /// <c><![CDATA[<html><body><!--StartFragment-->hello <b>world</b><!--EndFragment--></body></html>]]></c>
         /// If given html contains html/body tags then it will inject start/end fragments to exclude html/body tags:
-        /// <code><![CDATA[<html><body>hello <b>world</b></body></html>]]></code>
+        /// <c><![CDATA[<html><body>hello <b>world</b></body></html>]]></c>
         /// If given html doesn't contain html/body tags then it will inject the tags and start/end fragments properly:
-        /// <code><![CDATA[hello <b>world</b>]]></code>
+        /// <c><![CDATA[hello <b>world</b>]]></c>
         /// In all cases creating a proper CF_HTML header:<br/>
         /// <code>
         /// <![CDATA[

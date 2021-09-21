@@ -19,8 +19,6 @@ namespace Omnidoc.Html.Renderer.Core.Utils
     /// </summary>
     internal static class CommonUtils
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Table to convert numbers into roman digits
         /// </summary>
@@ -68,9 +66,6 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// </summary>
         private static string? _tempPath;
 
-        #endregion
-
-
         /// <summary>
         /// Check if the given char is of Asian range.
         /// </summary>
@@ -84,7 +79,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="ch">the character to check</param>
         /// <param name="hex">optional: is hex digit check</param>
         /// <returns>true - is digit, false - not a digit</returns>
-        public static bool IsDigit(char ch, bool hex = false) => (ch >= '0' && ch <= '9') || (hex && ((ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F')));
+        public static bool IsDigit(char ch, bool hex = false) => ch >= '0' && ch <= '9' || hex && (ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F');
 
         /// <summary>
         /// Convert the given char to digit.
@@ -300,8 +295,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         private static string GetValidFileName(string source)
         {
             var retVal = source;
-            var invalidFileNameChars = Path.GetInvalidFileNameChars();
-            foreach (var invalidFileNameChar in invalidFileNameChars)
+            foreach (var invalidFileNameChar in Path.GetInvalidFileNameChars())
             {
                 retVal = retVal.Replace(invalidFileNameChar, '_');
             }

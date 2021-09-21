@@ -8,12 +8,9 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class FontAdapter : RFont
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-
         /// <summary>
         /// the vertical offset of the font underline location from the top of the font.
         /// </summary>
@@ -28,9 +25,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         /// Cached font whitespace width.
         /// </summary>
         private double _whitespaceWidth = -1;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -64,7 +58,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
         {
             get { return _height / 6f; }
         }
-
 
         public override double GetWhitespaceWidth(RGraphics graphics)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Net;
 using System.Text;
@@ -17,8 +17,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </summary>
     internal sealed class CssBoxFrame : CssBox
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the image word of this image box
         /// </summary>
@@ -49,9 +47,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         private bool _imageLoadingComplete;
 
-        #endregion
-
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -68,12 +63,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 if (uri.Host.IndexOf("youtube.com", StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
                     IsVideo = true;
-                    LoadYoutubeDataAsync(uri);
+                    QueueYoutubeDataDownload(uri);
                 }
                 else if (uri.Host.IndexOf("vimeo.com", StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
                     IsVideo = true;
-                    LoadVimeoDataAsync(uri);
+                    QueueVimeoDataDownload(uri);
                 }
             }
 
@@ -103,34 +98,30 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public override void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            _imageLoadHandler?.Dispose();
             base.Dispose();
         }
-
-
-        #region Private methods
 
         /// <summary>
         /// Load YouTube video data (title, image, link) by calling YouTube API.
         /// </summary>
-        private void LoadYoutubeDataAsync(Uri uri) => ThreadPool.QueueUserWorkItem(state =>
-                                                    {
-                                                        try
-                                                        {
-                                                            var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&alt=json", uri.Segments[2]));
+        private void QueueYoutubeDataDownload(Uri uri) => ThreadPool.QueueUserWorkItem(state =>
+        {
+            try
+            {
+                var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&alt=json", uri.Segments[2]));
 
-                                                            using var client = new WebClient();
-                                                            client.Encoding = Encoding.UTF8;
-                                                            client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
-                                                            client.DownloadStringAsync(apiUri);
-                                                        }
-                                                        catch (WebException ex)
-                                                        {
-                                                            HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
-                                                            HtmlContainer.RequestRefresh(false);
-                                                        }
-                                                    });
+                using var client = new WebClient();
+                client.Encoding = Encoding.UTF8;
+                client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
+                client.DownloadStringAsync(apiUri);
+            }
+            catch (WebException ex)
+            {
+                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
+                HtmlContainer.RequestRefresh(false);
+            }
+        });
 
         /// <summary>
         /// Parse YouTube API response to get video data (title, image, link).
@@ -247,27 +238,27 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Load Vimeo video data (title, image, link) by calling Vimeo API.
         /// </summary>
-        private void LoadVimeoDataAsync(Uri uri) => ThreadPool.QueueUserWorkItem(state =>
-                                                  {
-                                                      try
-                                                      {
-                                                          var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://vimeo.com/api/v2/video/{0}.json", uri.Segments[2]));
+        private void QueueVimeoDataDownload(Uri uri) => ThreadPool.QueueUserWorkItem(state =>
+        {
+            try
+            {
+                var apiUri = new Uri(string.Format(CultureInfo.InvariantCulture, "http://vimeo.com/api/v2/video/{0}.json", uri.Segments[2]));
 
-                                                          var client = new WebClient
-                                                          {
-                                                              Encoding = Encoding.UTF8
-                                                          };
-                                                          client.DownloadStringCompleted += OnDownloadVimeoApiCompleted;
-                                                          client.DownloadStringAsync(apiUri);
-                                                      }
-                                                      catch (WebException ex)
-                                                      {
-                                                          _imageLoadingComplete = true;
-                                                          SetErrorBorder();
-                                                          HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
-                                                          HtmlContainer.RequestRefresh(false);
-                                                      }
-                                                  });
+                var client = new WebClient
+                {
+                    Encoding = Encoding.UTF8
+                };
+                client.DownloadStringCompleted += OnDownloadVimeoApiCompleted;
+                client.DownloadStringAsync(apiUri);
+            }
+            catch (WebException ex)
+            {
+                _imageLoadingComplete = true;
+                SetErrorBorder();
+                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
+                HtmlContainer.RequestRefresh(false);
+            }
+        });
 
         /// <summary>
         /// Parse Vimeo API response to get video data (title, image, link).
@@ -372,7 +363,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private void HandleDataLoadFailure(Exception ex, string source)
         {
             var webResponse = ex is WebException webError ? webError.Response as HttpWebResponse : null;
-            if (webResponse != null && webResponse.StatusCode == HttpStatusCode.NotFound)
+            if ( webResponse?.StatusCode == HttpStatusCode.NotFound )
             {
                 _videoTitle = "The video is not found, possibly removed by the user.";
             }
@@ -514,7 +505,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     new RPoint(left + 2 * size.Width / 3f + 1, top + size.Height / 2f)
                 };
                 g.DrawPolygon(g.GetSolidBrush(RColor.White), points);
-                
+
                 g.ReturnPreviousSmoothingMode(prevMode);
             }
         }
@@ -570,9 +561,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         {
             var width = new CssLength(Width);
             var height = new CssLength(Height);
-            return (width.Number <= 0 || width.Unit != CssUnit.Pixels) || (height.Number <= 0 || height.Unit != CssUnit.Pixels);
+            return width.Number <= 0 || width.Unit != CssUnit.Pixels || height.Number <= 0 || height.Unit != CssUnit.Pixels;
         }
-
-        #endregion
     }
 }

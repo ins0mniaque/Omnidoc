@@ -11,7 +11,7 @@ namespace Omnidoc.Html.Renderer.Adapters
 {
     /// <summary>
     /// Platform adapter to bridge platform specific objects to HTML Renderer core library.<br/>
-    /// Core uses abstract renderer objects (RAdapter/RControl/REtc...) to access platform specific functionality, the concrete platforms 
+    /// Core uses abstract renderer objects (RAdapter/RControl/REtc...) to access platform specific functionality, the concrete platforms
     /// implements those objects to provide concrete platform implementation. Those allowing the core library to be platform agnostic.
     /// <para>
     /// Platforms: ImageSharp, WPF, Metro, PDF renders, etc.<br/>
@@ -24,8 +24,6 @@ namespace Omnidoc.Html.Renderer.Adapters
     /// </remarks>
     public abstract class RAdapter
     {
-        #region Fields/Consts
-
         /// <summary>
         /// cache of brush color to brush instance
         /// </summary>
@@ -55,9 +53,6 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// image used to draw error image icon
         /// </summary>
         private RImage? _errorImage;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -152,7 +147,7 @@ namespace Omnidoc.Html.Renderer.Adapters
 
         /// <summary>
         /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing
         /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
         /// </summary>
         /// <param name="fromFamily">the font family to replace</param>
@@ -266,9 +261,6 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// <returns>font instance</returns>
         internal RFont CreateFont(RFontFamily family, double size, RFontStyle style) => CreateFontInt(family, size, style);
 
-
-        #region Private/Protected methods
-
         /// <summary>
         /// Resolve color value from given color name.
         /// </summary>
@@ -375,7 +367,5 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// <param name="extension">the extension of the image for save dialog</param>
         /// <param name="control">optional: the control to show the dialog on</param>
         protected virtual void SaveToFileInt(RImage image, string name, string extension, RControl? control = null) => throw new NotImplementedException();
-
-        #endregion
     }
 }

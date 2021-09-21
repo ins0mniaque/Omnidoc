@@ -17,14 +17,9 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
     /// </summary>
     internal sealed class ImageSharpAdapter : RAdapter
     {
-        #region Fields and Consts
-
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-
-        #endregion
-
         /// <summary>
         /// Init installed font families and set default font families mapping.
         /// </summary>

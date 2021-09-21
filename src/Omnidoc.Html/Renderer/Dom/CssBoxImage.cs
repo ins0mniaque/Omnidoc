@@ -11,8 +11,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </summary>
     internal sealed class CssBoxImage : CssBox
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the image word of this image box
         /// </summary>
@@ -27,9 +25,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// is image load is finished, used to know if no image is found
         /// </summary>
         private bool _imageLoadingComplete;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -146,13 +141,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public override void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            _imageLoadHandler?.Dispose();
             base.Dispose();
         }
-
-
-        #region Private methods
 
         /// <summary>
         /// Set error image border on the image box.
@@ -185,11 +176,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
             {
                 var width = new CssLength(Width);
                 var height = new CssLength(Height);
-                var layout = (width.Number <= 0 || width.Unit != CssUnit.Pixels) || (height.Number <= 0 || height.Unit != CssUnit.Pixels);
+                var layout = width.Number <= 0 || width.Unit != CssUnit.Pixels || height.Number <= 0 || height.Unit != CssUnit.Pixels;
                 HtmlContainer.RequestRefresh(layout);
             }
         }
-
-        #endregion
     }
 }

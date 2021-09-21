@@ -8,12 +8,6 @@ namespace Omnidoc.Html.Renderer.Core.Entities
     /// </summary>
     public sealed class HtmlRenderErrorEventArgs : EventArgs
     {
-
-        /// <summary>
-        /// the exception that occurred (can be null)
-        /// </summary>
-        private readonly Exception? _exception;
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -24,7 +18,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         {
             Type = type;
             Message = message;
-            _exception = exception;
+            Exception = exception;
         }
 
         /// <summary>
@@ -40,7 +34,7 @@ namespace Omnidoc.Html.Renderer.Core.Entities
         /// <summary>
         /// the exception that occurred (can be null)
         /// </summary>
-        public Exception? Exception => _exception;
+        public Exception? Exception { get; }
 
         public override string ToString() => string.Format(CultureInfo.InvariantCulture, "Type: {0}", Type);
     }

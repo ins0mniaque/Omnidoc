@@ -1,4 +1,4 @@
-﻿using PdfSharpCore.Drawing;
+using PdfSharpCore.Drawing;
 using System;
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
@@ -12,8 +12,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
     /// </summary>
     internal sealed class GraphicsAdapter : RGraphics
     {
-        #region Fields and Consts
-
         /// <summary>
         /// The wrapped ImageSharp graphics object
         /// </summary>
@@ -32,8 +30,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             Alignment = XStringAlignment.Near,
             LineAlignment = XLineAlignment.Near
         };
-
-        #endregion
 
         /// <summary>
         /// Init.
@@ -90,7 +86,7 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
             {
                 var height = realFont.Height;
                 var descent = realFont.Size * realFont.FontFamily.GetCellDescent(realFont.Style) / realFont.FontFamily.GetEmHeight(realFont.Style);
-                fontAdapter.SetMetrics(height, (int)Math.Round((height - descent + 1f)));
+                fontAdapter.SetMetrics(height, (int)Math.Round( height - descent + 1f ) );
             }
 
             return Utils.Convert(size);
@@ -117,8 +113,6 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
 
             base.Dispose(disposing);
         }
-
-        #region Delegate graphics methods
 
         public override void DrawLine(RPen pen, double x1, double y1, double x2, double y2) => _g.DrawLine(((PenAdapter)pen).Pen, x1, y1, x2, y2);
 
@@ -151,12 +145,10 @@ namespace Omnidoc.Html.Pdf.Renderer.Adapters
 
         public override void DrawPolygon(RBrush brush, RPoint[] points)
         {
-            if (points != null && points.Length > 0)
+            if ( points?.Length > 0 )
             {
                 _g.DrawPolygon((XBrush)((BrushAdapter)brush).Brush, Utils.Convert(points), XFillMode.Winding);
             }
         }
-
-        #endregion
     }
 }

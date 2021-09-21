@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
 using Omnidoc.Html.Renderer.Core.Dom;
@@ -11,15 +11,10 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
     /// </summary>
     internal static class BordersDrawHandler
     {
-        #region Fields and Consts
-
         /// <summary>
         /// used for all border paint to use the same points and not create new array each time.
         /// </summary>
         private static readonly RPoint[] _borderPts = new RPoint[4];
-
-        #endregion
-
 
         /// <summary>
         /// Draws all the border of the box with respect to style, width, etc.
@@ -67,9 +62,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             g.DrawPolygon(brush, _borderPts);
         }
 
-
-        #region Private methods
-
         /// <summary>
         /// Draw specific border (top/bottom/left/right) with the box data (style/width/rounded).<br/>
         /// </summary>
@@ -89,7 +81,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             {
                 // rounded border need special path
                 object? prevMode = null;
-                if (box.HtmlContainer != null && !box.HtmlContainer.AvoidGeometryAntialias && box.IsRounded)
+                if ( box.HtmlContainer?.AvoidGeometryAntialias == false && box.IsRounded)
                     prevMode = g.SetAntiAliasSmoothingMode();
 
                 var pen = GetPen(g, style, color, GetWidth(border, box));
@@ -327,7 +319,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// Makes the specified color darker for inset/outset borders.
         /// </summary>
         private static RColor Darken(RColor c) => RColor.FromArgb(c.R / 2, c.G / 2, c.B / 2);
-
-        #endregion
     }
 }

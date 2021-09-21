@@ -12,8 +12,6 @@ namespace Omnidoc.Html.Renderer.Adapters
     /// </summary>
     public abstract class RGraphics : IDisposable
     {
-        #region Fields/Consts
-
         /// <summary>
         /// the global adapter
         /// </summary>
@@ -28,9 +26,6 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// The suspended clips
         /// </summary>
         private readonly Stack<RRect> _suspendedClips = new();
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -89,7 +84,6 @@ namespace Omnidoc.Html.Renderer.Adapters
         /// </summary>
         /// <param name="rect">Rectangle to exclude clipping in.</param>
         public abstract void PushClipExclude(RRect rect);
-
 
         /// <summary>
         /// Restore the clipping region to the initial clip.

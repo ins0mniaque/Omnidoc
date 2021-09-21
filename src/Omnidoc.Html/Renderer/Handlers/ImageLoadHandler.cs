@@ -30,8 +30,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
     /// </remarks>
     internal sealed class ImageLoadHandler : IDisposable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the container of the html to handle load image for
         /// </summary>
@@ -71,9 +69,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// is the handler has been disposed
         /// </summary>
         private bool _disposed;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -160,9 +155,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             _disposed = true;
             ReleaseObjects();
         }
-
-
-        #region Private methods
 
         /// <summary>
         /// Set the image using callback from load image event, use the given data.
@@ -374,7 +366,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 }
             }
         }
-
-        #endregion
     }
 }

@@ -9,7 +9,6 @@ namespace Omnidoc.Html.Renderer.Adapters
     /// </summary>
     public abstract class RControl
     {
-
         /// <summary>
         /// Init control with platform adapter.
         /// </summary>

@@ -11,10 +11,8 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
     /// </summary>
     internal sealed class FontsHandler
     {
-        #region Fields and Consts
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private readonly RAdapter _adapter;
 
@@ -32,9 +30,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// cache of all the font used not to create same font again and again
         /// </summary>
         private readonly Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>> _fontsCache = new(StringComparer.InvariantCultureIgnoreCase);
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -77,7 +72,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
 
         /// <summary>
         /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing
         /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
         /// </summary>
         /// <param name="fromFamily">the font family to replace</param>
@@ -122,9 +117,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             }
             return font;
         }
-
-
-        #region Private methods
 
         /// <summary>
         /// Get cached font if it exists in cache or null if it is not.
@@ -176,7 +168,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                     : _adapter.CreateFont(family, size, RFontStyle.Regular);
             }
         }
-
-        #endregion
     }
 }

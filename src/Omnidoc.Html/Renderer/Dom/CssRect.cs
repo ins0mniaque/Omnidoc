@@ -11,26 +11,20 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// Represents a word inside an inline box
     /// </summary>
     /// <remarks>
-    /// Because of performance, words of text are the most atomic 
+    /// Because of performance, words of text are the most atomic
     /// element in the project. It should be characters, but come on,
     /// imagine the performance when drawing char by char on the device.<br/>
     /// It may change for future versions of the library.
     /// </remarks>
     internal abstract class CssRect
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the CSS box owner of the word
         /// </summary>
-
         /// <summary>
         /// Rectangle
         /// </summary>
         private RRect _rect;
-
-        #endregion
-
 
         /// <summary>
         /// Init.
@@ -90,7 +84,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the actual width of whitespace between words.
         /// </summary>
-        public double ActualWordSpacing => (OwnerBox != null ? (HasSpaceAfter ? OwnerBox.ActualWordSpacing : 0) + (IsImage ? OwnerBox.ActualWordSpacing : 0) : 0);
+        public double ActualWordSpacing => OwnerBox != null ? ( HasSpaceAfter ? OwnerBox.ActualWordSpacing : 0 ) + ( IsImage ? OwnerBox.ActualWordSpacing : 0 ) : 0;
 
         /// <summary>
         /// Height of the rectangle

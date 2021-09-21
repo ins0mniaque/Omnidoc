@@ -7,7 +7,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </summary>
     internal sealed class HoverBoxBlock
     {
-
         /// <summary>
         /// Init.
         /// </summary>

@@ -17,15 +17,9 @@ namespace Omnidoc.Html.Pdf.Renderer
     /// <seealso cref="HtmlContainerInt"/>
     public sealed class HtmlContainer : IDisposable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// The internal core html container
         /// </summary>
-
-        #endregion
-
-
         /// <summary>
         /// Init.
         /// </summary>

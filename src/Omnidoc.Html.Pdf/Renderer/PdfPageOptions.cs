@@ -1,4 +1,4 @@
-﻿using PdfSharpCore;
+using PdfSharpCore;
 using PdfSharpCore.Drawing;
 
 namespace Omnidoc.Html.Pdf.Renderer
@@ -8,8 +8,6 @@ namespace Omnidoc.Html.Pdf.Renderer
     /// </summary>
     public sealed class PdfPageOptions
     {
-        #region Fields/Consts
-
         /// <summary>
         /// the top margin between the page start and the text
         /// </summary>
@@ -29,9 +27,6 @@ namespace Omnidoc.Html.Pdf.Renderer
         /// the right margin between the page end and the text
         /// </summary>
         private int _marginRight;
-
-        #endregion
-
 
         /// <summary>
         /// the page size to use for each page in the generated pdf

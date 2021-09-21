@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Omnidoc.Html.Renderer.Adapters;
@@ -17,8 +17,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
     /// </summary>
     internal abstract class CssBoxProperties
     {
-        #region CSS Fields
-
         private string _borderTopWidth = "medium";
         private string _borderRightWidth = "medium";
         private string _borderBottomWidth = "medium";
@@ -42,20 +40,10 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private string _top = "auto";
         private string _wordSpacing = "normal";
 
-        #endregion
-
-
-        #region Fields
-
         /// <summary>
         /// Gets or sets the location of the box
         /// </summary>
         private RPoint _location;
-
-        /// <summary>
-        /// Gets or sets the size of the box
-        /// </summary>
-        private RSize _size;
 
         private double _actualCornerNw = double.NaN;
         private double _actualCornerNe = double.NaN;
@@ -93,11 +81,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private RColor _actualBorderRightColor = RColor.Empty;
         private RColor _actualBackgroundColor = RColor.Empty;
         private RFont? _actualFont;
-
-        #endregion
-
-
-        #region CSS Properties
 
         public string BorderBottomWidth
         {
@@ -312,7 +295,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 {
                     _location = GetActualLocation(Left, Top);
                 }
-
             }
         }
 
@@ -438,8 +420,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string ListStyleType { get; set; } = "disc";
 
-        #endregion CSS Propertier
-
         /// <summary>
         /// Gets or sets the location of the box
         /// </summary>
@@ -459,11 +439,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets or sets the size of the box
         /// </summary>
-        public RSize Size
-        {
-            get => _size;
-            set => _size = value;
-        }
+        public RSize Size { get; set; }
 
         /// <summary>
         /// Gets the bounds of the box
@@ -485,7 +461,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         }
 
         /// <summary>
-        /// Gets or sets the bottom of the box. 
+        /// Gets or sets the bottom of the box.
         /// (When setting, alters only the Size.Height of the box)
         /// </summary>
         public double ActualBottom
@@ -800,7 +776,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         {
             get
             {
-                if ((_actualBorderLeftColor.IsEmpty))
+                if ( _actualBorderLeftColor.IsEmpty )
                 {
                     _actualBorderLeftColor = GetActualColor(BorderLeftColor);
                 }
@@ -815,7 +791,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         {
             get
             {
-                if ((_actualBorderBottomColor.IsEmpty))
+                if ( _actualBorderBottomColor.IsEmpty )
                 {
                     _actualBorderBottomColor = GetActualColor(BorderBottomColor);
                 }
@@ -830,7 +806,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         {
             get
             {
-                if ((_actualBorderRightColor.IsEmpty))
+                if ( _actualBorderRightColor.IsEmpty )
                 {
                     _actualBorderRightColor = GetActualColor(BorderRightColor);
                 }
@@ -909,7 +885,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         public double ActualWordSpacing { get; private set; } = double.NaN;
 
         /// <summary>
-        /// 
+        ///
         /// Gets the actual color for the text.
         /// </summary>
         public RColor ActualColor
@@ -1089,7 +1065,6 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     }
                 }
 
-
                 return _actualBorderSpacingHorizontal;
             }
         }
@@ -1184,8 +1159,8 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Inherits inheritable values from specified box.
         /// </summary>
-        /// <param name="everything">Set to true to inherit all CSS properties instead of only the ineritables</param>
         /// <param name="p">Box to inherit the properties</param>
+        /// <param name="everything">Set to true to inherit all CSS properties instead of only the ineritables</param>
         protected void InheritStyle(CssBox? p, bool everything)
         {
             if (p != null)

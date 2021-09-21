@@ -7,8 +7,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
     /// </summary>
     public struct RSize : IEquatable<RSize>
     {
-        #region Fields and Consts
-
         /// <summary>
         ///     Gets a <see cref="RSize" /> structure that has a
         ///     <see
@@ -29,9 +27,6 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         /// </returns>
         /// <filterpriority>1</filterpriority>
         public static readonly RSize Empty;
-
-        #endregion
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RSize" /> structure from the specified existing
@@ -267,7 +262,7 @@ namespace Omnidoc.Html.Renderer.Adapters.Entities
         ///     The <see cref="object" /> to test.
         /// </param>
         /// <filterpriority>1</filterpriority>
-        public override bool Equals(object obj) => obj is RSize other ? Equals(other) : false;
+        public override bool Equals(object obj) => obj is RSize other && Equals (other);
 
         public bool Equals(RSize other) => Math.Abs(other.Width - Width) < 0.001 && Math.Abs(other.Height - Height) < 0.001;
 

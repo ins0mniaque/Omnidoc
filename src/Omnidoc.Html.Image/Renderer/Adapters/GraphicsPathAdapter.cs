@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SixLabors.ImageSharp.Drawing;
 using Omnidoc.Html.Renderer.Adapters;
 using Omnidoc.Html.Renderer.Adapters.Entities;
@@ -40,27 +40,13 @@ namespace Omnidoc.Html.Image.Renderer.Adapters
         /// <summary>
         /// Get arc start angle for the given corner.
         /// </summary>
-        private static int GetStartAngle(Corner corner)
+        private static int GetStartAngle ( Corner corner ) => corner switch
         {
-            int startAngle;
-            switch (corner)
-            {
-                case Corner.TopLeft:
-                    startAngle = 180;
-                    break;
-                case Corner.TopRight:
-                    startAngle = 270;
-                    break;
-                case Corner.BottomLeft:
-                    startAngle = 90;
-                    break;
-                case Corner.BottomRight:
-                    startAngle = 0;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(corner));
-            }
-            return startAngle;
-        }
+            Corner.TopLeft => 180,
+            Corner.TopRight => 270,
+            Corner.BottomLeft => 90,
+            Corner.BottomRight => 0,
+            _ => throw new ArgumentOutOfRangeException ( nameof ( corner ) ),
+        };
     }
 }

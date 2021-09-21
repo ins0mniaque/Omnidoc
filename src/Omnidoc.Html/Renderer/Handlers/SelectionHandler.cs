@@ -12,8 +12,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
     /// </summary>
     internal sealed class SelectionHandler : IDisposable
     {
-        #region Fields and Consts
-
         /// <summary>
         /// the root of the handled html tree
         /// </summary>
@@ -101,9 +99,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// </summary>
         private object? _dragDropData;
 
-        #endregion
-
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -169,7 +164,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 if (_root.HtmlContainer.IsSelectionEnabled && parent.LeftMouseButton)
                 {
                     var word = DomUtils.GetCssBoxWord(_root, loc);
-                    if (word != null && word.Selected)
+                    if ( word?.Selected == true )
                     {
                         _mouseDownOnSelectedWord = true;
                     }
@@ -186,7 +181,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                     {
                         _contextMenuHandler.ShowContextMenu(parent, rect, link);
                     }
-                    clear = rect == null || !rect.Selected;
+                    clear = rect?.Selected != true;
                 }
             }
 
@@ -219,7 +214,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 _mouseDownOnSelectedWord = false;
                 _inSelection = false;
             }
-            ignore = ignore || (DateTime.Now - _lastMouseDown > TimeSpan.FromSeconds(1));
+            ignore = ignore || DateTime.Now - _lastMouseDown > TimeSpan.FromSeconds(1);
             return ignore;
         }
 
@@ -256,7 +251,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 else if (_root.HtmlContainer.IsSelectionEnabled)
                 {
                     var word = DomUtils.GetCssBoxWord(_root, loc);
-                    _cursorChanged = word != null && !word.IsImage && !(word.Selected && (word.SelectedStartIndex < 0 || word.Left + word.SelectedStartOffset <= loc.X) && (word.SelectedEndOffset < 0 || word.Left + word.SelectedEndOffset >= loc.X));
+                    _cursorChanged = word?.IsImage == false && !(word.Selected && (word.SelectedStartIndex < 0 || word.Left + word.SelectedStartOffset <= loc.X) && (word.SelectedEndOffset < 0 || word.Left + word.SelectedEndOffset >= loc.X));
                     if (_cursorChanged)
                         parent.SetCursorIBeam();
                     else
@@ -373,9 +368,6 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// </summary>
         /// <filterpriority>2</filterpriority>
         public void Dispose() => _contextMenuHandler.Dispose();
-
-
-        #region Private methods
 
         /// <summary>
         /// Handle html text selection by mouse move over the html with left mouse button pressed.<br/>
@@ -654,7 +646,5 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 _backwardSelection = _selectionStart.Top >= _selectionEnd.Bottom;
             }
         }
-
-        #endregion
     }
 }
