@@ -88,7 +88,7 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
             if (borderPath != null)
             {
                 // rounded border need special path
-                object prevMode = null;
+                object? prevMode = null;
                 if (box.HtmlContainer != null && !box.HtmlContainer.AvoidGeometryAntialias && box.IsRounded)
                     prevMode = g.SetAntiAliasSmoothingMode();
 
@@ -96,7 +96,8 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                 using (borderPath)
                     g.DrawPath(pen, borderPath);
 
-                g.ReturnPreviousSmoothingMode(prevMode);
+                if(prevMode != null)
+                    g.ReturnPreviousSmoothingMode(prevMode);
             }
             else
             {

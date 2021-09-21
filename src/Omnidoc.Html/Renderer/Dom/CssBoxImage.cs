@@ -21,7 +21,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// handler used for image loading by source
         /// </summary>
-        private ImageLoadHandler _imageLoadHandler;
+        private ImageLoadHandler? _imageLoadHandler;
 
         /// <summary>
         /// is image load is finished, used to know if no image is found

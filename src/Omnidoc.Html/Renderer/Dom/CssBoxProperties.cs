@@ -27,7 +27,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private string _borderRightColor = "black";
         private string _borderBottomColor = "black";
         private string _borderLeftColor = "black";
-        private string _bottom;
+        private string _bottom = string.Empty;
         private string _color = "black";
         private string _cornerRadius = "0";
         private string _fontSize = "medium";
@@ -37,7 +37,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private string _paddingBottom = "0";
         private string _paddingRight = "0";
         private string _paddingTop = "0";
-        private string _right;
+        private string _right = string.Empty;
         private string _textIndent = "0";
         private string _top = "auto";
         private string _wordSpacing = "normal";
@@ -94,7 +94,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private RColor _actualBorderBottomColor = RColor.Empty;
         private RColor _actualBorderRightColor = RColor.Empty;
         private RColor _actualBackgroundColor = RColor.Empty;
-        private RFont _actualFont;
+        private RFont? _actualFont;
 
         #endregion
 
@@ -387,7 +387,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         public string WordBreak { get; set; } = "normal";
 
-        public string FontFamily { get; set; }
+        public string FontFamily { get; set; } = string.Empty;
 
         public string FontSize
         {
@@ -405,9 +405,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     {
                         computedValue = "medium";
                     }
-                    else if (len.Unit == CssUnit.Ems && GetParent() != null)
+                    else if (len.Unit == CssUnit.Ems && GetParent() is CssBoxProperties parent)
                     {
-                        computedValue = len.ConvertEmToPoints(GetParent().ActualFont.Size).ToString();
+                        computedValue = len.ConvertEmToPoints(parent.ActualFont.Size).ToString();
                     }
                     else
                     {
@@ -1006,7 +1006,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         public RFont ActualParentFont
         {
-            get { return GetParent() == null ? ActualFont : GetParent().ActualFont; }
+            get { return GetParent() is CssBoxProperties parent ? parent.ActualFont : ActualFont; }
         }
 
         /// <summary>
@@ -1041,8 +1041,8 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
                     var parentSize = CssConstants.FontSize;
 
-                    if (GetParent() != null)
-                        parentSize = GetParent().ActualFont.Size;
+                    if (GetParent() is CssBoxProperties parent)
+                        parentSize = parent.ActualFont.Size;
                     var fsize = FontSize switch
                     {
                         CssConstants.Medium => CssConstants.FontSize,
@@ -1158,7 +1158,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Get the parent of this css properties instance.
         /// </summary>
         /// <returns></returns>
-        protected abstract CssBoxProperties GetParent();
+        protected abstract CssBoxProperties? GetParent();
 
         /// <summary>
         /// Gets the height of the font in the specified units
@@ -1210,7 +1210,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                 _actualWordSpacing = CssUtils.WhiteSpace(g, this);
                 if (WordSpacing != CssConstants.Normal)
                 {
-                    var len = RegexParserUtils.Search(RegexParserUtils.CssLength, WordSpacing);
+                    var len = RegexParserUtils.Search(RegexParserUtils.CssLength, WordSpacing) ?? string.Empty;
                     _actualWordSpacing += CssValueParser.ParseLength(len, 1, this);
                 }
             }
@@ -1221,7 +1221,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// </summary>
         /// <param name="everything">Set to true to inherit all CSS properties instead of only the ineritables</param>
         /// <param name="p">Box to inherit the properties</param>
-        protected void InheritStyle(CssBox p, bool everything)
+        protected void InheritStyle(CssBox? p, bool everything)
         {
             if (p != null)
             {

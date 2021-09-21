@@ -514,7 +514,7 @@ namespace Omnidoc.Html.Renderer.Core
         /// <param name="location">the location to find the attribute at</param>
         /// <param name="attribute">the attribute key to get value by</param>
         /// <returns>found attribute value or null if not found</returns>
-        public string GetAttributeAt(RPoint location, string attribute)
+        public string? GetAttributeAt(RPoint location, string attribute)
         {
             ArgChecker.AssertArgNotNullOrEmpty(attribute, "attribute");
 

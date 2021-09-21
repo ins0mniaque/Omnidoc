@@ -389,7 +389,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                         // handle if line is wrapped for the first text element where parent has left margin\padding
                         var left = word.Left;
 
-                        if (box == box.ParentBox.Boxes[0] && word == box.Words[0] && word == line.Words[0] && line != line.OwnerBox.LineBoxes[0] && !word.IsLineBreak)
+                        if (box.ParentBox != null && box == box.ParentBox.Boxes[0] && word == box.Words[0] && word == line.Words[0] && line != line.OwnerBox.LineBoxes[0] && !word.IsLineBreak)
                             left -= box.ParentBox.ActualMarginLeft + box.ParentBox.ActualBorderLeftWidth + box.ParentBox.ActualPaddingLeft;
 
 

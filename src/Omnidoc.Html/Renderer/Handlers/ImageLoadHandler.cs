@@ -45,12 +45,12 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// Must be open as long as the image is in use
         /// </summary>
-        private FileStream _imageFileStream;
+        private FileStream? _imageFileStream;
 
         /// <summary>
         /// the image instance of the loaded image
         /// </summary>
-        private RImage _image;
+        private RImage? _image;
 
         /// <summary>
         /// the image rectangle restriction as returned from image load event
@@ -94,7 +94,15 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// </summary>
         public RImage Image
         {
-            get { return _image; }
+            get { return _image ?? throw new InvalidOperationException("Missing image"); }
+        }
+
+        /// <summary>
+        /// Returns true if the image instance is loaded
+        /// </summary>
+        public bool HasImage
+        {
+            get { return _image != null; }
         }
 
         /// <summary>

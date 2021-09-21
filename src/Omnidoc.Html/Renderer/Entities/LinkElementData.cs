@@ -76,6 +76,9 @@ namespace Omnidoc.Html.Renderer.Core.Entities
 
         public LinkElementData<T2> Convert<T2>(Func<T, T2> convert)
         {
+            if(convert == null)
+                throw new ArgumentNullException(nameof(convert));
+
             return new LinkElementData<T2>(_id, _href, convert(_rectangle));
         }
 

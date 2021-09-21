@@ -19,6 +19,9 @@ namespace Omnidoc.Html.Renderer.Core
         /// <returns>return: the size of the html to be rendered within the min/max limits</returns>
         public static RSize MeasureHtmlByRestrictions(RGraphics g, HtmlContainerInt htmlContainer, RSize minSize, RSize maxSize)
         {
+            if(htmlContainer is null)
+                throw new ArgumentNullException(nameof(htmlContainer));
+
             // first layout without size restriction to know html actual size
             htmlContainer.PerformLayout(g);
 
@@ -62,6 +65,9 @@ namespace Omnidoc.Html.Renderer.Core
         /// <param name="autoSizeHeightOnly">if to modify the height by html content layout</param>
         public static RSize Layout(RGraphics g, HtmlContainerInt htmlContainer, RSize size, RSize minSize, RSize maxSize, bool autoSize, bool autoSizeHeightOnly)
         {
+            if(htmlContainer is null)
+                throw new ArgumentNullException(nameof(htmlContainer));
+
             if (autoSize)
                 htmlContainer.MaxSize = new RSize(0, 0);
             else if (autoSizeHeightOnly)

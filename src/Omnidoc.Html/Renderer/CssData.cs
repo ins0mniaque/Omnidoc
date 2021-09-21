@@ -110,6 +110,9 @@ namespace Omnidoc.Html.Renderer.Core
         /// <param name="cssBlock">the css block to add</param>
         public void AddCssBlock(string media, CssBlock cssBlock)
         {
+            if (media is null) throw new ArgumentNullException(nameof(media));
+            if (cssBlock is null) throw new ArgumentNullException(nameof(cssBlock));
+
             if (!_mediaBlocks.TryGetValue(media, out var mid))
             {
                 mid = new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase);

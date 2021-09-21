@@ -66,7 +66,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <summary>
         /// the temp path to use for local files
         /// </summary>
-        private static string _tempPath;
+        private static string? _tempPath;
 
         #endregion
 

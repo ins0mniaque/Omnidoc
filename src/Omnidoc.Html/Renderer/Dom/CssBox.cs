@@ -87,11 +87,11 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         /// <summary>
         /// Gets the HtmlContainer of the Box.
-        /// WARNING: May be null.
+        /// WARNING: May be uninitialized.
         /// </summary>
-        public HtmlContainerInt? HtmlContainer
+        public HtmlContainerInt HtmlContainer
         {
-            get { return _htmlContainer ??= _parentBox?.HtmlContainer; }
+            get { return (_htmlContainer ??= _parentBox?.HtmlContainer) ?? throw new InvalidOperationException("Missing HtmlContainer"); }
             set { _htmlContainer = value; }
         }
 
@@ -491,9 +491,12 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="before"></param>
         public void SetBeforeBox(CssBox before)
         {
+            if (_parentBox == null)
+                throw new InvalidOperationException("box has no parent");
+
             var index = _parentBox.Boxes.IndexOf(before);
             if (index < 0)
-                throw new Exception("before box doesn't exist on parent");
+                throw new ArgumentException("before box doesn't exist on parent", nameof(before));
 
             _parentBox.Boxes.Remove(this);
             _parentBox.Boxes.Insert(index, this);
@@ -669,7 +672,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
             CreateListItemBox(g);
 
-            if (!IsFixed)
+            if (!IsFixed && HtmlContainer.Root != null)
             {
                 var actualWidth = Math.Max(GetMinimumWidth() + GetWidthMarginDeep(this), Size.Width < 90999 ? ActualRight - HtmlContainer.Root.Location.X : 0);
                 HtmlContainer.ActualSize = CommonUtils.Max(HtmlContainer.ActualSize, new RSize(actualWidth, ActualBottom - HtmlContainer.Root.Location.Y));
@@ -709,7 +712,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// Get the parent of this css properties instance.
         /// </summary>
         /// <returns></returns>
-        protected override sealed CssBoxProperties GetParent()
+        protected override sealed CssBoxProperties? GetParent()
         {
             return _parentBox;
         }
@@ -806,7 +809,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <param name="b"></param>
         /// <param name="line"> </param>
         /// <returns></returns>
-        internal CssRect FirstWordOccourence(CssBox b, CssLineBox line)
+        internal CssRect? FirstWordOccourence(CssBox b, CssLineBox line)
         {
             if (b.Words.Count == 0 && b.Boxes.Count == 0)
             {
@@ -858,7 +861,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <returns>Attribute value or defaultValue if no attribute specified</returns>
         internal string GetAttribute(string attribute, string defaultValue)
         {
-            return HtmlTag != null ? HtmlTag.TryGetAttribute(attribute, defaultValue) : defaultValue;
+            return HtmlTag?.TryGetAttribute(attribute, defaultValue) ?? defaultValue ?? string.Empty;
         }
 
         /// <summary>
@@ -1138,7 +1141,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         private double MarginBottomCollapse()
         {
             double margin = 0;
-            if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && _parentBox.ActualMarginBottom < 0.1)
+            if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && ParentBox.ActualMarginBottom < 0.1)
             {
                 var lastChildBottomMargin = _boxes[^1].ActualMarginBottom;
                 margin = Height == "auto" ? Math.Max(ActualMarginBottom, lastChildBottomMargin) : lastChildBottomMargin;
@@ -1317,7 +1320,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     brush.Dispose();
                 }
 
-                if (_imageLoadHandler != null && _imageLoadHandler.Image != null && isFirst)
+                if (_imageLoadHandler != null && _imageLoadHandler.HasImage && isFirst)
                 {
                     BackgroundImageDrawHandler.DrawBackgroundImage(g, this, _imageLoadHandler, rect);
                 }

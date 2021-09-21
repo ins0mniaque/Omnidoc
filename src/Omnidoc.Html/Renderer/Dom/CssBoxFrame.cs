@@ -141,7 +141,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
                     client.DownloadStringAsync(apiUri);
                 }
-                catch (Exception ex)
+                catch (WebException ex)
                 {
                     HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
                     HtmlContainer.RequestRefresh(false);
@@ -279,7 +279,7 @@ namespace Omnidoc.Html.Renderer.Core.Dom
                     client.DownloadStringCompleted += OnDownloadVimeoApiCompleted;
                     client.DownloadStringAsync(apiUri);
                 }
-                catch (Exception ex)
+                catch (WebException ex)
                 {
                     _imageLoadingComplete = true;
                     SetErrorBorder();

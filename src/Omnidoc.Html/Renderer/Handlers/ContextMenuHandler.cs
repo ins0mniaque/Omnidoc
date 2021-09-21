@@ -73,22 +73,22 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// the last context menu shown
         /// </summary>
-        private RContextMenu _contextMenu;
+        private RContextMenu? _contextMenu;
 
         /// <summary>
         /// the control that the context menu was shown on
         /// </summary>
-        private RControl _parentControl;
+        private RControl? _parentControl;
 
         /// <summary>
         /// the css rectangle that context menu shown on
         /// </summary>
-        private CssRect _currentRect;
+        private CssRect? _currentRect;
 
         /// <summary>
         /// the css link box that context menu shown on
         /// </summary>
-        private CssBox _currentLink;
+        private CssBox? _currentLink;
 
         #endregion
 

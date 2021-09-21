@@ -23,11 +23,11 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// table caption
         /// </summary>
-        private CssBox _caption;
+        private CssBox? _caption;
 
-        private CssBox _headerBox;
+        private CssBox? _headerBox;
 
-        private CssBox _footerBox;
+        private CssBox? _footerBox;
 
         /// <summary>
         /// collection of all rows boxes
@@ -48,9 +48,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
 
         private bool _widthSpecified;
 
-        private double[] _columnWidths;
+        private double[]? _columnWidths;
 
-        private double[] _columnMinWidths;
+        private double[]? _columnMinWidths;
 
         #endregion
 

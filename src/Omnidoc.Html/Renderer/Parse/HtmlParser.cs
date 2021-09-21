@@ -154,7 +154,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="name">return the name of the html tag</param>
         /// <param name="attributes">return the dictionary of tag attributes</param>
         /// <returns>true - the tag is closing tag, false - otherwise</returns>
-        private static bool ParseHtmlTag(string source, int idx, int length, out string name, out Dictionary<string, string> attributes)
+        private static bool ParseHtmlTag(string source, int idx, int length, out string name, out Dictionary<string, string>? attributes)
         {
             idx++;
             length -= (source[idx + length - 3] == '/' ? 3 : 2);
@@ -191,7 +191,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="idx">the start index of the tag attributes in the source</param>
         /// <param name="length">the length of the tag attributes from the start index in the source</param>
         /// <param name="attributes">return the dictionary of tag attributes</param>
-        private static void ExtractAttributes(string source, int idx, int length, out Dictionary<string, string> attributes)
+        private static void ExtractAttributes(string source, int idx, int length, out Dictionary<string, string>? attributes)
         {
             attributes = null;
 

@@ -86,6 +86,9 @@ EndSelection:<<<<<<<<4";
         /// <returns>the resulted string</returns>
         public static string Encode(string html)
         {
+            if(html is null)
+                throw new ArgumentNullException(nameof(html));
+
             var sb = new StringBuilder();
             sb.AppendLine(Header);
             sb.AppendLine(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");

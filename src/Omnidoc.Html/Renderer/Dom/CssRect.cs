@@ -197,9 +197,9 @@ namespace Omnidoc.Html.Renderer.Core.Dom
         /// <summary>
         /// Gets the text of the word
         /// </summary>
-        public virtual string? Text
+        public virtual string Text
         {
-            get { return null; }
+            get { return string.Empty; }
         }
 
         /// <summary>

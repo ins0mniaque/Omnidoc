@@ -146,16 +146,19 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// Checks if the file was downloaded and raises the cachedFileCallback from <see cref="_imageDownloadCallbacks"/>
         /// </summary>
-        private void OnDownloadImageCompleted(WebClient client, Uri source, string tempPath, string filePath, Exception error, bool cancelled)
+        private void OnDownloadImageCompleted(WebClient? client, Uri source, string tempPath, string filePath, Exception? error, bool cancelled)
         {
             if (!cancelled)
             {
                 if (error == null)
                 {
+                    if(client == null)
+                        throw new ArgumentNullException(nameof(client));
+
                     var contentType = CommonUtils.GetResponseContentType(client);
                     if (contentType == null || !contentType.StartsWith("image", StringComparison.OrdinalIgnoreCase))
                     {
-                        error = new Exception("Failed to load image, not image content type: " + contentType);
+                        error = new InvalidOperationException("Failed to load image, not image content type: " + contentType);
                     }
 
                 }
@@ -170,11 +173,11 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
                         }
                         catch (Exception ex)
                         {
-                            error = new Exception("Failed to move downloaded image from temp to cache location", ex);
+                            error = new InvalidOperationException("Failed to move downloaded image from temp to cache location", ex);
                         }
                     }
 
-                    error = File.Exists(filePath) ? null : (error ?? new Exception("Failed to download image, unknown error"));
+                    error = File.Exists(filePath) ? null : (error ?? new InvalidOperationException("Failed to download image, unknown error"));
                 }
             }
 

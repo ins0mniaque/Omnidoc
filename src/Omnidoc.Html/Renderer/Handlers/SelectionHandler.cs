@@ -658,7 +658,11 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// </summary>
         private void CheckSelectionDirection()
         {
-            if (_selectionStart == _selectionEnd)
+            if (_selectionStart == null || _selectionEnd == null)
+            {
+                throw new InvalidOperationException("Missing selection start/end");
+            }
+            else if (_selectionStart == _selectionEnd)
             {
                 _backwardSelection = _selectionStartIndex > _selectionEndIndex;
             }

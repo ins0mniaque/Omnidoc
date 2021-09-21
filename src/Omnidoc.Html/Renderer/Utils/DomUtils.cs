@@ -105,7 +105,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// Gets the previous sibling of this box.
         /// </summary>
         /// <returns>Box before this one on the tree. Null if its the first</returns>
-        public static CssBox GetPreviousContainingBlockSibling(CssBox b)
+        public static CssBox? GetPreviousContainingBlockSibling(CssBox b)
         {
             var conBlock = b;
             var index = conBlock.ParentBox.Boxes.IndexOf(conBlock);
@@ -149,9 +149,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// Gets the next sibling of this box.
         /// </summary>
         /// <returns>Box before this one on the tree. Null if its the first</returns>
-        public static CssBox GetNextSibling(CssBox b)
+        public static CssBox? GetNextSibling(CssBox b)
         {
-            CssBox sib = null;
+            CssBox? sib = null;
             if (b.ParentBox != null)
             {
                 var index = b.ParentBox.Boxes.IndexOf(b) + 1;
@@ -176,13 +176,17 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="box">the box to start lookup at</param>
         /// <param name="attribute">the attribute to get</param>
         /// <returns>the value of the attribute or null if not found</returns>
-        public static string GetAttribute(CssBox box, string attribute)
+        public static string? GetAttribute(CssBox box, string attribute)
         {
-            string value = null;
-            while (box != null && value == null)
+            string? value = null;
+            CssBox? currentBox = box;
+            while (currentBox != null && value == null)
             {
-                value = box.GetAttribute(attribute, null);
-                box = box.ParentBox;
+                value = currentBox.GetAttribute(attribute);
+                if (value.Length == 0)
+                    value = null;
+
+                currentBox = currentBox.ParentBox;
             }
             return value;
         }
@@ -195,7 +199,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="location">the location to find the box by</param>
         /// <param name="visible">Optional: if to get only visible boxes (default - true)</param>
         /// <returns>css link box if exists or null</returns>
-        public static CssBox GetCssBox(CssBox box, RPoint location, bool visible = true)
+        public static CssBox? GetCssBox(CssBox box, RPoint location, bool visible = true)
         {
             if (box != null)
             {
@@ -242,7 +246,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="box">the box to start search from</param>
         /// <param name="location">the location to find the box by</param>
         /// <returns>css link box if exists or null</returns>
-        public static CssBox GetLinkBox(CssBox box, RPoint location)
+        public static CssBox? GetLinkBox(CssBox box, RPoint location)
         {
             if (box != null)
             {
@@ -272,7 +276,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="box">the box to start search from</param>
         /// <param name="id">the id to find the box by</param>
         /// <returns>css box if exists or null</returns>
-        public static CssBox GetBoxById(CssBox box, string id)
+        public static CssBox? GetBoxById(CssBox box, string id)
         {
             if (box != null && !string.IsNullOrEmpty(id))
             {
@@ -299,9 +303,9 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="box">the box to start search from</param>
         /// <param name="location">the location to find the box at</param>
         /// <returns>css word box if exists or null</returns>
-        public static CssLineBox GetCssLineBox(CssBox box, RPoint location)
+        public static CssLineBox? GetCssLineBox(CssBox box, RPoint location)
         {
-            CssLineBox line = null;
+            CssLineBox? line = null;
             if (box != null)
             {
                 if (box.LineBoxes.Count > 0)
@@ -342,7 +346,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="box">the box to start search from</param>
         /// <param name="location">the location to find the box at</param>
         /// <returns>css word box if exists or null</returns>
-        public static CssRect GetCssBoxWord(CssBox box, RPoint location)
+        public static CssRect? GetCssBoxWord(CssBox box, RPoint location)
         {
             if (box != null && box.Visibility == CssConstants.Visible)
             {
@@ -379,7 +383,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="lineBox">the line box to search in</param>
         /// <param name="location">the location to find the box at</param>
         /// <returns>css word box if exists or null</returns>
-        public static CssRect GetCssBoxWord(CssLineBox lineBox, RPoint location)
+        public static CssRect? GetCssBoxWord(CssLineBox lineBox, RPoint location)
         {
             foreach (var rects in lineBox.Rectangles)
             {
@@ -407,7 +411,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             var box = word.OwnerBox;
             while (box.LineBoxes.Count == 0)
             {
-                box = box.ParentBox;
+                box = box.ParentBox ?? throw new InvalidOperationException("CSS line box not found");
             }
             foreach (var lineBox in box.LineBoxes)
             {
@@ -448,7 +452,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             if (root != null)
             {
                 var selectedBoxes = onlySelected ? CollectSelectedBoxes(root) : null;
-                var selectionRoot = onlySelected ? GetSelectionRoot(root, selectedBoxes) : null;
+                var selectionRoot = selectedBoxes != null ? GetSelectionRoot(root, selectedBoxes) : null;
                 WriteHtml(root.HtmlContainer.CssParser, sb, root, styleGen, selectedBoxes, selectionRoot);
             }
             return sb.ToString();
@@ -610,7 +614,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
             while (true)
             {
                 var foundRoot = false;
-                CssBox selectedChild = null;
+                CssBox? selectedChild = null;
                 foreach (var childBox in selectionRootRun.Boxes)
                 {
                     if (selectedBoxes.ContainsKey(childBox))
@@ -673,7 +677,7 @@ namespace Omnidoc.Html.Renderer.Core.Utils
         /// <param name="styleGen">Controls the way styles are generated when html is generated</param>
         /// <param name="selectedBoxes">Control if to generate only selected boxes, if given only boxes found in hash will be generated</param>
         /// <param name="selectionRoot">the box the is the root of selected boxes (the first box to contain multiple selected boxes)</param>
-        private static void WriteHtml(CssParser cssParser, StringBuilder sb, CssBox box, HtmlGenerationStyle styleGen, Dictionary<CssBox, bool> selectedBoxes, CssBox selectionRoot)
+        private static void WriteHtml(CssParser cssParser, StringBuilder sb, CssBox box, HtmlGenerationStyle styleGen, Dictionary<CssBox, bool>? selectedBoxes, CssBox? selectionRoot)
         {
             if (box.HtmlTag == null || selectedBoxes == null || selectedBoxes.ContainsKey(box))
             {

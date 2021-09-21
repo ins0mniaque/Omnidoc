@@ -129,9 +129,9 @@ namespace Omnidoc.Html.Renderer.Core.Handlers
         /// <summary>
         /// Get cached font if it exists in cache or null if it is not.
         /// </summary>
-        private RFont TryGetFont(string family, double size, RFontStyle style)
+        private RFont? TryGetFont(string family, double size, RFontStyle style)
         {
-            RFont font = null;
+            RFont? font = null;
             if (_fontsCache.ContainsKey(family))
             {
                 var a = _fontsCache[family];

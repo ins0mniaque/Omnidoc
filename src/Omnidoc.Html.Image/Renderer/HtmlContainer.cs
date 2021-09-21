@@ -287,7 +287,7 @@ namespace Omnidoc.Html.Image.Renderer
         /// <param name="location">the location to find the attribute at</param>
         /// <param name="attribute">the attribute key to get value by</param>
         /// <returns>found attribute value or null if not found</returns>
-        public string GetAttributeAt(PointF location, string attribute)
+        public string? GetAttributeAt(PointF location, string attribute)
         {
             return _htmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
         }

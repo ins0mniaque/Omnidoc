@@ -321,7 +321,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="className">the class selector to parse</param>
         /// <param name="firstClass">return the main class the css block is on</param>
         /// <returns>returns the hierarchy of classes or null if single class selector</returns>
-        private static List<CssBlockSelectorItem> ParseCssBlockSelector(string className, out string firstClass)
+        private static List<CssBlockSelectorItem> ParseCssBlockSelector(string className, out string? firstClass)
         {
             List<CssBlockSelectorItem> selectors = null;
 
@@ -763,7 +763,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <summary>
         /// Split multi direction value into the proper direction values (left, top, right, bottom).
         /// </summary>
-        private static void SplitMultiDirectionValues(string propValue, out string left, out string top, out string right, out string bottom)
+        private static void SplitMultiDirectionValues(string propValue, out string? left, out string? top, out string? right, out string? bottom)
         {
             top = null;
             left = null;
@@ -831,7 +831,7 @@ namespace Omnidoc.Html.Renderer.Core.Parse
         /// <param name="width"> </param>
         /// <param name="style"></param>
         /// <param name="color"></param>
-        public void ParseBorder(string value, out string width, out string style, out string color)
+        public void ParseBorder(string value, out string width, out string style, out string? color)
         {
             width = style = color = null;
             if (!string.IsNullOrEmpty(value))
