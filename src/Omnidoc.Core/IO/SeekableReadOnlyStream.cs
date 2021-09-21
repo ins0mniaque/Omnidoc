@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -11,28 +11,23 @@ namespace Omnidoc.IO
     /// </summary>
     public class SeekableReadOnlyStream : Stream
     {
-        private Stream baseStream;
-        private Stream bufferingStream;
+        private readonly Stream baseStream;
+        private readonly Stream bufferingStream;
 
         /// <summary>
-        /// Initializes a SeekableReadOnlyStream instance with base stream and 
+        /// Initializes a SeekableReadOnlyStream instance with base stream and
         /// buffering stream.
         /// </summary>
         /// <param name="baseStream">Base stream</param>
-        /// <param name="overflowStream">Buffering stream</param>
+        /// <param name="bufferingStream">Buffering stream</param>
         public SeekableReadOnlyStream ( Stream baseStream, Stream bufferingStream )
         {
-            if ( null == baseStream )
-                throw new ArgumentNullException ( nameof ( baseStream ) );
-            if ( null == bufferingStream )
-                throw new ArgumentNullException ( nameof ( bufferingStream ) );
+            this.baseStream = baseStream ?? throw new ArgumentNullException ( nameof ( baseStream ) );
+            this.bufferingStream = bufferingStream ?? throw new ArgumentNullException ( nameof ( bufferingStream ) );
 
             // Sanity check - make sure that buffering stream is seekable
             if ( ! bufferingStream.CanSeek )
                 throw new NotSupportedException ( "Buffering stream must be seekable" );
-
-            this.baseStream = baseStream;
-            this.bufferingStream = bufferingStream;
         }
 
         /// <summary>
@@ -40,21 +35,15 @@ namespace Omnidoc.IO
         /// VirtualStream instance as buffering stream.
         /// </summary>
         /// <param name="baseStream">Base stream</param>
-        public SeekableReadOnlyStream ( Stream baseStream ) : this ( baseStream, new VirtualStream ( ) )
-        {
-
-        }
+        public SeekableReadOnlyStream ( Stream baseStream ) : this ( baseStream, new VirtualStream ( ) ) { }
 
         /// <summary>
-        /// Initializes a SeekableReadOnlyStream instance with base stream and buffer size, and 
+        /// Initializes a SeekableReadOnlyStream instance with base stream and buffer size, and
         /// inherently uses VirtualStream instance as buffering stream.
         /// </summary>
         /// <param name="baseStream">Base stream</param>
         /// <param name="bufferSize">Buffer size</param>
-        public SeekableReadOnlyStream ( Stream baseStream, int bufferSize ) : this ( baseStream, new VirtualStream ( bufferSize ) )
-        {
-
-        }
+        public SeekableReadOnlyStream ( Stream baseStream, int bufferSize ) : this ( baseStream, new VirtualStream ( bufferSize ) ) { }
 
         /// <summary>
         /// Gets a flag indicating whether this stream can be read.
@@ -132,7 +121,7 @@ namespace Omnidoc.IO
                         int bytesRead = baseStream.Read(buffer, 0, (int) Math.Min(bytesToRead, buffer.Length));
 
                         // Check if any bytes were read
-                        if ( 0 == bytesRead )
+                        if ( bytesRead == 0 )
                             break;
 
                         // Write read bytes to the buffering stream
@@ -152,7 +141,7 @@ namespace Omnidoc.IO
         }
 
         /// <summary>
-        /// Seeks in stream. For this stream can be very expensive because entire base stream 
+        /// Seeks in stream. For this stream can be very expensive because entire base stream
         /// can be dumped into buffering stream if SeekOrigin.End is used.
         /// </summary>
         /// <param name="offset">A byte offset relative to the origin parameter</param>
@@ -174,7 +163,7 @@ namespace Omnidoc.IO
             if ( SeekOrigin.Current == origin )
             {
                 // Set the position using current Position property value plus offset
-                Position = Position + offset;
+                Position += offset;
                 return Position;
             }
 
@@ -198,7 +187,7 @@ namespace Omnidoc.IO
                     int bytesRead = baseStream.Read(buffer, 0, buffer.Length);
 
                     // Break the reading loop if the base stream is exhausted
-                    if ( 0 == bytesRead )
+                    if ( bytesRead == 0 )
                         break;
 
                     // Write buffer to the buffering stream

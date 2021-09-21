@@ -26,7 +26,7 @@ namespace Omnidoc
 
         public static   bool Equals ( Point left, Point right ) => left.Equals ( right );
         public          bool Equals ( Point  other )            => X == other.X && Y == other.Y;
-        public override bool Equals ( object obj   )            => obj is Point other ? Equals ( other ) : false;
+        public override bool Equals ( object obj   )            => obj is Point other && Equals ( other );
         public override int  GetHashCode ( )                    => HashCode.Combine ( X, Y );
 
         public static Point Add         ( Point left, Point right ) => new Point ( left.X + right.X, left.Y + right.Y );

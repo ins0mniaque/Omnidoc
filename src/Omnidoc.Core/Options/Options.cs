@@ -1,8 +1,5 @@
-﻿namespace Omnidoc
+namespace Omnidoc
 {
     // TODO: Add Synchronous or custom scheduling enum property (second is probably best)
-    public class Options
-    {
-
-    }
+    public class Options { }
 }

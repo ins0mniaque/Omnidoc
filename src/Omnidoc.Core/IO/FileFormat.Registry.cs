@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +7,7 @@ namespace Omnidoc.IO
 {
     public partial class FileFormat
     {
-        private static readonly List < FileFormat > registry = new List < FileFormat > ( );
+        private static readonly List < FileFormat > registry = new ( );
 
         public static void Register ( params FileFormat [ ] formats )
         {

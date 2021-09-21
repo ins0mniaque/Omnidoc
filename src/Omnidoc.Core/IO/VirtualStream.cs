@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace Omnidoc.IO
@@ -21,11 +21,11 @@ namespace Omnidoc.IO
         private const int DefaultMemorySize = 4 * 1024;        // Default memory consumption (4Kb)
         private const int DefaultBufferSize = 4 * 1024;        // Default memory consumption (4Kb)
 
-        private Stream     wrappedStream;
-        private bool       isDisposed;
-        private bool       isInMemory;
-        private int        thresholdSize;
-        private BufferMode mode;
+        private readonly int        thresholdSize;
+        private readonly BufferMode mode;
+        private          Stream     wrappedStream;
+        private          bool       isDisposed;
+        private          bool       isInMemory;
 
         /// <summary>
         /// Initializes a VirtualStream instance with default parameters (4K memory buffer,
@@ -86,7 +86,7 @@ namespace Omnidoc.IO
         /// <param name="dataStream">Underlying stream</param>
         private VirtualStream ( int bufferSize, BufferMode bufferMode, Stream dataStream )
         {
-            if ( null == dataStream )
+            if ( dataStream == null )
                 throw new ArgumentNullException ( nameof ( dataStream ) );
 
             isInMemory = ( bufferMode != BufferMode.OnlyToDisk );
@@ -107,6 +107,7 @@ namespace Omnidoc.IO
         {
             get { return wrappedStream.CanRead; }
         }
+
         /// <summary>
         /// Gets a flag indicating whether a stream can be written.
         /// </summary>
@@ -289,14 +290,14 @@ namespace Omnidoc.IO
             var currentPosition = source.Position;
 
             // Read and write in chunks each thresholdSize
-            var tempBuffer = new Byte[thresholdSize];
+            var tempBuffer = new byte[thresholdSize];
             var read = 0;
 
             source.Position = 0;
             while ( ( read = source.Read ( tempBuffer, 0, tempBuffer.Length ) ) != 0 )
                 target.Write ( tempBuffer, 0, read );
 
-            // Set target's stream position to be the same as was in source stream. This is required because 
+            // Set target's stream position to be the same as was in source stream. This is required because
             // target stream is going substitute source stream.
             target.Position = currentPosition;
 

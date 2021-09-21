@@ -81,6 +81,6 @@ namespace Omnidoc
                                                                 service.Descriptor.Outputs  ( outputFormat ) );
         }
 
-        protected override IEnumerable < IService >? BeginDispose ( ) => services != null && services.IsValueCreated ? services.Value : null;
+        protected override IEnumerable < IService >? BeginDispose ( ) => services?.IsValueCreated == true ? services.Value : null;
     }
 }

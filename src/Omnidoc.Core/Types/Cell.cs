@@ -24,7 +24,7 @@ namespace Omnidoc
 
         public static   bool Equals ( Cell left, Cell right ) => left.Equals ( right );
         public          bool Equals ( Cell   other )          => Column == other.Column && Row == other.Row && ColumnSpan == other.ColumnSpan && RowSpan == other.RowSpan;
-        public override bool Equals ( object obj   )          => obj is Cell other ? Equals ( other ) : false;
+        public override bool Equals ( object obj   )          => obj is Cell other && Equals ( other );
         public override int  GetHashCode ( )                  => HashCode.Combine ( Column, Row, ColumnSpan, RowSpan );
 
         public static bool operator == ( Cell left, Cell right ) =>   left.Equals ( right );

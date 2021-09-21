@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -22,7 +22,7 @@ namespace Omnidoc.Core
                                                  chain [ ^1 ].Descriptor.OutputFormats );
         }
 
-        protected IReadOnlyList < IFileFormatConverter > Chain { get; private set; }
+        protected IReadOnlyList < IFileFormatConverter > Chain { get; }
 
         public IServiceDescriptor Descriptor { get; }
 

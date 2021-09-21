@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,8 +17,7 @@ namespace Omnidoc.IO
 
             int FileFormatDependency ( T service )
             {
-                return formats ( service ).Select ( format => Array.IndexOf ( sorted, format ) )
-                                          .Min    ( );
+                return formats ( service ).Min ( format => Array.IndexOf ( sorted, format ) );
             }
         }
 

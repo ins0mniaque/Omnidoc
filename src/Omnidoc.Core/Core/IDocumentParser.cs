@@ -1,7 +1,4 @@
-﻿namespace Omnidoc.Core
+namespace Omnidoc.Core
 {
-    public interface IDocumentParser : IDocumentLoader < IPager < IPageParser >, IPageParser >
-    {
-
-    }
+    public interface IDocumentParser : IDocumentLoader < IPager < IPageParser >, IPageParser > { }
 }

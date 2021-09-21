@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Omnidoc.Collections
@@ -18,10 +18,10 @@ namespace Omnidoc.Collections
 
         private IEqualityComparer < TVertex > Comparer { get; }
 
-        public bool Equals ( Edge < TVertex > other ) => ! ( other is null ) && Comparer.Equals ( Source, other.Source ) &&
-                                                                                Comparer.Equals ( Target, other.Target );
+        public bool Equals ( Edge < TVertex > other ) => other is not null && Comparer.Equals ( Source, other.Source ) &&
+                                                                              Comparer.Equals ( Target, other.Target );
 
-        public override bool   Equals      ( object obj ) => obj is Edge < TVertex > other ? Equals ( other ) : false;
+        public override bool   Equals      ( object obj ) => obj is Edge < TVertex > other && Equals ( other );
         public override int    GetHashCode ( )            => HashCode.Combine ( Source, Target );
         public override string ToString    ( )            => $"{ Source } => { Target }";
     }

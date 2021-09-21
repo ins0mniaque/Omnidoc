@@ -31,7 +31,7 @@ namespace Omnidoc
 
         public static   bool Equals ( Size left, Size right ) => left.Equals ( right );
         public          bool Equals ( Size   other )          => width == other.width && height == other.height;
-        public override bool Equals ( object obj   )          => obj is Size other ? Equals ( other ) : false;
+        public override bool Equals ( object obj   )          => obj is Size other && Equals ( other );
         public override int  GetHashCode ( )                  => HashCode.Combine ( width, height );
 
         [ SuppressMessage ( "Usage", "CA2225:Operator overloads have named alternates", Justification = "System.Drawing.Size" ) ]

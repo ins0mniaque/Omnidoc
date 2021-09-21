@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,25 +9,30 @@ namespace Omnidoc.Model
 {
     public static class AsyncNodeBuilder
     {
-        public static async IAsyncEnumerable < Node > BuildAsync ( this IAsyncEnumerable < Element > elements, ParserOptions options, [ EnumeratorCancellation ] CancellationToken cancellationToken )
+        public static IAsyncEnumerable < Node > BuildAsync ( this IAsyncEnumerable < Element > elements, ParserOptions options, CancellationToken cancellationToken )
         {
             if ( elements is null )
                 throw new ArgumentNullException ( nameof ( elements ) );
 
-            var builder = new NodeBuilder ( options );
+            return BuildAsync ( cancellationToken );
 
-            await foreach ( var element in elements.WithCancellation ( cancellationToken ) )
+            async IAsyncEnumerable < Node > BuildAsync ( [ EnumeratorCancellation ] CancellationToken cancellationToken )
             {
-                builder.Add ( element );
+                var builder = new NodeBuilder ( options );
+
+                await foreach ( var element in elements.WithCancellation ( cancellationToken ) )
+                {
+                    builder.Add ( element );
+
+                    while ( builder.HasNodes )
+                        yield return builder.ReadNode ( );
+                }
+
+                builder.Flush ( );
 
                 while ( builder.HasNodes )
                     yield return builder.ReadNode ( );
             }
-
-            builder.Flush ( );
-
-            while ( builder.HasNodes )
-                yield return builder.ReadNode ( );
         }
     }
 }

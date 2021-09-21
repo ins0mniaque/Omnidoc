@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Omnidoc.Collections
@@ -42,8 +42,7 @@ namespace Omnidoc.Collections
 
                     while ( edges.MoveNext ( ) )
                     {
-                        var edge = edges.Current;
-                        var v    = edge;
+                        var v = edges.Current;
 
                         switch ( colors [ v ] )
                         {

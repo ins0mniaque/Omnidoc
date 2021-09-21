@@ -17,7 +17,7 @@ namespace Omnidoc.Zip
             new [ ] { FileFormats.Zip }
         );
 
-        private static FileSignature [ ] signatures = new [ ]
+        private static readonly FileSignature [ ] signatures = new [ ]
         {
             new FileSignature ( (byte) 'P', (byte) 'K', 0x03, 0x04 )
         };

@@ -13,7 +13,7 @@ namespace Omnidoc.Zip
 {
     public abstract class ZipContainerFormatDetector : AsyncDisposable, IFileFormatDetector
     {
-        private static FileSignature [ ] signatures = new [ ]
+        private static readonly FileSignature [ ] signatures = new [ ]
         {
             new FileSignature ( (byte) 'P', (byte) 'K', 0x03, 0x04 )
         };

@@ -20,7 +20,7 @@ namespace Omnidoc.Image
             new [ ] { typeof ( Element ) }
         );
 
-        public static Func < TesseractEngine > CreateDefaultEngine { get; set; } = ( ) => new TesseractEngine ( @"tessdata", "eng" );
+        public static Func < TesseractEngine > CreateDefaultEngine { get; set; } = ( ) => new TesseractEngine ( "tessdata", "eng" );
 
         public ImageDocumentParser ( ) : this ( CreateDefaultEngine ) { }
         public ImageDocumentParser ( Func < TesseractEngine > createEngine )

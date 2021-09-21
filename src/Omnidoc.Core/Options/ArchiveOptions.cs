@@ -1,7 +1,4 @@
-﻿namespace Omnidoc
+namespace Omnidoc
 {
-    public class ArchiveOptions : Options
-    {
-
-    }
+    public class ArchiveOptions : Options { }
 }
