@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omnidoc.Html.Image", "src\O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Omnidoc.Html.Pdf", "src\Omnidoc.Html.Pdf\Omnidoc.Html.Pdf.csproj", "{EF653E70-E67A-4E97-A9DD-7D5EBA03DEF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Omnidoc", "src\Omnidoc\Omnidoc.csproj", "{98D4ED56-3F81-4E3B-BB02-CD0E2113C6A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,10 @@ Global
 		{EF653E70-E67A-4E97-A9DD-7D5EBA03DEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF653E70-E67A-4E97-A9DD-7D5EBA03DEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF653E70-E67A-4E97-A9DD-7D5EBA03DEF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98D4ED56-3F81-4E3B-BB02-CD0E2113C6A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98D4ED56-3F81-4E3B-BB02-CD0E2113C6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98D4ED56-3F81-4E3B-BB02-CD0E2113C6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98D4ED56-3F81-4E3B-BB02-CD0E2113C6A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +116,7 @@ Global
 		{700C4E5B-282F-4057-AEFC-252C68E2EF35} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
 		{1B058920-24B4-4140-8AE7-C8C6C38CA52D} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
 		{EF653E70-E67A-4E97-A9DD-7D5EBA03DEF6} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
+		{98D4ED56-3F81-4E3B-BB02-CD0E2113C6A0} = {0E66EE30-7076-4FD4-84D3-583B933BE91A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BD0C251-09D6-47FA-B28A-58CD61D37E9D}
