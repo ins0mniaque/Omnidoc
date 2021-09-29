@@ -141,16 +141,16 @@ dotnet_naming_style.disallowed_style.required_prefix = ____RULE_VIOLATION____
 dotnet_naming_style.disallowed_style.required_suffix = ____RULE_VIOLATION____
 
 # Naming symbols
-dotnet_naming_symbols.symbols.applicable_kinds                = *
-dotnet_naming_symbols.constant_fields.applicable_kinds        = field
-dotnet_naming_symbols.constant_fields.required_modifiers      = const
-dotnet_naming_symbols.private_fields.applicable_kinds         = field
-dotnet_naming_symbols.private_fields.required_modifiers       = private
-dotnet_naming_symbols.other_fields.applicable_accessibilities = public, protected, protected_internal
-dotnet_naming_symbols.other_fields.applicable_kinds           = field
-dotnet_naming_symbols.parameters.applicable_kinds             = parameter
-dotnet_naming_symbols.local_fields.applicable_accessibilities = local
-dotnet_naming_symbols.local_fields.applicable_kinds           = local
+dotnet_naming_symbols.symbols.applicable_kinds                  = *
+dotnet_naming_symbols.constant_fields.applicable_kinds          = field, local
+dotnet_naming_symbols.constant_fields.required_modifiers        = const
+dotnet_naming_symbols.private_fields.applicable_kinds           = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_symbols.other_fields.applicable_accessibilities   = public, protected, protected_internal
+dotnet_naming_symbols.other_fields.applicable_kinds             = field
+dotnet_naming_symbols.parameters.applicable_kinds               = parameter
+dotnet_naming_symbols.local_fields.applicable_accessibilities   = local
+dotnet_naming_symbols.local_fields.applicable_kinds             = local
 
 # Naming rule: Symbols should be PascalCase
 dotnet_naming_rule.symbols_should_be_pascal_case.symbols  = symbols
