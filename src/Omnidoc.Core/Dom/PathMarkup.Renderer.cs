@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Omnidoc.Dom
 {
@@ -8,6 +9,16 @@ namespace Omnidoc.Dom
         private const char Relative  = ' ';
         private const char NoCommand = '\0';
 
+        public static void Render ( ReadOnlySpan < byte > markup, Rendering.IGeometryRenderer renderer )
+        {
+            if ( markup == null )
+                throw new ArgumentNullException ( nameof ( markup ) );
+
+            var length = TryRender ( markup, renderer );
+            if ( length != markup.Length )
+                throw new FormatException ( $"Invalid path command '{ markup [ length - 1 ] }'" );
+        }
+
         public static void Render ( ReadOnlySpan < char > markup, Rendering.IGeometryRenderer renderer )
         {
             if ( markup == null )
@@ -16,6 +27,37 @@ namespace Omnidoc.Dom
             var length = TryRender ( markup, renderer );
             if ( length != markup.Length )
                 throw new FormatException ( $"Invalid path command '{ markup [ length - 1 ] }'" );
+        }
+
+        public static int TryRender ( ReadOnlySpan < byte > markup, Rendering.IGeometryRenderer renderer )
+        {
+            var position = 0;
+            var command  = NoCommand;
+
+            while ( position < markup.Length )
+            {
+                var read     = (char) markup [ position++ ];
+                var argCount = GetCommandArgumentCount ( read );
+                if ( argCount < 0 )
+                {
+                    if ( command is 'M' or 'm' )
+                        command--;
+                }
+                else
+                    command = read;
+
+                var argSize = argCount * sizeof ( float );
+                if ( position + argSize >= markup.Length )
+                    return position;
+
+                var arguments = MemoryMarshal.Cast < byte, float > ( markup.Slice ( position, argSize ) );
+
+                RenderCommand ( renderer, command, arguments );
+
+                position += argSize;
+            }
+
+            return position;
         }
 
         public static int TryRender ( ReadOnlySpan < char > markup, Rendering.IGeometryRenderer renderer )
@@ -65,7 +107,7 @@ namespace Omnidoc.Dom
             _                                      => -1
         };
 
-        private static void RenderCommand ( Rendering.IGeometryRenderer renderer, char command, params float [ ] args )
+        private static void RenderCommand ( Rendering.IGeometryRenderer renderer, char command, ReadOnlySpan < float > args )
         {
             var relative = ( command & Relative ) != 0;
 
